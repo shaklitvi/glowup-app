@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0D0D0D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GlowUp">
+<link rel="manifest" href="manifest.json">
+<title>GlowUp</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g1:#FF006E; --g2:#FB5607; --g3:#FFBE0B; --g4:#8338EC; --g5:#3A86FF;
+  --bg:#0D0D0D; --bg2:#161616; --bg3:#1E1E1E; --bg4:#252525;
+  --text:#FFFFFF; --muted:#888; --border:rgba(255,255,255,.08);
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bot:env(safe-area-inset-bottom,0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg)}
+body{font-family:'DM Sans',sans-serif;color:var(--text);user-select:none}
+
+/* GRAIN */
+body::after{content:’’;position:fixed;inset:0;pointer-events:none;z-index:9999;
+background-image:url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23noise)’ opacity=‘0.03’/%3E%3C/svg%3E”);
+opacity:.4;
+}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;background:var(–bg);z-index:9000;
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+transition:opacity .6s,transform .6s}
+#splash.out{opacity:0;transform:scale(1.05);pointer-events:none}
+.splash-logo{font-family:‘Syne’,sans-serif;font-size:56px;font-weight:800;
+background:linear-gradient(135deg,var(–g1),var(–g2),var(–g3));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+animation:logopulse 2s ease-in-out infinite}
+@keyframes logopulse{0%,100%{filter:drop-shadow(0 0 20px rgba(255,0,110,.4))}50%{filter:drop-shadow(0 0 50px rgba(255,190,11,.6))}}
+.splash-tag{color:var(–muted);font-size:13px;letter-spacing:6px;text-transform:uppercase;margin-top:8px}
+.splash-progress{width:180px;height:2px;background:var(–bg3);border-radius:2px;margin-top:48px;overflow:hidden}
+.splash-bar{height:100%;background:linear-gradient(90deg,var(–g1),var(–g4));animation:prog 2.2s ease forwards;width:0}
+@keyframes prog{to{width:100%}}
+
+/* APP */
+#app{display:none;flex-direction:column;height:100vh;position:relative;overflow:hidden}
+#app.on{display:flex}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;
+padding:calc(var(–safe-top) + 12px) 18px 12px;
+position:relative;z-index:100;flex-shrink:0}
+.tlogo{font-family:‘Syne’,sans-serif;font-size:22px;font-weight:800;
+background:linear-gradient(135deg,var(–g1),var(–g2));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tpills{display:flex;gap:8px;align-items:center}
+.tpill{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;transition:transform .15s}
+.tpill:active{transform:scale(.94)}
+.tp-coin{background:rgba(255,190,11,.12);border:1px solid rgba(255,190,11,.25);color:#FFBE0B}
+.tp-xp{background:rgba(58,134,255,.1);border:1px solid rgba(58,134,255,.2);color:var(–g5)}
+
+/* SCROLL */
+.main{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.main::-webkit-scrollbar{display:none}
+
+/* BOTTOM NAV */
+.bnav{display:flex;align-items:center;
+padding:8px 0 calc(var(–safe-bot) + 8px);
+background:rgba(13,13,13,.95);backdrop-filter:blur(30px);
+border-top:1px solid var(–border);flex-shrink:0;z-index:100}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:4px;transition:all .2s}
+.nb .ni{font-size:22px;transition:transform .25s}
+.nb .nl{font-size:9px;color:var(–muted);font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.nb.active .ni{transform:scale(1.25)}
+.nb.active .nl{color:var(–g1)}
+.nb-mid .ni{
+width:52px;height:52px;border-radius:18px;
+background:linear-gradient(135deg,var(–g1),var(–g4));
+display:flex;align-items:center;justify-content:center;font-size:26px;
+box-shadow:0 4px 24px rgba(255,0,110,.5);transform:translateY(-8px);
+transition:all .25s;
+}
+.nb-mid.active .ni{transform:translateY(-8px) scale(1.08)}
+
+/* SCREENS */
+.screen{display:none;animation:sin .3s cubic-bezier(.2,.8,.4,1)}
+.screen.on{display:block}
+@keyframes sin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ============ FEED ============ */
+#sc-feed{height:100%;padding:0}
+.feed-wrap{height:100%;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none}
+.feed-wrap::-webkit-scrollbar{display:none}
+.fpost{height:100svh;scroll-snap-align:start;position:relative;display:flex;align-items:flex-end;overflow:hidden;flex-shrink:0;background:var(–bg2)}
+.fp-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:140px;transition:transform .3s}
+.fp-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.3) 45%,transparent 75%)}
+.fp-content{position:relative;z-index:2;padding:16px 16px 90px;width:100%}
+.fp-user{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.fp-av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid rgba(255,255,255,.2);flex-shrink:0}
+.fp-uname{font-family:‘Syne’,sans-serif;font-size:15px;font-weight:700}
+.fp-follow{font-size:11px;color:var(–g5);font-weight:700;cursor:pointer}
+.fp-cap{font-size:14px;line-height:1.55;margin-bottom:8px}
+.fp-tags{font-size:13px;color:var(–g5);font-weight:600;margin-bottom:8px}
+.fp-music{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.75)}
+.fp-disc{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(–g1),var(–g4));display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;animation:disc 4s linear infinite}
+@keyframes disc{to{transform:rotate(360deg)}}
+
+/* Trending badge */
+.fp-trend{position:absolute;top:60px;right:14px;z-index:3;
+background:rgba(255,0,110,.9);backdrop-filter:blur(10px);
+padding:5px 12px;border-radius:20px;font-size:11px;font-weight:800;
+animation:trendbadge 2s ease-in-out infinite}
+@keyframes trendbadge{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+
+/* Side actions */
+.fp-actions{position:absolute;right:14px;bottom:95px;z-index:3;display:flex;flex-direction:column;gap:20px;align-items:center}
+.fpa{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:transform .2s}
+.fpa:active{transform:scale(.82)}
+.fpa-icon{font-size:32px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6))}
+.fpa-count{font-size:12px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.9)}
+.fpa.liked .fpa-icon{animation:heartpop .35s ease}
+@keyframes heartpop{0%{transform:scale(1)}50%{transform:scale(1.5)}100%{transform:scale(1)}}
+
+/* Post gradients */
+.pb1{background:linear-gradient(160deg,#1a0a2e,#2d0b45)}
+.pb2{background:linear-gradient(160deg,#0a1628,#112244)}
+.pb3{background:linear-gradient(160deg,#1a1200,#332200)}
+.pb4{background:linear-gradient(160deg,#0a1a0a,#122212)}
+.pb5{background:linear-gradient(160deg,#1a0010,#2d0020)}
+
+/* ============ MISSIONS ============ */
+#sc-missions{padding:16px}
+
+.ai-banner{
+background:linear-gradient(135deg,rgba(255,0,110,.15),rgba(131,56,236,.15));
+border:1px solid rgba(255,0,110,.3);border-radius:20px;
+padding:16px;margin-bottom:20px;position:relative;overflow:hidden;
+}
+.ai-banner::before{content:’’;position:absolute;inset:0;
+background:radial-gradient(circle at 80% 50%,rgba(255,0,110,.1),transparent 60%);
+animation:aiglw 3s ease-in-out infinite}
+@keyframes aiglw{0%,100%{opacity:.5}50%{opacity:1}}
+.ai-banner-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.ai-badge{background:linear-gradient(135deg,var(–g1),var(–g4));padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:1px}
+.ai-banner h3{font-family:‘Syne’,sans-serif;font-size:17px;font-weight:800}
+.ai-banner p{font-size:12px;color:var(–muted);line-height:1.5}
+.ai-trend-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.att{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;
+background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:all .2s}
+.att:active{transform:scale(.94);background:rgba(255,0,110,.2);border-color:var(–g1)}
+
+.streak-row{display:flex;align-items:center;gap:12px;
+background:var(–bg2);border:1px solid rgba(255,190,11,.2);
+border-radius:18px;padding:14px;margin-bottom:16px}
+.streak-fire{font-size:40px;animation:fireani 1.2s ease-in-out infinite}
+@keyframes fireani{0%,100%{transform:scale(1) rotate(-5deg)}50%{transform:scale(1.2) rotate(5deg)}}
+.streak-txt h3{font-size:16px;font-weight:800}
+.streak-txt p{font-size:11px;color:var(–muted);margin-top:2px}
+.streak-num{margin-right:auto;text-align:center}
+.sn{font-family:‘Syne’,sans-serif;font-size:34px;font-weight:800;color:#FFBE0B;line-height:1}
+.sl{font-size:10px;color:var(–muted);font-weight:700}
+
+.msec{font-family:‘Syne’,sans-serif;font-size:15px;font-weight:800;margin:16px 0 10px;display:flex;align-items:center;gap:8px}
+.mnew{font-size:9px;background:var(–g1);padding:2px 8px;border-radius:20px;font-family:‘DM Sans’,sans-serif;font-weight:700;letter-spacing:1px}
+
+.mcard{background:var(–bg2);border:1px solid var(–border);border-radius:18px;padding:14px;margin-bottom:10px;cursor:pointer;position:relative;overflow:hidden;transition:border-color .25s}
+.mcard::after{content:’’;position:absolute;inset:0;opacity:0;background:linear-gradient(135deg,rgba(255,0,110,.06),rgba(131,56,236,.06));transition:opacity .25s;pointer-events:none}
+.mcard:active::after{opacity:1}
+.mcard.done{border-color:rgba(58,200,80,.35);background:linear-gradient(135deg,var(–bg2),rgba(58,200,80,.05))}
+.mcard.video{border-color:rgba(255,94,7,.2)}
+.mcard-top{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px}
+.mcard-icon{font-size:30px;flex-shrink:0;margin-top:2px}
+.mcard-title{font-family:‘Syne’,sans-serif;font-size:14px;font-weight:800;margin-bottom:3px}
+.mcard-desc{font-size:12px;color:var(–muted);line-height:1.5}
+.mcard-music{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;
+background:rgba(255,0,110,.1);border:1px solid rgba(255,0,110,.2);color:var(–g1);
+padding:3px 8px;border-radius:20px;margin-bottom:8px}
+.mrewards{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.mrew{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.mr-c{background:rgba(255,190,11,.1);border:1px solid rgba(255,190,11,.2);color:#FFBE0B}
+.mr-x{background:rgba(58,134,255,.1);border:1px solid rgba(58,134,255,.2);color:var(–g5)}
+.mr-d{background:rgba(58,200,80,.1);border:1px solid rgba(58,200,80,.2);color:#3AC850}
+.mbar{height:4px;background:var(–bg4);border-radius:4px;overflow:hidden}
+.mbar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(–g1),var(–g4));transition:width .8s}
+.mbar-fill.done{background:linear-gradient(90deg,#3AC850,#00C9A7)}
+
+/* ============ CREATE ============ */
+#sc-create{padding:16px}
+
+.ctabs{display:flex;gap:8px;margin-bottom:16px}
+.ctab{flex:1;padding:11px;border-radius:14px;background:var(–bg2);border:1px solid var(–border);
+font-family:‘DM Sans’,sans-serif;font-size:13px;font-weight:700;color:var(–muted);
+cursor:pointer;text-align:center;transition:all .2s}
+.ctab:active{transform:scale(.96)}
+.ctab.on{background:linear-gradient(135deg,var(–g1),var(–g4));border-color:transparent;color:#fff}
+
+.upload-z{border:2px dashed rgba(131,56,236,.4);border-radius:20px;padding:36px 18px;
+text-align:center;cursor:pointer;background:rgba(131,56,236,.04);margin-bottom:14px;
+transition:all .3s;position:relative;overflow:hidden}
+.upload-z:active{border-color:var(–g1);background:rgba(255,0,110,.06)}
+.upload-z input{display:none}
+.uz-em{font-size:44px;display:block;margin-bottom:9px;animation:uzfl 2s ease-in-out infinite}
+@keyframes uzfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.uz-t{font-family:‘Syne’,sans-serif;font-size:16px;font-weight:800;margin-bottom:5px}
+.uz-s{color:var(–muted);font-size:12px;line-height:1.5}
+
+.bonus-pills{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.bp{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;
+background:var(–bg3);border:1px solid var(–border)}
+.bp:active{transform:scale(.94)}
+.bp.sel{background:linear-gradient(135deg,rgba(255,0,110,.2),rgba(131,56,236,.2));border-color:var(–g1);color:var(–g1)}
+
+#prev-area{display:none;margin-bottom:14px}
+.prev-wrap{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:9/16;max-height:320px;background:var(–bg2);display:flex;align-items:center;justify-content:center;font-size:70px}
+#prev-img{width:100%;height:100%;object-fit:cover;display:none}
+.filter-lay{position:absolute;inset:0;pointer-events:none;transition:all .5s}
+.retake{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.7);border:1px solid var(–border);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;color:#fff;backdrop-filter:blur(12px)}
+
+.fsec{font-family:‘Syne’,sans-serif;font-size:13px;font-weight:800;margin-bottom:8px}
+.fscroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;margin-bottom:14px}
+.fscroll::-webkit-scrollbar{display:none}
+.fchip{flex-shrink:0;padding:8px 14px;border-radius:50px;background:var(–bg2);border:1px solid var(–border);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap}
+.fchip:active{transform:scale(.93)}
+.fchip.on{background:linear-gradient(135deg,var(–g1),var(–g4));border-color:transparent}
+.fchip.lock{opacity:.6}
+
+#ai-box{display:none;margin-bottom:14px}
+.ai-res-card{background:linear-gradient(135deg,var(–bg2),rgba(131,56,236,.12));border:1px solid rgba(131,56,236,.3);border-radius:18px;padding:16px}
+.ai-load{text-align:center;padding:12px}
+.ai-load p{font-size:12px;color:var(–muted);margin-bottom:10px}
+.dots span{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 3px;animation:dot 1.3s infinite}
+.dots span:nth-child(1){background:var(–g1)}
+.dots span:nth-child(2){background:var(–g4);animation-delay:.2s}
+.dots span:nth-child(3){background:var(–g5);animation-delay:.4s}
+@keyframes dot{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+#ai-inner{display:none}
+.ai-res-t{font-family:‘Syne’,sans-serif;font-size:15px;font-weight:800;margin-bottom:9px}
+.ai-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.ai-tag{padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}
+.ai-desc{font-size:12px;color:var(–muted);line-height:1.6}
+
+.share-row{display:flex;gap:8px;margin-top:12px}
+.sbtn{flex:1;padding:12px 8px;border-radius:14px;border:none;font-family:‘DM Sans’,sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:transform .2s;display:flex;align-items:center;justify-content:center;gap:5px}
+.sbtn:active{transform:scale(.94)}
+.sb-ig{background:linear-gradient(135deg,#833AB4,#FD1D1D,#FCAF45);color:#fff}
+.sb-tt{background:#111;color:#fff;border:1px solid rgba(255,255,255,.12)}
+.sb-wa{background:#25D366;color:#fff}
+
+/* Music */
+.music-box{background:var(–bg2);border:1px solid var(–border);border-radius:18px;padding:14px;margin-bottom:14px}
+.music-box-t{font-family:‘Syne’,sans-serif;font-size:13px;font-weight:800;margin-bottom:10px}
+.track{display:flex;align-items:center;gap:10px;padding:10px;background:var(–bg3);border-radius:12px;border:1px solid var(–border);cursor:pointer;transition:all .2s;margin-bottom:7px}
+.track:last-child{margin-bottom:0}
+.track:active{transform:scale(.97)}
+.track.sel{border-color:var(–g1);background:rgba(255,0,110,.08)}
+.track-disc{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(–g1),var(–g4));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.track.sel .track-disc{animation:disc 2s linear infinite}
+.track-info{flex:1}
+.track-name{font-size:13px;font-weight:700}
+.track-artist{font-size:11px;color:var(–muted)}
+.track-now{font-size:10px;color:var(–g1);font-weight:700;margin-top:2px}
+.track-dur{font-size:11px;color:var(–muted)}
+
+#vid-ready{display:none;margin-bottom:14px}
+.vid-ready-card{background:linear-gradient(135deg,var(–bg2),rgba(58,134,255,.1));border:1px solid rgba(58,134,255,.3);border-radius:18px;padding:18px;text-align:center}
+.vrc-icon{font-size:46px;display:block;margin-bottom:10px}
+.vrc-t{font-family:‘Syne’,sans-serif;font-size:16px;font-weight:800;margin-bottom:4px}
+.vrc-s{font-size:12px;color:var(–muted)}
+
+/* BTN */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px;border:none;border-radius:16px;font-family:‘DM Sans’,sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .25s}
+.btn:active{transform:scale(.96)}
+.btn-main{background:linear-gradient(135deg,var(–g1),var(–g4));color:#fff;box-shadow:0 4px 24px rgba(255,0,110,.35)}
+.btn-out{background:var(–bg2);border:1px solid var(–border);color:var(–text)}
+
+/* ============ PROFILE ============ */
+#sc-profile{padding:16px}
+.prof-top{text-align:center;margin-bottom:20px;padding:24px 16px;background:var(–bg2);border-radius:24px;border:1px solid var(–border);position:relative;overflow:hidden}
+.prof-top::before{content:’’;position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(255,0,110,.15),transparent 70%)}
+.av-ring{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(–g1),var(–g4),var(–g5));padding:3px;display:inline-block;margin-bottom:10px;position:relative}
+.av-in{width:100%;height:100%;border-radius:50%;background:var(–bg2);display:flex;align-items:center;justify-content:center;font-size:38px}
+.av-lv{position:absolute;bottom:-3px;right:-3px;background:linear-gradient(135deg,var(–g1),var(–g4));border:2px solid var(–bg);border-radius:20px;padding:2px 8px;font-size:10px;font-weight:800}
+.pname{font-family:‘Syne’,sans-serif;font-size:20px;font-weight:800;margin-bottom:2px}
+.phandle{color:var(–muted);font-size:12px;margin-bottom:14px}
+.pstats{display:flex;justify-content:center;gap:24px}
+.pstat-n{font-family:‘Syne’,sans-serif;font-size:20px;font-weight:800}
+.pstat-l{font-size:10px;color:var(–muted);margin-top:2px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+
+.xpbar-wrap{background:var(–bg2);border:1px solid var(–border);border-radius:18px;padding:14px;margin-bottom:16px}
+.xpbar-hdr{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:8px}
+.xpbar-hdr span:first-child{color:var(–g4)}
+.xpbar{height:8px;background:var(–bg4);border-radius:8px;overflow:hidden}
+.xpbar-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(–g1),var(–g4),var(–g5));background-size:200% 100%;animation:xpshim 2s linear infinite;transition:width 1s}
+@keyframes xpshim{0%{background-position:100%}100%{background-position:-100%}}
+
+.badges-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.bdg{background:var(–bg2);border:1px solid var(–border);border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;transition:all .2s}
+.bdg:active{transform:scale(.92)}
+.bdg.earn{border-color:rgba(255,190,11,.35);background:rgba(255,190,11,.05)}
+.bdg-e{font-size:26px;display:block;margin-bottom:4px}
+.bdg-n{font-size:9px;color:var(–muted);line-height:1.2;font-weight:700}
+.bdg.earn .bdg-n{color:#FFBE0B}
+
+/* ============ SHOP ============ */
+#sc-shop{padding:16px}
+.coins-hero{text-align:center;padding:22px;
+background:linear-gradient(135deg,rgba(255,190,11,.1),rgba(255,94,7,.08));
+border:1px solid rgba(255,190,11,.2);border-radius:22px;margin-bottom:18px;position:relative;overflow:hidden}
+.coins-hero::before{content:‘💰’;position:absolute;font-size:80px;opacity:.06;top:10px;left:10px}
+.ch-num{font-family:‘Syne’,sans-serif;font-size:52px;font-weight:800;color:#FFBE0B;line-height:1}
+.ch-lbl{font-size:12px;color:var(–muted);margin-top:4px;font-weight:700}
+.packs-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px}
+.pack{background:var(–bg2);border:1px solid var(–border);border-radius:18px;padding:16px 12px;text-align:center;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.pack:active{transform:scale(.95)}
+.pack.hot{border-color:rgba(255,0,110,.4);background:linear-gradient(135deg,var(–bg2),rgba(255,0,110,.08))}
+.pack-hb{position:absolute;top:7px;left:50%;transform:translateX(-50%);background:var(–g1);color:#fff;font-size:9px;font-weight:800;padding:2px 9px;border-radius:20px;white-space:nowrap}
+.pack-ic{font-size:28px;display:block;margin-bottom:5px}
+.pack-c{font-family:‘Syne’,sans-serif;font-size:24px;font-weight:800;color:#FFBE0B}
+.pack-b{font-size:10px;color:#3AC850;font-weight:700;margin:2px 0}
+.pack-p{font-size:15px;font-weight:800;margin-top:5px}
+.items-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sitem{background:var(–bg2);border:1px solid var(–border);border-radius:14px;padding:12px 7px;text-align:center;cursor:pointer;transition:all .25s}
+.sitem:active{transform:scale(.93)}
+.sitem.own{border-color:rgba(58,200,80,.35);background:rgba(58,200,80,.04)}
+.si-e{font-size:28px;display:block;margin-bottom:4px}
+.si-n{font-size:10px;font-weight:700;line-height:1.3;margin-bottom:5px}
+.si-p{font-size:10px;font-weight:800;padding:3px 8px;border-radius:10px;display:inline-block;background:rgba(255,190,11,.1);border:1px solid rgba(255,190,11,.2);color:#FFBE0B}
+.si-p.ot{background:rgba(58,200,80,.1);border-color:rgba(58,200,80,.2);color:#3AC850}
+
+/* TOAST */
+#toast{position:fixed;top:88px;left:50%;transform:translateX(-50%) translateY(-120px);
+background:rgba(30,30,30,.96);backdrop-filter:blur(20px);
+border:1px solid rgba(255,0,110,.3);border-radius:14px;
+padding:10px 18px;font-size:13px;font-weight:700;z-index:9990;
+transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+max-width:85vw;text-align:center;white-space:normal}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+/* MISSION COMPLETE */
+#mc-ov{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:8000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(12px)}
+#mc-ov.show{display:flex;animation:fdin .3s}
+@keyframes fdin{from{opacity:0}to{opacity:1}}
+.mc-box{background:linear-gradient(135deg,#1a1a1a,rgba(131,56,236,.2));border:1px solid rgba(131,56,236,.5);border-radius:28px;padding:32px 24px;text-align:center;max-width:280px;width:90%;animation:mcin .5s cubic-bezier(.2,.8,.4,1)}
+@keyframes mcin{from{transform:scale(.65) translateY(50px);opacity:0}to{transform:none;opacity:1}}
+.mc-em{font-size:60px;display:block;margin-bottom:12px;animation:mcbounce 1s infinite}
+@keyframes mcbounce{0%,100%{transform:scale(1)}50%{transform:scale(1.2) rotate(8deg)}}
+.mc-t{font-family:‘Syne’,sans-serif;font-size:22px;font-weight:800;color:#FFBE0B;margin-bottom:6px}
+.mc-s{color:var(–muted);font-size:13px;margin-bottom:16px;line-height:1.6}
+.mc-rr{display:flex;gap:9px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}
+.mc-r{padding:8px 16px;border-radius:20px;font-size:14px;font-weight:800}
+.mc-rc{background:rgba(255,190,11,.15);border:1px solid rgba(255,190,11,.35);color:#FFBE0B}
+.mc-rx{background:rgba(58,134,255,.12);border:1px solid rgba(58,134,255,.3);color:var(–g5)}
+
+/* COIN BURST */
+.cburst{position:fixed;pointer-events:none;z-index:9998;font-size:20px;animation:cb .8s ease forwards}
+@keyframes cb{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-80px) scale(1.5)}}
+</style>
+
+</head>
+<body>
+
+<!-- SPLASH -->
+
+<div id="splash">
+  <div class="splash-logo">GlowUp</div>
+  <div class="splash-tag">Create · Trend · Glow</div>
+  <div class="splash-progress"><div class="splash-bar"></div></div>
+</div>
+
+<!-- MISSION COMPLETE -->
+
+<div id="mc-ov" onclick="closeMC()">
+  <div class="mc-box" onclick="event.stopPropagation()">
+    <span class="mc-em" id="mc-em">🏆</span>
+    <div class="mc-t" id="mc-t">משימה הושלמה!</div>
+    <div class="mc-s" id="mc-s">כל הכבוד! קיבלת:</div>
+    <div class="mc-rr"><div class="mc-r mc-rc" id="mc-c">+50 🪙</div><div class="mc-r mc-rx" id="mc-x">+100 XP</div></div>
+    <button class="btn btn-main" onclick="closeMC()">🔥 המשך לגלוע!</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+
+<div id="toast"></div>
+
+<!-- APP -->
+
+<div id="app">
+
+  <nav class="topbar">
+    <div class="tlogo">GlowUp</div>
+    <div class="tpills">
+      <div class="tpill tp-coin" onclick="switchTab('shop')">🪙 <span id="cd">250</span></div>
+      <div class="tpill tp-xp">⚡ <span id="xd">65</span></div>
+    </div>
+  </nav>
+
+  <div class="main" id="main">
+
+```
+<!-- FEED -->
+<div class="screen on" id="sc-feed">
+  <div class="feed-wrap" id="feed-wrap"></div>
+</div>
+
+<!-- MISSIONS -->
+<div class="screen" id="sc-missions">
+  <div class="ai-banner">
+    <div class="ai-banner-top"><span class="ai-badge">AI TRENDS</span><span style="font-size:18px">🤖</span></div>
+    <h3>הטרנדים של השבוע — נוצרו ע"י AI</h3>
+    <p>האפליקציה ניתחה מיליוני פוסטים וזיהתה את מה שהולך להיות ויראלי 🔥</p>
+    <div class="ai-trend-tags">
+      <div class="att" onclick="doTrend('#Y2K_Revival')">🪩 #Y2K_Revival</div>
+      <div class="att" onclick="doTrend('#SoftLife')">🌸 #SoftLife</div>
+      <div class="att" onclick="doTrend('#GlowUp2025')">✨ #GlowUp2025</div>
+      <div class="att" onclick="doTrend('#CinematicDay')">🎬 #CinematicDay</div>
+      <div class="att" onclick="doTrend('#MirrorSelfie')">🪞 #MirrorSelfie</div>
+    </div>
+  </div>
+
+  <div class="streak-row">
+    <div class="streak-fire">🔥</div>
+    <div class="streak-txt"><h3>סדרה פעילה!</h3><p>אל תפסיד — עשה משימה כל יום</p></div>
+    <div class="streak-num"><div class="sn">5</div><div class="sl">ימים</div></div>
+  </div>
+
+  <div class="msec">🎬 וידאו + מוזיקה <span class="mnew">NEW</span></div>
+  <div id="vm"></div>
+  <div class="msec">📸 משימות צילום</div>
+  <div id="pm"></div>
+  <div class="msec">👥 חברתי</div>
+  <div id="sm"></div>
+</div>
+
+<!-- CREATE -->
+<div class="screen" id="sc-create">
+  <div class="ctabs">
+    <div class="ctab on" onclick="setCT('photo',this)">📸 תמונה</div>
+    <div class="ctab" onclick="setCT('video',this)">🎬 וידאו</div>
+  </div>
+
+  <div id="ct-photo">
+    <div class="upload-z" onclick="document.getElementById('fi').click()">
+      <input type="file" id="fi" accept="image/*" onchange="handleImg(this)">
+      <span class="uz-em">📸</span>
+      <div class="uz-t">העלה תמונה</div>
+      <div class="uz-s">בחר סוג לבונוס XP:</div>
+    </div>
+    <div class="bonus-pills" id="bpills"></div>
+    <div id="prev-area">
+      <div class="prev-wrap">
+        <img id="prev-img" alt="">
+        <div class="filter-lay" id="flayer"></div>
+        <span id="prev-icon" style="display:none;font-size:70px">🧑</span>
+        <div class="retake" onclick="retake()">🔄 שנה</div>
+      </div>
+    </div>
+    <div class="fsec">🎨 בחר פילטר</div>
+    <div class="fscroll" id="fchips"></div>
+    <div id="ai-box">
+      <div class="ai-res-card">
+        <div class="ai-load" id="ai-ld"><p>✨ AI מנתח ומייצר GlowUp...</p><div class="dots"><span></span><span></span><span></span></div></div>
+        <div id="ai-inner">
+          <div class="ai-res-t">✨ ה-GlowUp שלך מוכן!</div>
+          <div class="ai-tags" id="ai-tags"></div>
+          <div class="ai-desc" id="ai-desc"></div>
+        </div>
+      </div>
+      <div class="share-row">
+        <button class="sbtn sb-ig" onclick="shareIt('Instagram')">📷 IG</button>
+        <button class="sbtn sb-tt" onclick="shareIt('TikTok')">🎵 TikTok</button>
+        <button class="sbtn sb-wa" onclick="shareIt('WhatsApp')">💬 WA</button>
+      </div>
+    </div>
+    <div id="gen-wrap" style="display:none;margin-top:12px">
+      <button class="btn btn-main" onclick="genGlow()">✨ צור GlowUp עם AI!</button>
+    </div>
+  </div>
+
+  <div id="ct-video" style="display:none">
+    <div class="music-box">
+      <div class="music-box-t">🎵 בחר מוזיקה לסרטון</div>
+      <div id="tracks"></div>
+    </div>
+    <div class="upload-z" onclick="document.getElementById('vi').click()">
+      <input type="file" id="vi" accept="video/*" onchange="handleVid(this)">
+      <span class="uz-em">🎬</span>
+      <div class="uz-t">צלם או העלה סרטון</div>
+      <div class="uz-s" id="vidsub">בחר מוזיקה קודם, אחר כך צלם 15 שניות 🎬</div>
+    </div>
+    <div id="vid-ready">
+      <div class="vid-ready-card">
+        <span class="vrc-icon">🎬✨</span>
+        <div class="vrc-t">הסרטון מוכן!</div>
+        <div class="vrc-s" id="vrc-s">ללא מוזיקה</div>
+      </div>
+      <div class="share-row" style="margin-top:12px">
+        <button class="sbtn sb-ig" onclick="shareVid('Reels')">📷 Reels</button>
+        <button class="sbtn sb-tt" onclick="shareVid('TikTok')">🎵 TikTok</button>
+        <button class="sbtn sb-wa" onclick="shareVid('Status')">💬 Status</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="screen" id="sc-profile">
+  <div class="prof-top">
+    <div style="position:relative;display:inline-block;margin-bottom:10px">
+      <div class="av-ring"><div class="av-in">🧑<div class="av-lv">⭐<span id="plvl">7</span></div></div></div>
+    </div>
+    <div class="pname">GlowUser ✨</div>
+    <div class="phandle">@glowuser · Glow Star</div>
+    <div class="pstats">
+      <div><div class="pstat-n">42</div><div class="pstat-l">GlowUps</div></div>
+      <div><div class="pstat-n">1.2K</div><div class="pstat-l">עוקבים</div></div>
+      <div><div class="pstat-n">8.4K</div><div class="pstat-l">לייקים</div></div>
+      <div><div class="pstat-n" id="pxp">65</div><div class="pstat-l">XP</div></div>
+    </div>
+  </div>
+  <div class="xpbar-wrap">
+    <div class="xpbar-hdr">
+      <span>⚡ Level <span id="plvl2">7</span> – Glow Star</span>
+      <span style="color:var(--muted)" id="pxplbl">65/100 XP</span>
+    </div>
+    <div class="xpbar"><div class="xpbar-fill" id="pxpbar" style="width:65%"></div></div>
+  </div>
+  <div class="msec">🏆 הישגים</div>
+  <div class="badges-grid" id="bdgs"></div>
+  <button class="btn btn-out" style="margin-bottom:8px" onclick="installGuide()">📲 התקן כאפליקציה</button>
+  <button class="btn btn-out" onclick="toast('⚙️ הגדרות בקרוב!')">⚙️ הגדרות</button>
+</div>
+
+<!-- SHOP -->
+<div class="screen" id="sc-shop">
+  <div class="coins-hero">
+    <div class="ch-num" id="shcoins">250</div>
+    <div class="ch-lbl">🪙 Glow Coins שלך</div>
+  </div>
+  <div class="msec">💎 רכישת Coins</div>
+  <div class="packs-grid" id="packs"></div>
+  <div class="msec">🛍️ פילטרים ואביזרים</div>
+  <div class="items-grid" id="items"></div>
+</div>
+```
+
+  </div><!-- /main -->
+
+  <nav class="bnav">
+    <div class="nb active" data-t="feed"><div class="ni">🏠</div><div class="nl">פיד</div></div>
+    <div class="nb" data-t="missions"><div class="ni">🎯</div><div class="nl">משימות</div></div>
+    <div class="nb nb-mid" data-t="create"><div class="ni">✨</div><div class="nl">צור</div></div>
+    <div class="nb" data-t="shop"><div class="ni">🛍️</div><div class="nl">חנות</div></div>
+    <div class="nb" data-t="profile"><div class="ni">👤</div><div class="nl">פרופיל</div></div>
+  </nav>
+</div>
+
+<script>
+// STATE
+let coins=250,xp=65,xpMax=100,level=7;
+let selFilter='none',selMusic=null,selBonus=null,fileUp=false;
+let owned=['none','neon','pastel'];
+let likes={},toastT;
+
+// DATA
+const filters=[
+  {id:'none', name:'✨ Clean', free:true, cost:0, bg:''},
+  {id:'neon',  name:'🌆 Neon',  free:true, cost:0, bg:'linear-gradient(135deg,rgba(0,245,255,.28),rgba(131,56,236,.2))'},
+  {id:'pastel',name:'🌸 Pastel',free:true, cost:0, bg:'linear-gradient(135deg,rgba(255,182,193,.32),rgba(255,218,255,.28))'},
+  {id:'fire',  name:'🔥 Fire',  free:false,cost:30,bg:'linear-gradient(135deg,rgba(255,69,0,.4),rgba(255,200,0,.25))'},
+  {id:'galaxy',name:'🌌 Galaxy',free:false,cost:50,bg:'linear-gradient(135deg,rgba(75,0,130,.45),rgba(0,0,80,.35))'},
+  {id:'golden',name:'✨ Gold',  free:false,cost:75,bg:'linear-gradient(135deg,rgba(255,215,0,.4),rgba(255,140,0,.28))'},
+  {id:'matrix',name:'💻 Matrix',free:false,cost:40,bg:'linear-gradient(135deg,rgba(0,255,70,.3),rgba(0,50,0,.4))'},
+  {id:'magic', name:'🪄 Magic', free:false,cost:100,bg:'conic-gradient(rgba(255,0,110,.3),rgba(131,56,236,.3),rgba(255,190,11,.3),rgba(255,0,110,.3))'},
+];
+const aiData={
+  none:{tags:['טבעי','אמיתי','ייחודי'],desc:'אתה נראה מדהים בדיוק כמו שאתה! הביטחון העצמי זה הסטייל הכי חזק. 💪'},
+  neon:{tags:['🌆 Neon City','🎮 Cyberpunk','🔵 Futuristic'],desc:'לוק Neon שנראה ישר מסרט עתידני. ויראלי ב-TikTok מובטח! 🚀'},
+  pastel:{tags:['🌸 Soft Aesthetic','🎀 Cute','💜 Dreamy'],desc:'Pastel Aesthetic שהוא טרנד עכשיו. Pinterest ו-Instagram יאהבו! 🌸'},
+  fire:{tags:['🔥 On Fire','⚡ Bold','🌋 Fierce'],desc:'ON FIRE! הלוק הזה צועק ביטחון עצמי. אף אחד לא יתעלם! 🔥'},
+  galaxy:{tags:['🌌 Cosmic','🪐 Space','✨ Stellar'],desc:'פשוט מהגלקסיה! הלוק הזה הוא אחד מסוגו בכל היקום. 🌌'},
+  golden:{tags:['✨ Golden Hour','👑 Royalty','💛 Luxe'],desc:'מלכותי! הלוק הזהב משדר יוקרה של סלב אמיתי. 👑'},
+  matrix:{tags:['💻 Hacker','🟢 Digital','🤖 Neo'],desc:'"האם אתה האחד?" הלוק הדיגיטלי הזה הוא Red pill all the way. 💻'},
+  magic:{tags:['🪄 Rare','🌈 Unique','💫 1 of 1'],desc:'Magic Boost הפעיל את הגרסה הנדירה ביותר שלך! ✨'},
+};
+const tracks=[
+  {name:'Espresso',artist:'Sabrina Carpenter',dur:'2:58',em:'☕'},
+  {name:'Levitating',artist:'Dua Lipa',dur:'3:23',em:'🪩'},
+  {name:'Flowers',artist:'Miley Cyrus',dur:'3:21',em:'🌸'},
+  {name:'Unholy',artist:'Sam Smith',dur:'2:37',em:'🖤'},
+  {name:'As It Was',artist:'Harry Styles',dur:'2:37',em:'💜'},
+  {name:'Anti-Hero',artist:'Taylor Swift',dur:'3:20',em:'🦋'},
+];
+const bonusTypes=[
+  {id:'friend',label:'🤝 עם חבר',xp:30},{id:'couple',label:'💑 בת/בן זוג',xp:40},
+  {id:'celeb',label:'🌟 סגנון סלב',xp:50},{id:'solo',label:'🧑 סולו',xp:15},
+];
+const feedPosts=[
+  {em:'👑',bg:'pb1',av:'👸',user:'@maya_glows',cap:'סטייל Y2K Comeback! הפילטר Galaxy שלי ✨',tags:'#GlowUp #Y2K #Fashion',music:'Levitating – Dua Lipa',l:2847,c:184,trend:true},
+  {em:'🌊',bg:'pb2',av:'🌟',user:'@noa_vibe',cap:'תמונה עם הבחורות 💜 פילטר Neon הכי שווה!',tags:'#GlowUp #BFF #NeonVibes',music:'Espresso – Sabrina Carpenter',l:1203,c:92,trend:false},
+  {em:'⚡',bg:'pb3',av:'🔥',user:'@gal_fire',cap:'אתגר השבוע! Y2K כמו Dua Lipa 🪩',tags:'#GlowUpChallenge #Y2K #Viral',music:'Levitating – Dua Lipa',l:5412,c:341,trend:true},
+  {em:'🌿',bg:'pb4',av:'😎',user:'@tom_cool',cap:'הסרטון הוויראלי שלי! פילטר Golden 🏆',tags:'#GlowUp #Golden #TrendAlert',music:'As It Was – Harry Styles',l:987,c:67,trend:false},
+  {em:'🎭',bg:'pb5',av:'💫',user:'@liron_style',cap:'תמונה עם הבן זוג 💑 הכי קלאסי!',tags:'#GlowUp #Couple #Love',music:'Flowers – Miley Cyrus',l:3201,c:218,trend:false},
+];
+const videoM=[
+  {id:'v1',type:'v',icon:'🎬',title:'סרטון עם מוזיקה #1',done:false,
+   desc:'צלם סרטון GlowUp עם מוזיקה. צריך 2 סרטונים בשבוע לשמירת Streak! 🔥',
+   music:'כל שיר',coins:40,xp:80,p:0,t:1,col:''},
+  {id:'v2',type:'v',icon:'🎵',title:'סרטון עם מוזיקה #2',done:false,
+   desc:'הסרטון השני השבוע! שיר אחר, סטייל שונה. כפול XP! ✨',
+   music:'שיר שונה',coins:60,xp:120,p:0,t:1,col:''},
+  {id:'v3',type:'v',icon:'🪩',title:'ריקוד Y2K ויראלי',done:false,
+   desc:'ריקוד Y2K עם Levitating של Dua Lipa. הטרנד הכי חם השבוע!',
+   music:'Levitating – Dua Lipa',coins:80,xp:150,p:0,t:1,col:''},
+];
+const photoM=[
+  {id:'p1',type:'p',icon:'🤝',title:'תמונה עם חבר',done:false,
+   desc:'צלם עם חבר ועשה GlowUp. תמונות חברתיות = 2X לייקים! 🤝',
+   coins:50,xp:100,p:0,t:1,col:''},
+  {id:'p2',type:'p',icon:'💑',title:'תמונה עם בת/בן זוג',done:false,
+   desc:'שתף רגע מיוחד עם הפרטנר. בונוס רומנטי! 💕',
+   coins:60,xp:120,p:0,t:1,col:''},
+  {id:'p3',type:'p',icon:'🌟',title:'סגנון סלב השבוע',done:false,
+   desc:'הטרנד הוויראלי: סטייל Y2K של Dua Lipa. צלם בסגנון! 🔥',
+   coins:80,xp:150,p:0,t:1,col:''},
+  {id:'p4',type:'p',icon:'📸',title:'תמונת היום',done:true,
+   desc:'שתף GlowUp של היום. כל יום = XP מובטח!',
+   coins:15,xp:30,p:1,t:1,col:'done'},
+];
+const socialM=[
+  {id:'s1',type:'s',icon:'📤',title:'שתף ל-3 רשתות',done:false,
+   desc:'שתף GlowUp לאינסטגרם, טיקטוק ו-WhatsApp. ויראלי! 🔥',
+   coins:40,xp:80,p:1,t:3,col:''},
+  {id:'s2',type:'s',icon:'👥',title:'הזמן חבר חדש',done:true,
+   desc:'הזמן חבר שירשם – שניכם מקבלים בונוס!',
+   coins:100,xp:200,p:1,t:1,col:'done'},
+];
+const shopItems=[
+  {em:'👑',name:'כתר זהב',cost:80,id:'crown'},{em:'🌈',name:'שיער קשת',cost:60,id:'rainbow'},
+  {em:'💎',name:'יהלום',cost:120,id:'diamond'},{em:'🦋',name:'כנפיים',cost:90,id:'wings'},
+  {em:'🌹',name:'רוז פילטר',cost:45,id:'rose'},{em:'⚡',name:'ברק',cost:70,id:'lightning'},
+  {em:'🎭',name:'מסיכה',cost:55,id:'mask'},{em:'🌙',name:'לילה מאגי',cost:85,id:'moon'},
+  {em:'🏆',name:'VIP',cost:200,id:'vip'},
+];
+const shopPacks=[
+  {ic:'🪙',c:100,b:'',p:'₪4.99'},{ic:'💰',c:300,b:'+50 בונוס!',p:'₪9.99',hot:true},
+  {ic:'🏆',c:700,b:'+150 בונוס!',p:'₪19.99'},{ic:'👑',c:2000,b:'+500 בונוס!',p:'₪49.99'},
+];
+const bdgs=[
+  {e:'🔥',n:'First Glow',ok:true},{e:'👑',n:'Trendsetter',ok:true},
+  {e:'💜',n:'1K Likes',ok:true},{e:'🌟',n:'Viral Post',ok:true},
+  {e:'🎬',n:'Video Star',ok:false},{e:'💎',n:'Diamond',ok:false},
+  {e:'🪩',n:'Y2K Master',ok:false},{e:'🚀',n:'10K Likes',ok:false},
+];
+
+// INIT
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('splash').classList.add('out');
+    setTimeout(()=>{
+      document.getElementById('app').classList.add('on');
+      buildAll();
+    },500);
+  },2600);
+});
+
+function buildAll(){
+  buildFeed(); buildFilterChips(); buildTracks();
+  buildBonusPills(); buildMissions('vm',videoM);
+  buildMissions('pm',photoM); buildMissions('sm',socialM);
+  buildShop(); buildBadges();
+}
+
+// FEED
+function buildFeed(){
+  const c=document.getElementById('feed-wrap'); c.innerHTML='';
+  feedPosts.forEach((p,i)=>{
+    const d=document.createElement('div'); d.className='fpost';
+    d.innerHTML=`
+      <div class="fp-bg ${p.bg}">${p.em}</div>
+      <div class="fp-grad"></div>
+      ${p.trend?'<div class="fp-trend">🔥 טרנד</div>':''}
+      <div class="fp-content">
+        <div class="fp-user">
+          <div class="fp-av" style="background:linear-gradient(135deg,var(--g${(i%5)+1}),var(--g4))">${p.av}</div>
+          <div>
+            <div class="fp-uname">${p.user}</div>
+            <div class="fp-follow" onclick="follow(${i},event)">+ עקוב</div>
+          </div>
+        </div>
+        <div class="fp-cap">${p.cap}</div>
+        <div class="fp-tags">${p.tags}</div>
+        <div class="fp-music"><div class="fp-disc">🎵</div>${p.music}</div>
+      </div>
+      <div class="fp-actions">
+        <div class="fpa${likes['l'+i]?' liked':''}" onclick="likeP(${i},event)">
+          <div class="fpa-icon">${likes['l'+i]?'❤️':'🤍'}</div>
+          <div class="fpa-count">${((likes['lc'+i]||p.l)/1000).toFixed(1)}K</div>
+        </div>
+        <div class="fpa" onclick="toast('💬 תגובות בקרוב!')">
+          <div class="fpa-icon">💬</div>
+          <div class="fpa-count">${p.c}</div>
+        </div>
+        <div class="fpa" onclick="shareP(${i})">
+          <div class="fpa-icon">📤</div>
+          <div class="fpa-count">שתף</div>
+        </div>
+        <div class="fpa" onclick="toast('🎵 '+feedPosts[${i}].music+' נוסף!')">
+          <div class="fpa-icon">🎵</div>
+          <div class="fpa-count">שיר</div>
+        </div>
+      </div>`;
+    c.appendChild(d);
+  });
+}
+
+function likeP(i,e){
+  if(likes['l'+i]) return;
+  likes['l'+i]=true; likes['lc'+i]=(likes['lc'+i]||feedPosts[i].l)+1;
+  buildFeed(); burst(e,'❤️'); addXP(3); addCoins(1);
+}
+function follow(i,e){ burst(e,'💜'); addXP(5); toast(`💜 עוקב! +5 XP`); }
+function shareP(i){ addXP(10); addCoins(3); toast('📤 שותף! +3 🪙 +10 XP'); }
+
+// TABS
+function switchTab(id){
+  document.querySelectorAll('.nb').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.querySelector(`.nb[data-t="${id}"]`)?.classList.add('active');
+  document.getElementById(`sc-${id}`)?.classList.add('on');
+  document.getElementById('main').scrollTop=0;
+  document.querySelector('.topbar').style.display=id==='feed'?'none':'flex';
+  if(id==='shop') document.getElementById('shcoins').textContent=coins;
+}
+document.querySelectorAll('.nb').forEach(n=>n.addEventListener('click',()=>switchTab(n.dataset.t)));
+document.querySelector('.topbar').style.display='none';
+
+// CREATE TABS
+function setCT(mode,el){
+  document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('ct-photo').style.display=mode==='photo'?'block':'none';
+  document.getElementById('ct-video').style.display=mode==='video'?'block':'none';
+}
+
+// BONUS PILLS
+function buildBonusPills(){
+  const c=document.getElementById('bpills'); c.innerHTML='';
+  bonusTypes.forEach(b=>{
+    const d=document.createElement('div');
+    d.className=`bp${selBonus===b.id?' sel':''}`;
+    d.textContent=`${b.label} +${b.xp} XP`;
+    d.onclick=()=>{ selBonus=b.id; buildBonusPills(); toast(`${b.label} נבחר! +${b.xp} XP בונוס`); };
+    c.appendChild(d);
+  });
+}
+
+// FILTER CHIPS
+function buildFilterChips(){
+  const c=document.getElementById('fchips'); c.innerHTML='';
+  filters.forEach(f=>{
+    const isOwned=owned.includes(f.id)||f.free;
+    const d=document.createElement('div');
+    d.className=`fchip${f.id===selFilter?' on':''}${!isOwned?' lock':''}`;
+    d.textContent=f.name+(isOwned?'':` 🔒${f.cost}🪙`);
+    d.onclick=()=>pickFilter(f.id,isOwned,f.cost);
+    c.appendChild(d);
+  });
+}
+function pickFilter(id,isOwned,cost){
+  if(!isOwned){
+    if(coins>=cost){if(!confirm(`לקנות ב-${cost} 🪙?`)) return; coins-=cost; owned.push(id); updateStats(); toast('✅ פילטר נוסף!'); buildFilterChips();}
+    else{toast('⚠️ אין מספיק 🪙!'); setTimeout(()=>switchTab('shop'),1000);}
+    return;
+  }
+  selFilter=id; buildFilterChips();
+  document.getElementById('flayer').style.background=filters.find(x=>x.id===id)?.bg||'';
+  document.getElementById('ai-box').style.display='none';
+  document.getElementById('gen-wrap').style.display='block';
+}
+
+// TRACKS
+function buildTracks(){
+  const c=document.getElementById('tracks'); c.innerHTML='';
+  tracks.forEach((t,i)=>{
+    const d=document.createElement('div'); d.className=`track${selMusic===i?' sel':''}`;
+    d.innerHTML=`<div class="track-disc">${t.em}</div><div class="track-info"><div class="track-name">${t.name}</div><div class="track-artist">${t.artist}</div>${selMusic===i?'<div class="track-now">▶ מנגן...</div>':''}</div><div class="track-dur">${t.dur}</div>`;
+    d.onclick=()=>{selMusic=i; buildTracks(); document.getElementById('vidsub').textContent=`🎵 ${t.name} נבחר! עכשיו צלם 🎬`; toast(`🎵 ${t.name} נבחר!`);};
+    c.appendChild(d);
+  });
+}
+
+// FILE HANDLING
+function handleImg(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=document.getElementById('prev-img');
+    img.src=e.target.result; img.style.display='block';
+    document.getElementById('prev-icon').style.display='none';
+    document.querySelector('#ct-photo .upload-z').style.display='none';
+    document.getElementById('prev-area').style.display='block';
+    document.getElementById('gen-wrap').style.display='block';
+    fileUp=true;
+    document.getElementById('flayer').style.background=filters.find(x=>x.id===selFilter)?.bg||'';
+    if(selBonus){ const b=bonusTypes.find(x=>x.id===selBonus); if(b){addXP(b.xp); toast(`${b.label} +${b.xp} XP בונוס! 🎉`);} }
+  };
+  reader.readAsDataURL(file);
+}
+function retake(){
+  document.getElementById('prev-area').style.display='none';
+  document.querySelector('#ct-photo .upload-z').style.display='block';
+  document.getElementById('ai-box').style.display='none';
+  document.getElementById('gen-wrap').style.display='none';
+  document.getElementById('prev-img').style.display='none';
+  document.getElementById('fi').value=''; fileUp=false;
+}
+function handleVid(input){
+  if(!input.files[0]) return;
+  document.querySelector('#ct-video .upload-z').style.display='none';
+  document.getElementById('vid-ready').style.display='block';
+  document.getElementById('vrc-s').textContent=selMusic!==null?`🎵 ${tracks[selMusic].name} – ${tracks[selMusic].artist}`:'ללא מוזיקה';
+  addXP(30); addCoins(15); toast('🎬 סרטון הועלה! +15 🪙 +30 XP');
+  const vm2=videoM.find(m=>!m.done);
+  if(vm2){vm2.p=1;vm2.done=true; setTimeout(()=>showMC(vm2),800); buildMissions('vm',videoM);}
+}
+
+// GENERATE
+function genGlow(){
+  if(!fileUp){
+    document.getElementById('prev-area').style.display='block';
+    document.getElementById('prev-icon').style.display='block';
+    document.querySelector('#ct-photo .upload-z').style.display='none';
+    fileUp=true;
+  }
+  document.getElementById('ai-box').style.display='block';
+  document.getElementById('ai-ld').style.display='block';
+  document.getElementById('ai-inner').style.display='none';
+  document.getElementById('gen-wrap').style.display='none';
+  const res=aiData[selFilter]||aiData.none;
+  setTimeout(()=>{
+    document.getElementById('ai-ld').style.display='none';
+    document.getElementById('ai-inner').style.display='block';
+    document.getElementById('ai-tags').innerHTML=res.tags.map(t=>`<span class="ai-tag">${t}</span>`).join('');
+    document.getElementById('ai-desc').textContent=res.desc;
+    addXP(20); addCoins(10); toast('🎉 GlowUp מוכן! +10 🪙 +20 XP');
+  },2400);
+}
+function shareIt(p){ addXP(15); addCoins(5); toast(`📤 שותף ל-${p}! +5 🪙 +15 XP`); }
+function shareVid(p){ addXP(20); addCoins(8); toast(`📤 סרטון ל-${p}! +8 🪙 +20 XP`); }
+
+// MISSIONS
+function buildMissions(cid,data){
+  const c=document.getElementById(cid); c.innerHTML='';
+  data.forEach(m=>{
+    const pct=Math.min(Math.round((m.p/m.t)*100),100);
+    const d=document.createElement('div');
+    d.className=`mcard${m.done?' done':''}${m.type==='v'?' video':''}`;
+    d.innerHTML=`
+      ${m.type==='v'&&!m.done?`<div class="mcard-music">🎵 ${m.music}</div>`:''}
+      <div class="mcard-top">
+        <div class="mcard-icon">${m.icon}</div>
+        <div><div class="mcard-title">${m.title}</div><div class="mcard-desc">${m.desc}</div></div>
+      </div>
+      <div class="mrewards">
+        <span class="mrew mr-c">+${m.coins} 🪙</span>
+        <span class="mrew mr-x">+${m.xp} XP</span>
+        ${m.done?'<span class="mrew mr-d">✅ הושלם</span>':''}
+      </div>
+      <div class="mbar"><div class="mbar-fill${m.done?' done':''}" style="width:${m.done?100:pct}%"></div></div>`;
+    if(!m.done){
+      d.onclick=()=>{
+        if(m.type==='v'){ switchTab('create'); setCT('video',document.querySelectorAll('.ctab')[1]); toast('🎬 בחר מוזיקה וצלם!'); }
+        else completeMission(m,cid,data);
+      };
+    }
+    c.appendChild(d);
+  });
+}
+
+function completeMission(m,cid,data){
+  if(m.done) return;
+  m.p=Math.min(m.p+1,m.t);
+  if(m.p>=m.t){m.done=true; addCoins(m.coins); addXP(m.xp); showMC(m);}
+  else{buildMissions(cid,data); toast(`📈 ${m.p}/${m.t}`);}
+}
+function showMC(m){
+  document.getElementById('mc-em').textContent=m.icon;
+  document.getElementById('mc-t').textContent=`${m.title} – הושלמה! 🎉`;
+  document.getElementById('mc-s').textContent='מדהים! קיבלת:';
+  document.getElementById('mc-c').textContent=`+${m.coins} 🪙`;
+  document.getElementById('mc-x').textContent=`+${m.xp} XP`;
+  document.getElementById('mc-ov').classList.add('show');
+}
+function closeMC(){
+  document.getElementById('mc-ov').classList.remove('show');
+  buildMissions('vm',videoM); buildMissions('pm',photoM); buildMissions('sm',socialM);
+}
+
+// AI TRENDS
+function doTrend(tag){ addXP(10); addCoins(5); toast(`🔥 ${tag} נוסף למשימות! +5 🪙 +10 XP`); }
+
+// SHOP
+function buildShop(){
+  const pg=document.getElementById('packs'); pg.innerHTML='';
+  shopPacks.forEach(p=>{
+    const d=document.createElement('div'); d.className=`pack${p.hot?' hot':''}`;
+    d.innerHTML=`${p.hot?'<div class="pack-hb">🔥 פופולרי</div>':''}<span class="pack-ic">${p.ic}</span><div class="pack-c">${p.c}</div>${p.b?`<div class="pack-b">${p.b}</div>`:''}<div class="pack-p">${p.p}</div>`;
+    d.onclick=()=>toast(`💳 רכישה: ${p.c}🪙 ב-${p.p} – בקרוב!`);
+    pg.appendChild(d);
+  });
+  const ig=document.getElementById('items'); ig.innerHTML='';
+  shopItems.forEach(item=>{
+    const isOwned=owned.includes(item.id);
+    const d=document.createElement('div'); d.className=`sitem${isOwned?' own':''}`;
+    d.innerHTML=`<span class="si-e">${item.em}</span><div class="si-n">${item.name}</div><div class="si-p${isOwned?' ot':''}">${isOwned?'✅ יש לך':item.cost+' 🪙'}</div>`;
+    d.onclick=()=>{
+      if(isOwned){toast('✅ כבר יש לך!');return;}
+      if(coins<item.cost){toast(`⚠️ חסרים ${item.cost-coins} 🪙!`);return;}
+      if(!confirm(`לקנות ${item.em} ${item.name} ב-${item.cost} 🪙?`)) return;
+      coins-=item.cost; owned.push(item.id); updateStats(); buildShop(); toast(`✅ ${item.em} נוסף!`);
+    };
+    ig.appendChild(d);
+  });
+}
+
+// BADGES
+function buildBadges(){
+  const c=document.getElementById('bdgs'); c.innerHTML='';
+  bdgs.forEach(b=>{
+    const d=document.createElement('div'); d.className=`bdg${b.ok?' earn':''}`;
+    d.innerHTML=`<span class="bdg-e">${b.e}</span><div class="bdg-n">${b.n}</div>`;
+    d.onclick=()=>toast(b.ok?`${b.e} "${b.n}" – שלך!`:`🔒 ${b.n} – עדיין לא`);
+    c.appendChild(d);
+  });
+}
+
+// STATS
+function addXP(a){
+  xp+=a;
+  while(xp>=xpMax){xp-=xpMax;level++;xpMax=Math.floor(xpMax*1.2);toast(`🏆 LEVEL UP! Level ${level}! 🎉`);}
+  updateStats();
+}
+function addCoins(a){ coins+=a; updateStats(); }
+function updateStats(){
+  document.getElementById('cd').textContent=coins;
+  document.getElementById('xd').textContent=xp;
+  document.getElementById('pxp').textContent=xp;
+  document.getElementById('pxplbl').textContent=`${xp}/${xpMax} XP`;
+  document.getElementById('pxpbar').style.width=(xp/xpMax*100)+'%';
+  document.getElementById('plvl').textContent=level;
+  document.getElementById('plvl2').textContent=level;
+  const sc=document.getElementById('shcoins');
+  if(sc) sc.textContent=coins;
+}
+
+// INSTALL
+function installGuide(){
+  const ua=navigator.userAgent;
+  if(/iPhone|iPad/i.test(ua)) toast('📲 iOS: לחץ ⬆️ → "הוסף למסך הבית"');
+  else toast('📲 Android: תפריט ⋮ → "הוסף למסך הבית"');
+}
+
+// TOAST
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// BURST
+function burst(e,em){
+  const el=document.createElement('div'); el.className='cburst'; el.textContent=em;
+  const x=e.clientX||100; const y=e.clientY||100;
+  el.style.cssText=`left:${x-10}px;top:${y-10}px;`;
+  document.body.appendChild(el); setTimeout(()=>el.remove(),900);
+}
+
+// SW
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+
+</body>
+</html>
