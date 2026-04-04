@@ -1,0 +1,16 @@
+{
+  "name": "GlowUp App",
+  "short_name": "GlowUp",
+  "description": "הפוך את התמונות שלך ליצירות אמנות עם פילטרים של AI",
+  "start_url": "/glowup-app/index.html",
+  "display": "standalone",
+  "background_color": "#07070F",
+  "theme_color": "#FF2D78",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/color/512/sparkling.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
