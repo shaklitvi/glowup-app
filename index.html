@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GlowUp - AI Photo Magic</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            --bg-color: #07070F;
+            --primary-color: #FF2D78; /* ורוד פוקסיה */
+            --secondary-color: #FFAC2D; /* כתום זהב */
+            --text-color: #FFFFFF;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding-bottom: env(safe-area-inset-bottom); /* לאייפון X ומעלה */
+        }
+
+        /* אנימציית כניסה */
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(255, 45, 120, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(255, 45, 120, 0.6); }
+            100% { box-shadow: 0 0 5px rgba(255, 45, 120, 0.2); }
+        }
+
+        .app-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 20px;
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        .header {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .logo-text {
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin: 0;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(255, 45, 120, 0.3);
+        }
+
+        .tagline {
+            font-size: 1rem;
+            opacity: 0.7;
+            margin: 5px 0 0 0;
+            font-weight: 300;
+        }
+
+        /* מסגרת תמונה חיה ("זכוכית") */
+        .preview-area {
+            width: 280px;
+            height: 280px;
+            background-color: var(--glass-bg);
+            border: 2px solid var(--glass-border);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            animation: glow 3s infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-area::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, transparent, transparent, rgba(255, 255, 255, 0.1));
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        .icon-sparkle {
+            font-size: 4rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .prompt-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            position: relative;
+        }
+
+        /* כפתור העלאה משי */
+        .action-area {
+            width: 100%;
+            max-width: 320px;
+            margin-bottom: 20px;
+        }
+
+        .upload-btn {
+            width: 100%;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 18px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255, 45, 120, 0.4);
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .upload-btn:active {
+            transform: scale(0.97);
+            box-shadow: 0 5px 15px rgba(255, 45, 120, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header">
+            <h1 class="logo-text">GlowUp</h1>
+            <p class="tagline">הקסם של AI בתמונות שלך</p>
+        </div>
+
+        <div class="preview-area">
+            <div class="icon-sparkle">✨</div>
+            <div class="prompt-text">גע כדי להוסיף קסם</div>
+        </div>
+
+        <div class="action-area">
+            <input type="file" id="upload" hidden accept="image/*">
+            <button class="upload-btn" onclick="document.getElementById('upload').click()">העלה תמונה ✨</button>
+        </div>
+    </div>
+
+    <script>
+        // הקוד הבסיסי לפתיחת המצלמה
+        document.getElementById('upload').onchange = function() {
+            if (this.files && this.files[0]) {
+                const previewText = document.querySelector('.prompt-text');
+                const sparkle = document.querySelector('.icon-sparkle');
+                const previewArea = document.querySelector('.preview-area');
+                
+                previewArea.innerHTML = '<div class="icon-sparkle">🚀</div><div class="prompt-text">התמונה נשלחת ל-AI...</div>';
+                
+                alert('התמונה הועלתה! השלב הבא: חיבור פילטר ה-AI הראשון');
+            }
+        };
+    </script>
+</body>
+</html>
