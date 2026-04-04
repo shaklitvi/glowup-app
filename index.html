@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+    <title>GlowUp AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff3b5c; /* TikTok Red */
+            --secondary: #00f2ea; /* TikTok Cyan */
+            --bg: #000000;
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Assistant', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* App Header */
+        header {
+            padding: 60px 20px 20px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .tagline {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        /* Main Content Area */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .magic-card {
+            width: 100%;
+            max-width: 350px;
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 40px 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .upload-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .upload-btn-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Bottom Nav Bar (TikTok Style) */
+        nav {
+            height: 85px;
+            background: rgba(0,0,0,0.9);
+            border-top: 0.5px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 20px; /* Safe area for iPhone */
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            opacity: 0.6;
+        }
+
+        .nav-item.active {
+            opacity: 1;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        /* The TikTok Plus Button */
+        .create-btn {
+            position: relative;
+            width: 45px;
+            height: 30px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .create-btn::before {
+            content: '';
+            position: absolute;
+            left: -3px;
+            width: 100%;
+            height: 100%;
+            background: var(--secondary);
+            border-radius: 8px;
+            z-index: -1;
+        }
+
+        .create-btn::after {
+            content: '';
+            position: absolute;
+            right: -3px;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            border-radius: 8px;
+            z-index: -1;
+        }
+
+        /* Hidden Input */
+        #file-upload {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">GlowUp</div>
+        <div class="tagline">הקסם של ה-AI בתמונות שלך</div>
+    </header>
+
+    <main>
+        <div class="magic-card" onclick="document.getElementById('file-upload').click()">
+            <span class="upload-icon">✨</span>
+            <div class="upload-btn-label">לחץ כאן להוספת קסם</div>
+            <p style="font-size: 12px; opacity: 0.5; margin-top: 15px;">העלה תמונה ותן ל-AI לעשות את השאר</p>
+            <input type="file" id="file-upload" accept="image/*">
+        </div>
+    </main>
+
+    <nav>
+        <div class="nav-item active">
+            <span>🏠</span>
+            <span>ראשי</span>
+        </div>
+        <div class="nav-item">
+            <span>🔍</span>
+            <span>גלה</span>
+        </div>
+        <div class="create-btn" onclick="document.getElementById('file-upload').click()">+</div>
+        <div class="nav-item">
+            <span>💬</span>
+            <span>הודעות</span>
+        </div>
+        <div class="nav-item">
+            <span>👤</span>
+            <span>פרופיל</span>
+        </div>
+    </nav>
+
+    <script>
+        // פונקציונליות בסיסית להעלאה
+        document.getElementById('file-upload').onchange = function() {
+            if(this.files && this.files[0]) {
+                alert("התמונה התקבלה! הקסם מתחיל...");
+                // כאן נחבר בעתיד את הלוגיקה של ה-AI
+            }
+        };
+    </script>
+</body>
+</html>
