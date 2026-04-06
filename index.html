@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a12">
+<title>GlowUp ✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Noto+Sans+Hebrew:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   RESET + ROOT
+═══════════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { height:-webkit-fill-available; font-size:16px; }
+body {
+  font-family:'Noto Sans Hebrew',sans-serif;
+  background:#0a0a12; color:#f0f0ff;
+  min-height:100vh; min-height:-webkit-fill-available;
+}
+/* Force Safari to keep colors */
+input, button, textarea, select {
+  font-family:'Noto Sans Hebrew',sans-serif;
+  -webkit-appearance:none !important;
+  appearance:none !important;
+  outline:none;
+  border-radius:0;
+}
+
+/* ═══════════════════════════════════════
+PAGES — simple show/hide
+═══════════════════════════════════════ */
+.page { display:none; }
+.page.on { display:flex; flex-direction:column; min-height:100vh; min-height:-webkit-fill-available; }
+
+/* ═══════════════════════════════════════
+── PAGE: ONBOARDING ──
+═══════════════════════════════════════ */
+#pg-onboard {
+background:#0a0a12;
+align-items:center;
+justify-content:space-between;
+padding: env(safe-area-inset-top,20px) 0 0;
+overflow-y:auto;
+-webkit-overflow-scrolling:touch;
+}
+
+.ob-top {
+width:100%; text-align:center;
+padding:40px 24px 20px;
+position:relative;
+}
+
+/* Neon ring background */
+.ob-ring {
+width:220px; height:220px; border-radius:50%;
+background:conic-gradient(from 0deg, #ff2d78, #b44dff, #00e5ff, #ff2d78);
+margin:0 auto 0;
+padding:4px;
+animation:spinSlow 8s linear infinite;
+box-shadow:0 0 60px rgba(255,45,120,.4), 0 0 120px rgba(180,77,255,.2);
+}
+@keyframes spinSlow { to{transform:rotate(360deg)} }
+
+.ob-ring-inner {
+width:100%; height:100%; border-radius:50%;
+background:#0a0a12;
+display:flex; align-items:center; justify-content:center;
+flex-direction:column; gap:4px;
+}
+
+.ob-logo-emoji { font-size:56px; animation:pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+
+.ob-logo-text {
+font-family:‘Syne’,sans-serif; font-size:28px; font-weight:800;
+background:linear-gradient(135deg,#ff2d78,#b44dff,#00e5ff);
+-webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+
+.ob-headline {
+font-family:‘Syne’,sans-serif; font-size:26px; font-weight:800;
+line-height:1.25; margin-top:28px; margin-bottom:10px;
+}
+.ob-headline span { background:linear-gradient(135deg,#ff2d78,#b44dff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+.ob-sub { color:#7070a0; font-size:15px; line-height:1.6; }
+
+/* Feature pills */
+.ob-features {
+display:flex; flex-direction:column; gap:10px;
+padding:0 24px; width:100%;
+}
+.ob-feat {
+display:flex; align-items:center; gap:14px;
+background:#14142a; border-radius:18px;
+padding:14px 16px; border:1px solid rgba(255,255,255,.07);
+}
+.ob-feat-icon {
+width:44px; height:44px; border-radius:14px; flex-shrink:0;
+display:flex; align-items:center; justify-content:center; font-size:22px;
+}
+.ob-feat-text h4 { font-size:14px; font-weight:700; margin-bottom:2px; }
+.ob-feat-text p { font-size:12px; color:#7070a0; }
+
+/* CTA area */
+.ob-cta {
+width:100%; padding:24px 24px calc(env(safe-area-inset-bottom,16px) + 24px);
+display:flex; flex-direction:column; gap:12px; background:#0a0a12;
+border-top:1px solid rgba(255,255,255,.06);
+}
+
+.btn-primary {
+display:block; width:100%;
+background:#ff2d78 !important;
+background-image:linear-gradient(135deg,#ff2d78 0%,#b44dff 100%) !important;
+color:#fff !important; border:none !important;
+border-radius:20px !important; padding:18px !important;
+font-size:17px !important; font-weight:800 !important;
+font-family:‘Syne’,sans-serif !important;
+text-align:center; cursor:pointer;
+box-shadow:0 8px 32px rgba(255,45,120,.45);
+transition:transform .15s, opacity .15s;
+letter-spacing:.3px;
+}
+.btn-primary:active { transform:scale(.96); opacity:.9; }
+
+.btn-secondary {
+display:block; width:100%;
+background:transparent !important;
+color:#a0a0d0 !important; border:1.5px solid rgba(255,255,255,.12) !important;
+border-radius:20px !important; padding:16px !important;
+font-size:15px !important; font-weight:700 !important;
+font-family:‘Noto Sans Hebrew’,sans-serif !important;
+text-align:center; cursor:pointer;
+transition:all .2s;
+}
+.btn-secondary:active { opacity:.7; }
+
+/* ═══════════════════════════════════════
+── PAGE: AUTH ──
+═══════════════════════════════════════ */
+#pg-auth {
+background:#0a0a12;
+overflow-y:auto;
+-webkit-overflow-scrolling:touch;
+align-items:stretch;
+}
+
+.auth-header {
+display:flex; align-items:center; gap:12px;
+padding: calc(env(safe-area-inset-top,20px) + 12px) 20px 12px;
+}
+.back-circle {
+width:40px; height:40px; border-radius:50%;
+background:#14142a; border:1px solid rgba(255,255,255,.1);
+display:flex; align-items:center; justify-content:center;
+font-size:18px; cursor:pointer; flex-shrink:0;
+color:#f0f0ff;
+}
+.auth-header-title { font-family:‘Syne’,sans-serif; font-size:20px; font-weight:800; }
+
+/* Mode toggle */
+.auth-mode-toggle {
+display:flex; background:#14142a; border-radius:16px;
+padding:5px; margin:20px 24px 0; gap:4px;
+}
+.mode-btn {
+flex:1; padding:12px 8px; border:none !important;
+border-radius:12px !important; font-size:14px !important; font-weight:700 !important;
+cursor:pointer; transition:all .25s; font-family:‘Noto Sans Hebrew’,sans-serif !important;
+/* default: inactive */
+background:transparent !important; color:#6060a0 !important;
+}
+.mode-btn.active {
+background:linear-gradient(135deg,#ff2d78,#b44dff) !important;
+color:#ffffff !important;
+box-shadow:0 4px 16px rgba(255,45,120,.4) !important;
+}
+
+/* Form */
+.auth-form { padding:24px; display:flex; flex-direction:column; gap:0; }
+
+.field-group { margin-bottom:14px; }
+.field-label { font-size:12px; font-weight:700; color:#7070a0; margin-bottom:6px; display:block; letter-spacing:.5px; text-transform:uppercase; }
+
+.field-input {
+display:block; width:100%;
+background:#14142a !important; color:#f0f0ff !important;
+border:2px solid rgba(255,255,255,.08) !important;
+border-radius:16px !important; padding:15px 18px !important;
+font-size:16px !important; /* 16px = no iOS zoom */
+font-family:‘Noto Sans Hebrew’,sans-serif !important;
+transition:border-color .2s;
+-webkit-text-fill-color:#f0f0ff !important;
+}
+.field-input:focus { border-color:#b44dff !important; }
+.field-input::placeholder { color:#4040608c; -webkit-text-fill-color:#404060; }
+
+.auth-error-box {
+background:rgba(255,45,120,.12); border:1.5px solid rgba(255,45,120,.35);
+border-radius:14px; padding:12px 16px; margin-bottom:14px;
+color:#ff6090; font-size:14px; font-weight:600; display:none;
+animation:shake .4s ease;
+}
+.auth-error-box.show { display:block; }
+@keyframes shake {
+0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)}
+40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)}
+}
+
+.auth-submit {
+display:block; width:100%;
+background:#ff2d78 !important;
+background-image:linear-gradient(135deg,#ff2d78,#b44dff) !important;
+color:#fff !important; border:none !important;
+border-radius:18px !important; padding:18px !important;
+font-size:17px !important; font-weight:800 !important;
+font-family:‘Syne’,sans-serif !important;
+cursor:pointer; text-align:center;
+box-shadow:0 8px 28px rgba(255,45,120,.4);
+transition:transform .15s, opacity .15s;
+margin-top:6px;
+}
+.auth-submit:active { transform:scale(.97); }
+.auth-submit:disabled { opacity:.55; cursor:not-allowed; transform:none; }
+
+.auth-or {
+display:flex; align-items:center; gap:12px;
+margin:18px 0; color:#404060; font-size:13px;
+}
+.auth-or::before,.auth-or::after { content:’’; flex:1; height:1px; background:rgba(255,255,255,.07); }
+
+.btn-google {
+display:flex; align-items:center; justify-content:center; gap:10px;
+width:100%; padding:15px !important;
+background:#14142a !important; color:#d0d0ff !important;
+border:1.5px solid rgba(255,255,255,.1) !important;
+border-radius:16px !important; font-size:15px !important; font-weight:600 !important;
+cursor:pointer; font-family:‘Noto Sans Hebrew’,sans-serif !important;
+transition:all .2s;
+}
+.btn-google:active { opacity:.75; }
+
+.auth-bottom-pad { height:calc(env(safe-area-inset-bottom,16px) + 32px); }
+
+/* ═══════════════════════════════════════
+── APP SHELL ──
+═══════════════════════════════════════ */
+#pg-app {
+background:#0a0a12;
+position:relative;
+}
+
+/* Header */
+.app-bar {
+position:sticky; top:0; z-index:100;
+padding:calc(env(safe-area-inset-top,14px) + 10px) 18px 10px;
+background:rgba(10,10,18,.85);
+backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+border-bottom:1px solid rgba(255,255,255,.05);
+display:flex; align-items:center; justify-content:space-between;
+}
+.app-logo {
+font-family:‘Syne’,sans-serif; font-size:22px; font-weight:800;
+background:linear-gradient(135deg,#ff2d78,#b44dff,#00e5ff);
+-webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.app-bar-right { display:flex; gap:8px; align-items:center; }
+.stat-pill {
+background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+border-radius:20px; padding:5px 12px; font-size:12px; font-weight:700;
+color:#f0f0ff; display:flex; align-items:center; gap:4px;
+}
+
+/* Scrollable main area */
+.app-scroll {
+flex:1; overflow-y:auto; overflow-x:hidden;
+-webkit-overflow-scrolling:touch;
+padding-bottom:calc(env(safe-area-inset-bottom,0px) + 72px);
+}
+.app-scroll::-webkit-scrollbar { display:none; }
+
+/* Bottom Nav */
+.bottom-nav {
+position:fixed; bottom:0; left:0; right:0; z-index:200;
+background:rgba(10,10,18,.92);
+backdrop-filter:blur(28px); -webkit-backdrop-filter:blur(28px);
+border-top:1px solid rgba(255,255,255,.07);
+display:flex;
+padding-bottom:env(safe-area-inset-bottom,0px);
+height:calc(60px + env(safe-area-inset-bottom,0px));
+}
+.nav-item {
+flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+gap:3px; cursor:pointer; border:none !important; background:none !important;
+color:#505070; font-size:10px; font-weight:700;
+font-family:‘Noto Sans Hebrew’,sans-serif !important;
+transition:color .2s; padding:8px 0;
+letter-spacing:.2px;
+}
+.nav-item .nicon { font-size:22px; line-height:1; transition:transform .2s; }
+.nav-item.on { color:#ff2d78; }
+.nav-item.on .nicon { transform:scale(1.18); }
+.nav-center .nicon {
+background:linear-gradient(135deg,#ff2d78,#b44dff);
+border-radius:16px; width:48px; height:48px;
+display:flex; align-items:center; justify-content:center;
+font-size:24px; margin-top:-14px;
+box-shadow:0 4px 20px rgba(255,45,120,.5);
+}
+
+/* ═══════════════════════════════════════
+── TAB: FEED ──
+═══════════════════════════════════════ */
+/* Stories */
+.stories-row {
+display:flex; gap:12px; padding:14px 16px;
+overflow-x:auto; -webkit-overflow-scrolling:touch;
+scrollbar-width:none;
+}
+.stories-row::-webkit-scrollbar { display:none; }
+
+.story-item { flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:5px; cursor:pointer; }
+.story-ring {
+width:64px; height:64px; border-radius:50%; padding:2.5px;
+background:linear-gradient(135deg,#ff2d78,#b44dff,#00e5ff);
+}
+.story-ring.unseen { background:rgba(255,255,255,.12); }
+.story-ring-inner {
+width:100%; height:100%; border-radius:50%; background:#14142a;
+display:flex; align-items:center; justify-content:center; font-size:26px;
+border:2px solid #0a0a12; overflow:hidden;
+}
+.story-ring-inner img { width:100%; height:100%; object-fit:cover; }
+.story-add-ring { position:relative; }
+.story-add-badge {
+position:absolute; bottom:0; right:0;
+width:20px; height:20px; border-radius:50%; background:#ff2d78;
+border:2px solid #0a0a12; display:flex; align-items:center; justify-content:center;
+font-size:13px; font-weight:900; color:#fff; line-height:1;
+}
+.story-name { font-size:11px; color:#606080; max-width:64px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* Post card */
+.post-card { border-bottom:1px solid rgba(255,255,255,.05); }
+.post-head { display:flex; align-items:center; gap:10px; padding:12px 14px 8px; }
+.post-av {
+width:40px; height:40px; border-radius:50%; background:#14142a;
+display:flex; align-items:center; justify-content:center; font-size:20px;
+overflow:hidden; flex-shrink:0; position:relative;
+}
+.post-av::after {
+content:’’; position:absolute; inset:-2px; border-radius:50%;
+background:linear-gradient(135deg,#ff2d78,#b44dff); z-index:-1;
+}
+.post-av img { width:100%; height:100%; object-fit:cover; }
+.post-user-info { flex:1; }
+.post-uname { font-weight:700; font-size:14px; }
+.post-meta-row { font-size:11px; color:#606080; margin-top:1px; }
+.post-ai-badge {
+background:rgba(180,77,255,.15); border:1px solid rgba(180,77,255,.35);
+border-radius:20px; padding:5px 12px; font-size:11px; font-weight:700; color:#b44dff;
+}
+.post-img { width:100%; aspect-ratio:4/5; background:#14142a; overflow:hidden; position:relative; display:flex; align-items:center; justify-content:center; font-size:72px; }
+.post-img img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.post-actions { display:flex; align-items:center; gap:14px; padding:10px 14px 6px; }
+.act { background:none !important; border:none !important; color:#f0f0ff !important; font-size:22px; cursor:pointer; padding:0; line-height:1; transition:transform .15s; }
+.act:active { transform:scale(.85); }
+.act.liked { filter:none; }
+.act-count { font-size:13px; font-weight:700; color:#f0f0ff; }
+.post-spacer { flex:1; }
+.post-caption { padding:2px 14px 12px; font-size:13px; line-height:1.55; }
+.post-caption b { font-weight:700; }
+.post-tags { color:#00c8ff; }
+
+/* ═══════════════════════════════════════
+── TAB: CREATE ──
+═══════════════════════════════════════ */
+.create-wrap { padding:16px; }
+.create-section-title {
+font-family:‘Syne’,sans-serif; font-size:16px; font-weight:800;
+margin-bottom:4px;
+}
+.create-section-sub { font-size:13px; color:#606080; margin-bottom:14px; }
+
+/* Upload zone */
+.upload-zone {
+border:2px dashed rgba(255,45,120,.35); border-radius:24px;
+background:rgba(255,45,120,.04); padding:50px 20px;
+text-align:center; cursor:pointer; transition:all .2s;
+}
+.upload-zone:active { border-color:#ff2d78; background:rgba(255,45,120,.09); }
+.uz-emoji { font-size:48px; margin-bottom:10px; }
+.uz-title { font-family:‘Syne’,sans-serif; font-size:17px; font-weight:800; margin-bottom:5px; }
+.uz-sub { font-size:13px; color:#606080; }
+
+/* Preview */
+.img-preview-box { border-radius:20px; overflow:hidden; position:relative; margin-bottom:14px; }
+.img-preview-box img { width:100%; display:block; max-height:400px; object-fit:cover; }
+.img-overlay-btns { position:absolute; top:10px; left:10px; right:10px; display:flex; justify-content:space-between; }
+.overlay-btn {
+background:rgba(0,0,0,.6); backdrop-filter:blur(8px);
+border:1px solid rgba(255,255,255,.15) !important;
+border-radius:20px !important; padding:7px 14px !important;
+font-size:12px !important; font-weight:700 !important; color:#fff !important;
+cursor:pointer; font-family:inherit !important;
+}
+
+/* AI Styles */
+.styles-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:14px; }
+.style-card {
+border-radius:18px; overflow:hidden; cursor:pointer;
+border:2px solid transparent; transition:all .2s; position:relative;
+aspect-ratio:1;
+}
+.style-card.picked { border-color:#ff2d78; box-shadow:0 0 0 3px rgba(255,45,120,.25); }
+.style-card-bg {
+width:100%; height:100%; display:flex; align-items:center; justify-content:center;
+font-size:40px; flex-direction:column; gap:6px;
+}
+.style-card-name {
+position:absolute; bottom:0; left:0; right:0;
+background:linear-gradient(0,rgba(0,0,0,.8),transparent);
+padding:16px 10px 10px; font-size:13px; font-weight:700; text-align:center;
+}
+.style-card-check {
+position:absolute; top:8px; right:8px;
+background:#ff2d78; border-radius:50%;
+width:22px; height:22px; display:none;
+align-items:center; justify-content:center; font-size:12px;
+}
+.style-card.picked .style-card-check { display:flex; }
+
+/* Prompt */
+.prompt-area {
+background:#14142a; border:1.5px solid rgba(255,255,255,.08);
+border-radius:16px; padding:14px 16px; color:#f0f0ff;
+font-size:15px; font-family:‘Noto Sans Hebrew’,sans-serif;
+width:100%; resize:none; min-height:80px; margin-bottom:14px;
+display:block;
+}
+.prompt-area::placeholder { color:#404060; }
+.prompt-area:focus { border-color:#b44dff; outline:none; }
+
+/* AI run button */
+.btn-ai {
+display:flex; align-items:center; justify-content:center; gap:8px;
+width:100%; padding:16px !important;
+background:linear-gradient(135deg,#ff2d78,#b44dff) !important;
+color:#fff !important; border:none !important;
+border-radius:18px !important; font-size:16px !important; font-weight:800 !important;
+font-family:‘Syne’,sans-serif !important; cursor:pointer;
+box-shadow:0 6px 24px rgba(255,45,120,.38);
+transition:all .2s; margin-bottom:14px;
+}
+.btn-ai:active { transform:scale(.97); }
+.btn-ai:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+
+/* AI result */
+.ai-result-box {
+background:#14142a; border:1.5px solid rgba(0,229,255,.2);
+border-radius:20px; padding:18px; margin-bottom:14px;
+animation:fadeUp .35s ease;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+.result-row { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.result-title { font-family:‘Syne’,sans-serif; font-size:17px; font-weight:800; flex:1; }
+.score-badge {
+background:linear-gradient(135deg,#ff2d78,#ffd700);
+border-radius:12px; padding:6px 14px;
+font-family:‘Syne’,sans-serif; font-weight:800; font-size:16px;
+}
+.res-label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#505070; margin-bottom:6px; }
+.res-text { font-size:14px; line-height:1.6; margin-bottom:14px; }
+.tip-item { display:flex; gap:10px; margin-bottom:9px; align-items:flex-start; }
+.tip-n {
+background:linear-gradient(135deg,#ff2d78,#b44dff);
+border-radius:8px; padding:2px 8px; font-size:11px; font-weight:800; flex-shrink:0; margin-top:2px;
+}
+.caption-block {
+background:#0a0a12; border-radius:14px; padding:13px 14px;
+font-size:14px; line-height:1.6; margin-bottom:10px; position:relative;
+padding-left:68px;
+}
+.copy-btn {
+position:absolute; left:10px; top:10px;
+background:rgba(255,255,255,.07); border:none !important;
+border-radius:8px !important; padding:4px 10px !important;
+font-size:11px !important; font-weight:700 !important; color:#8080b0 !important;
+cursor:pointer; font-family:inherit !important; transition:color .2s;
+}
+.copy-btn.ok { color:#00e5ff !important; }
+.tags-wrap { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:4px; }
+.tag-chip {
+background:rgba(0,229,255,.08); border:1px solid rgba(0,229,255,.2);
+border-radius:20px; padding:5px 12px; font-size:12px; font-weight:700; color:#00c8ff;
+}
+
+/* Caption input */
+.caption-input {
+display:block; width:100%;
+background:#14142a; border:1.5px solid rgba(255,255,255,.08);
+border-radius:16px; padding:14px 16px; color:#f0f0ff;
+font-size:15px; font-family:‘Noto Sans Hebrew’,sans-serif;
+resize:none; min-height:90px; margin-bottom:14px;
+}
+.caption-input::placeholder { color:#404060; }
+.caption-input:focus { border-color:#b44dff; outline:none; }
+
+.btn-publish {
+display:block; width:100%;
+background:linear-gradient(135deg,#ff2d78,#b44dff) !important;
+color:#fff !important; border:none !important;
+border-radius:18px !important; padding:18px !important;
+font-size:16px !important; font-weight:800 !important;
+font-family:‘Syne’,sans-serif !important; cursor:pointer;
+box-shadow:0 6px 24px rgba(255,45,120,.38); transition:all .2s;
+}
+.btn-publish:disabled { opacity:.4; cursor:not-allowed; }
+
+/* ═══════════════════════════════════════
+── TAB: AI STUDIO ──
+═══════════════════════════════════════ */
+.studio-wrap { padding:16px; }
+
+.studio-hero {
+background:linear-gradient(135deg,rgba(255,45,120,.12),rgba(180,77,255,.12));
+border:1px solid rgba(180,77,255,.2); border-radius:24px;
+padding:20px; margin-bottom:18px; text-align:center;
+}
+.studio-hero-icon { font-size:40px; margin-bottom:8px; }
+.studio-hero-title { font-family:‘Syne’,sans-serif; font-size:20px; font-weight:800; margin-bottom:4px; }
+.studio-hero-sub { color:#606080; font-size:13px; }
+
+/* Bg categories */
+.bg-cats { display:flex; gap:8px; overflow-x:auto; margin-bottom:16px; padding-bottom:4px; scrollbar-width:none; }
+.bg-cats::-webkit-scrollbar { display:none; }
+.bg-cat {
+flex-shrink:0; padding:8px 16px;
+background:#14142a; border:1.5px solid rgba(255,255,255,.08);
+border-radius:20px; font-size:13px; font-weight:700; cursor:pointer;
+color:#8080b0; transition:all .2s; white-space:nowrap;
+}
+.bg-cat.on { background:rgba(255,45,120,.15); border-color:#ff2d78; color:#ff2d78; }
+
+/* Background grid */
+.bg-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:18px; }
+.bg-card {
+border-radius:18px; overflow:hidden; cursor:pointer;
+border:2px solid transparent; transition:all .2s; position:relative;
+aspect-ratio:9/14;
+}
+.bg-card.picked { border-color:#ff2d78; box-shadow:0 0 0 3px rgba(255,45,120,.25); }
+.bg-card-inner { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:40px; }
+.bg-card-label {
+position:absolute; bottom:0; left:0; right:0;
+padding:20px 10px 10px;
+background:linear-gradient(0,rgba(0,0,0,.8),transparent);
+font-size:12px; font-weight:700; text-align:center;
+}
+.bg-card-check {
+position:absolute; top:8px; right:8px;
+background:#ff2d78; border-radius:50%;
+width:24px; height:24px; display:none;
+align-items:center; justify-content:center; font-size:13px;
+}
+.bg-card.picked .bg-card-check { display:flex; }
+
+/* Prompt for bg */
+.bg-prompt-wrap { margin-bottom:14px; }
+.bg-prompt-label { font-size:13px; font-weight:700; color:#8080b0; margin-bottom:8px; }
+.bg-prompt-input {
+display:block; width:100%;
+background:#14142a; border:1.5px solid rgba(255,255,255,.08);
+border-radius:16px; padding:13px 16px; color:#f0f0ff;
+font-size:16px; font-family:‘Noto Sans Hebrew’,sans-serif;
+-webkit-text-fill-color:#f0f0ff;
+}
+.bg-prompt-input::placeholder { color:#404060; -webkit-text-fill-color:#404060; }
+.bg-prompt-input:focus { border-color:#b44dff; outline:none; }
+
+.btn-gen {
+display:flex; align-items:center; justify-content:center; gap:8px;
+width:100%; padding:16px !important;
+background:linear-gradient(135deg,#b44dff,#00e5ff) !important;
+color:#fff !important; border:none !important;
+border-radius:18px !important; font-size:16px !important; font-weight:800 !important;
+font-family:‘Syne’,sans-serif !important; cursor:pointer;
+box-shadow:0 6px 24px rgba(180,77,255,.4);
+transition:all .2s; margin-bottom:18px;
+}
+.btn-gen:active { transform:scale(.97); }
+.btn-gen:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+
+/* Generated result */
+.gen-result {
+border-radius:24px; overflow:hidden; margin-bottom:14px;
+position:relative; animation:fadeUp .4s ease;
+background:#14142a;
+}
+.gen-result-img {
+width:100%; aspect-ratio:9/16;
+display:flex; align-items:center; justify-content:center;
+font-size:80px; position:relative; overflow:hidden;
+}
+.gen-result-img img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.gen-result-overlay {
+position:absolute; bottom:0; left:0; right:0;
+padding:30px 16px 16px;
+background:linear-gradient(0,rgba(0,0,0,.7),transparent);
+}
+.gen-result-desc { font-size:13px; color:rgba(255,255,255,.9); line-height:1.5; }
+.gen-actions { display:flex; gap:8px; padding:12px; }
+.gen-action-btn {
+flex:1; padding:12px !important; border-radius:14px !important;
+background:#0a0a12 !important; border:1px solid rgba(255,255,255,.1) !important;
+color:#f0f0ff !important; font-size:13px !important; font-weight:700 !important;
+cursor:pointer; font-family:inherit !important; text-align:center;
+transition:all .2s;
+}
+.gen-action-btn:active { opacity:.7; }
+
+/* ═══════════════════════════════════════
+── TAB: TASKS ──
+═══════════════════════════════════════ */
+.tasks-wrap { padding:0 16px 16px; }
+
+.streak-banner {
+background:linear-gradient(135deg,rgba(255,215,0,.12),rgba(255,45,120,.1));
+border:1px solid rgba(255,215,0,.2); border-radius:20px;
+display:flex; align-items:center; gap:14px; padding:16px; margin-bottom:18px;
+}
+.streak-icon { font-size:38px; }
+.streak-text h3 { font-family:‘Syne’,sans-serif; font-size:17px; font-weight:800; color:#ffd700; }
+.streak-text p { font-size:13px; color:#7070a0; margin-top:2px; }
+
+.task-section-title {
+font-family:‘Syne’,sans-serif; font-size:14px; font-weight:800;
+color:#7070a0; text-transform:uppercase; letter-spacing:.8px;
+margin:16px 0 10px;
+}
+
+.task-card {
+background:#14142a; border-radius:18px; padding:14px;
+border:1.5px solid rgba(255,255,255,.07);
+display:flex; align-items:center; gap:12px;
+margin-bottom:10px; cursor:pointer; transition:all .15s;
+}
+.task-card:active { transform:scale(.98); }
+.task-card.done { opacity:.55; border-color:rgba(0,229,255,.25); }
+
+.task-icon-wrap {
+width:48px; height:48px; border-radius:15px; flex-shrink:0;
+display:flex; align-items:center; justify-content:center; font-size:24px;
+}
+.task-info { flex:1; }
+.task-title { font-weight:700; font-size:14px; margin-bottom:3px; }
+.task-desc { font-size:12px; color:#7070a0; line-height:1.4; }
+.task-reward { display:flex; flex-direction:column; align-items:flex-end; gap:4px; }
+.task-xp {
+background:linear-gradient(135deg,#ff2d78,#b44dff);
+border-radius:10px; padding:4px 10px; font-size:11px; font-weight:800; white-space:nowrap;
+}
+.task-coins { font-size:11px; font-weight:700; color:#ffd700; }
+.task-done-badge {
+background:rgba(0,229,255,.1); border:1px solid rgba(0,229,255,.3);
+border-radius:10px; padding:4px 10px; font-size:11px; font-weight:700; color:#00e5ff;
+}
+
+/* ═══════════════════════════════════════
+── TAB: PROFILE ──
+═══════════════════════════════════════ */
+.profile-cover {
+height:140px;
+background:linear-gradient(135deg,rgba(255,45,120,.5),rgba(180,77,255,.5),rgba(0,229,255,.3));
+}
+.profile-body { padding:0 18px 20px; position:relative; }
+.profile-av-ring {
+width:86px; height:86px; border-radius:50%; padding:3px;
+background:linear-gradient(135deg,#ff2d78,#b44dff,#00e5ff);
+margin-top:-43px; margin-bottom:10px; display:inline-block;
+}
+.profile-av-inner {
+width:100%; height:100%; border-radius:50%; background:#14142a;
+display:flex; align-items:center; justify-content:center; font-size:40px;
+border:3px solid #0a0a12; overflow:hidden;
+}
+.profile-av-inner img { width:100%; height:100%; object-fit:cover; }
+.profile-edit-btn {
+position:absolute; top:12px; right:18px;
+background:#14142a !important; border:1px solid rgba(255,255,255,.1) !important;
+border-radius:20px !important; padding:8px 16px !important;
+color:#d0d0ff !important; font-size:13px !important; font-weight:700 !important;
+cursor:pointer; font-family:inherit !important;
+}
+.profile-name { font-family:‘Syne’,sans-serif; font-size:22px; font-weight:800; margin-bottom:2px; }
+.profile-handle { color:#7070a0; font-size:13px; margin-bottom:8px; }
+.profile-bio { font-size:14px; line-height:1.55; margin-bottom:16px; color:rgba(240,240,255,.85); }
+.profile-stats { display:flex; gap:0; background:#14142a; border-radius:18px; overflow:hidden; border:1px solid rgba(255,255,255,.07); margin-bottom:18px; }
+.ps-item { flex:1; padding:14px 8px; text-align:center; position:relative; }
+.ps-item:not(:last-child)::after { content:’’; position:absolute; right:0; top:14px; bottom:14px; width:1px; background:rgba(255,255,255,.07); }
+.ps-val { font-family:‘Syne’,sans-serif; font-size:20px; font-weight:800; background:linear-gradient(135deg,#ff2d78,#b44dff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.ps-lbl { font-size:11px; color:#7070a0; margin-top:2px; }
+.xp-bar-wrap { margin-bottom:18px; }
+.xp-bar-head { display:flex; justify-content:space-between; font-size:12px; font-weight:700; margin-bottom:8px; }
+.xp-bar-track { height:8px; background:#14142a; border-radius:4px; overflow:hidden; }
+.xp-bar-fill { height:100%; background:linear-gradient(90deg,#ff2d78,#b44dff,#00e5ff); border-radius:4px; transition:width 1.2s ease; }
+.logout-btn {
+display:block; width:100%; padding:14px !important;
+background:transparent !important; border:1.5px solid rgba(255,255,255,.1) !important;
+border-radius:16px !important; color:#7070a0 !important;
+font-size:14px !important; font-weight:700 !important;
+cursor:pointer; font-family:inherit !important; margin-bottom:16px; text-align:center;
+}
+
+.profile-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
+.pg-cell { aspect-ratio:1; background:#14142a; overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:30px; cursor:pointer; }
+.pg-cell img { width:100%; height:100%; object-fit:cover; }
+
+/* ═══════════════════════════════════════
+── STORY VIEWER ──
+═══════════════════════════════════════ */
+#story-viewer {
+position:fixed; inset:0; z-index:500; background:#000;
+display:none; flex-direction:column;
+}
+#story-viewer.open { display:flex; }
+.sv-progress { display:flex; gap:4px; padding:calc(env(safe-area-inset-top,14px)+10px) 12px 6px; }
+.sv-seg { flex:1; height:3px; background:rgba(255,255,255,.2); border-radius:2px; overflow:hidden; }
+.sv-fill { height:100%; width:0%; background:#fff; transition:width 5s linear; }
+.sv-body { flex:1; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.sv-tap-l, .sv-tap-r { position:absolute; top:0; bottom:0; width:35%; z-index:2; }
+.sv-tap-l { left:0; }
+.sv-tap-r { right:0; }
+.sv-img { width:100%; height:100%; object-fit:cover; position:absolute; }
+.sv-ph { font-size:100px; }
+.sv-head { position:absolute; top:0; left:0; right:0; z-index:3; padding:12px 16px; background:linear-gradient(180deg,rgba(0,0,0,.6),transparent); display:flex; align-items:center; gap:10px; }
+.sv-av { width:36px; height:36px; border-radius:50%; background:#14142a; border:2px solid #fff; overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:18px; }
+.sv-av img { width:100%; height:100%; object-fit:cover; }
+.sv-uname { font-weight:700; font-size:14px; flex:1; }
+.sv-close { font-size:22px; cursor:pointer; }
+.sv-bottom { padding:14px 16px calc(env(safe-area-inset-bottom,0px)+14px); display:flex; gap:10px; align-items:center; }
+.sv-reply {
+flex:1; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2) !important;
+border-radius:24px !important; padding:12px 16px !important;
+color:#fff !important; font-size:14px !important; font-family:inherit !important;
+}
+.sv-reply::placeholder { color:rgba(255,255,255,.5); }
+.sv-heart { font-size:28px; cursor:pointer; }
+
+/* ═══════════════════════════════════════
+── ADD STORY SHEET ──
+═══════════════════════════════════════ */
+#add-story-sheet {
+position:fixed; inset:0; z-index:400; display:none; align-items:flex-end;
+}
+#add-story-sheet.open { display:flex; }
+.sheet-bg { position:absolute; inset:0; background:rgba(0,0,0,.65); backdrop-filter:blur(4px); }
+.sheet-panel {
+position:relative; z-index:1; width:100%;
+background:#12121e; border-radius:28px 28px 0 0;
+padding:12px 22px calc(env(safe-area-inset-bottom,0px)+28px);
+border-top:1px solid rgba(255,255,255,.08);
+}
+.sheet-handle { width:38px; height:4px; background:rgba(255,255,255,.14); border-radius:2px; margin:0 auto 18px; }
+.sheet-title { font-family:‘Syne’,sans-serif; font-size:18px; font-weight:800; margin-bottom:4px; }
+.sheet-sub { color:#7070a0; font-size:13px; margin-bottom:18px; }
+.story-upload-zone {
+border:2px dashed rgba(255,45,120,.35); border-radius:20px;
+background:rgba(255,45,120,.04); padding:40px 20px;
+text-align:center; cursor:pointer; transition:all .2s;
+}
+.story-upload-zone:active { border-color:#ff2d78; }
+.story-preview-img-wrap { border-radius:16px; overflow:hidden; margin-bottom:14px; max-height:280px; }
+.story-preview-img-wrap img { width:100%; display:block; object-fit:cover; max-height:280px; }
+
+/* ═══════════════════════════════════════
+── LOADING OVERLAY ──
+═══════════════════════════════════════ */
+#loading {
+position:fixed; inset:0; z-index:800;
+background:rgba(10,10,18,.9); backdrop-filter:blur(12px);
+display:none; flex-direction:column;
+align-items:center; justify-content:center; gap:18px;
+}
+#loading.on { display:flex; }
+.spin { width:54px; height:54px; border-radius:50%; border:3px solid rgba(255,45,120,.2); border-top-color:#ff2d78; animation:spin .8s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.loading-title { font-family:‘Syne’,sans-serif; font-size:20px; font-weight:800; background:linear-gradient(135deg,#ff2d78,#b44dff,#00e5ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.loading-sub { color:#606080; font-size:13px; text-align:center; max-width:260px; line-height:1.5; }
+
+/* ═══════════════════════════════════════
+── TOAST ──
+═══════════════════════════════════════ */
+#toast {
+position:fixed; bottom:calc(env(safe-area-inset-bottom,0px) + 76px);
+left:50%; transform:translateX(-50%) translateY(8px);
+background:rgba(20,20,42,.96); backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.1); border-radius:24px;
+padding:12px 22px; font-size:14px; font-weight:700;
+z-index:900; opacity:0; pointer-events:none; white-space:nowrap;
+transition:all .3s cubic-bezier(.34,1.56,.64,1);
+}
+#toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+input[type=file] { display:none !important; }
+</style>
+
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     PAGE 1: ONBOARDING
+═══════════════════════════════════════ -->
+
+<div class="page on" id="pg-onboard">
+
+  <div class="ob-top">
+    <!-- Spinning neon ring -->
+    <div class="ob-ring">
+      <div class="ob-ring-inner">
+        <div class="ob-logo-emoji">✨</div>
+        <div class="ob-logo-text">GlowUp</div>
+      </div>
+    </div>
+
+```
+<div class="ob-headline">הפלטפורמה שתהיה<br><span>הטרנד הבא</span> 🔥</div>
+<div class="ob-sub">AI + תוכן + ויראליות<br>הכל במקום אחד — בחינם</div>
+```
+
+  </div>
+
+  <!-- Features -->
+
+  <div class="ob-features">
+    <div class="ob-feat">
+      <div class="ob-feat-icon" style="background:linear-gradient(135deg,#ff2d78,#b44dff)">🤖</div>
+      <div class="ob-feat-text">
+        <h4>AI שמשפר כל תמונה</h4>
+        <p>קפשן ויראלי + ניתוח וייב + ציון GlowScore</p>
+      </div>
+    </div>
+    <div class="ob-feat">
+      <div class="ob-feat-icon" style="background:linear-gradient(135deg,#b44dff,#00e5ff)">🎨</div>
+      <div class="ob-feat-text">
+        <h4>רקעים AI מדהימים</h4>
+        <p>ריו, קיץ, Y2K, ליל כוכבים — בלחיצה אחת</p>
+      </div>
+    </div>
+    <div class="ob-feat">
+      <div class="ob-feat-icon" style="background:linear-gradient(135deg,#ffd700,#ff2d78)">🎯</div>
+      <div class="ob-feat-text">
+        <h4>משימות יומיות</h4>
+        <p>השלם משימות → קבל XP ומטבעות → עלה רמה</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ob-cta">
+    <button class="btn-primary" onclick="goAuth('signup')">צור חשבון חינם ✨</button>
+    <button class="btn-secondary" onclick="goAuth('login')">כבר יש לי חשבון</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE 2: AUTH
+═══════════════════════════════════════ -->
+
+<div class="page" id="pg-auth">
+  <div class="auth-header">
+    <button class="back-circle" onclick="goPage('pg-onboard')">←</button>
+    <div class="auth-header-title" id="auth-header-title">הרשמה חינם</div>
+  </div>
+
+  <div class="auth-mode-toggle">
+    <button class="mode-btn active" id="mbtn-signup" onclick="setAuthMode('signup')">הרשמה ✨</button>
+    <button class="mode-btn" id="mbtn-login" onclick="setAuthMode('login')">כניסה</button>
+  </div>
+
+  <div class="auth-form" id="auth-form">
+    <!-- Signup-only fields -->
+    <div id="sf-name" class="field-group">
+      <label class="field-label">שם מלא</label>
+      <input class="field-input" id="f-name" type="text" placeholder="למשל: שקד ✨" autocomplete="name" maxlength="32">
+    </div>
+    <div id="sf-username" class="field-group">
+      <label class="field-label">@שם משתמש</label>
+      <input class="field-input" id="f-username" type="text" placeholder="glow_queen" dir="ltr" autocomplete="username" maxlength="20">
+    </div>
+
+```
+<!-- Always shown -->
+<div class="field-group">
+  <label class="field-label">אימייל</label>
+  <input class="field-input" id="f-email" type="email" placeholder="you@gmail.com" dir="ltr" autocomplete="email">
+</div>
+<div class="field-group">
+  <label class="field-label">סיסמה</label>
+  <input class="field-input" id="f-pass" type="password" placeholder="לפחות 6 תווים" dir="ltr" autocomplete="current-password">
+</div>
+
+<div class="auth-error-box" id="auth-err"></div>
+
+<button class="auth-submit" id="auth-submit" onclick="doAuth()">צור חשבון ✨</button>
+
+<div class="auth-or">או</div>
+
+<button class="btn-google" onclick="doGoogleAuth()">
+  <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>
+  המשך עם Google
+</button>
+```
+
+  </div>
+  <div class="auth-bottom-pad"></div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE 3: MAIN APP
+═══════════════════════════════════════ -->
+
+<div class="page" id="pg-app">
+  <div class="app-bar">
+    <span class="app-logo">✨ GlowUp</span>
+    <div class="app-bar-right">
+      <div class="stat-pill">🪙 <span id="ui-coins">250</span></div>
+      <div class="stat-pill">⚡ <span id="ui-xp">65</span> XP</div>
+    </div>
+  </div>
+
+  <div class="app-scroll">
+    <!-- ── FEED TAB ── -->
+    <div id="tab-feed">
+      <div class="stories-row" id="stories-row">
+        <div class="story-item story-add-ring" onclick="openAddStory()">
+          <div class="story-ring unseen">
+            <div class="story-ring-inner" id="my-av-el">👤</div>
+          </div>
+          <div class="story-add-badge">+</div>
+          <div class="story-name">הסיפור שלי</div>
+        </div>
+      </div>
+      <div id="posts-list"></div>
+      <div style="padding:28px;text-align:center;color:#505070;font-size:13px">
+        🎉 ראית הכל!
+        <span style="color:#ff2d78;font-weight:700;cursor:pointer;display:block;margin-top:6px" onclick="switchTab('create')">+ פרסם GlowUp חדש</span>
+      </div>
+    </div>
+
+```
+<!-- ── CREATE TAB ── -->
+<div id="tab-create" style="display:none">
+  <div class="create-wrap">
+    <div class="create-section-title">✨ GlowUp חדש</div>
+    <div class="create-section-sub">העלה תמונה · AI יבנה לך קפשן ויראלי · שתף</div>
+
+    <input type="file" id="create-file" accept="image/*" onchange="onCreateFile(event)">
+    <div id="create-upload" class="upload-zone" onclick="$('create-file').click()">
+      <div class="uz-emoji">📸</div>
+      <div class="uz-title">בחר תמונה</div>
+      <div class="uz-sub">לחץ לפתיחת הגלריה שלך</div>
+    </div>
+
+    <div id="create-after" style="display:none">
+      <div class="img-preview-box">
+        <img id="create-preview" src="" alt="">
+        <div class="img-overlay-btns">
+          <button class="overlay-btn" onclick="resetCreate()">✕</button>
+          <button class="overlay-btn" onclick="$('create-file').click()">🔄 שנה</button>
+        </div>
+      </div>
+
+      <!-- AI Style selection -->
+      <div class="create-section-title" style="margin-bottom:6px">🎨 בחר סגנון AI</div>
+      <div class="styles-grid" id="styles-grid">
+        <!-- filled by JS -->
+      </div>
+
+      <textarea class="prompt-area" id="create-prompt" placeholder="תאר את הסצנה (אופציונלי) — למשל: 'שמש שוקעת בחוף', 'מסיבה בלילה'..."></textarea>
+
+      <button class="btn-ai" id="btn-ai-run" onclick="runCreateAI()">
+        🤖 צור GlowUp עם AI
+      </button>
+
+      <div id="create-ai-result" style="display:none"></div>
+
+      <div class="create-section-title" style="margin-bottom:6px">✏️ הקפשן שלך</div>
+      <textarea class="caption-input" id="create-caption" placeholder="כתוב קפשן... או לחץ AI למעלה ✨"></textarea>
+
+      <button class="btn-publish" id="btn-publish" onclick="publishPost()">🚀 פרסם GlowUp</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── AI STUDIO TAB ── -->
+<div id="tab-studio" style="display:none">
+  <div class="studio-wrap">
+    <div class="studio-hero">
+      <div class="studio-hero-icon">🎨</div>
+      <div class="studio-hero-title">AI סטודיו</div>
+      <div class="studio-hero-sub">בחר רקע · כתוב תיאור · AI מייצר תמונה מושלמת</div>
+    </div>
+
+    <!-- Category filter -->
+    <div class="bg-cats" id="bg-cats"></div>
+
+    <!-- Background presets -->
+    <div class="bg-grid" id="bg-grid"></div>
+
+    <!-- Custom prompt -->
+    <div class="bg-prompt-wrap">
+      <div class="bg-prompt-label">או תאר רקע מדויק שאתה רוצה:</div>
+      <input class="bg-prompt-input" id="studio-prompt" type="text"
+        placeholder='למשל: "ריו דה ז׳ניירו בשקיעה עם קרנבל"'>
+    </div>
+
+    <button class="btn-gen" id="btn-gen" onclick="runStudio()">
+      🎨 צור רקע AI עכשיו
+    </button>
+
+    <div id="studio-result" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ── TASKS TAB ── -->
+<div id="tab-tasks" style="display:none">
+  <div class="tasks-wrap">
+    <div style="padding:16px 0 4px">
+      <div class="create-section-title">🎯 משימות היום</div>
+      <div class="create-section-sub">השלם משימות יומיות וקבל XP ומטבעות</div>
+    </div>
+
+    <div class="streak-banner">
+      <div class="streak-icon">🔥</div>
+      <div class="streak-text">
+        <h3>5 ימים ברצף!</h3>
+        <p>תמשיך — אתה בדרך לאגדה 💪</p>
+      </div>
+    </div>
+
+    <div class="task-section-title">⚡ משימות בסיסיות</div>
+    <div id="tasks-basic"></div>
+
+    <div class="task-section-title">🔥 משימות AI</div>
+    <div id="tasks-ai"></div>
+
+    <div class="task-section-title">🌟 משימות ויראליות</div>
+    <div id="tasks-viral"></div>
+  </div>
+</div>
+
+<!-- ── PROFILE TAB ── -->
+<div id="tab-profile" style="display:none">
+  <div class="profile-cover"></div>
+  <div class="profile-body">
+    <div class="profile-av-ring">
+      <div class="profile-av-inner" id="prof-av">👤</div>
+    </div>
+    <button class="profile-edit-btn" onclick="toast('✏️ עריכת פרופיל בקרוב!')">ערוך פרופיל</button>
+    <div class="profile-name" id="prof-name">GlowUser</div>
+    <div class="profile-handle" id="prof-handle">@glowuser</div>
+    <div class="profile-bio" id="prof-bio">✨ יוצר תוכן | GlowUp Addict 🔥</div>
+    <div class="profile-stats">
+      <div class="ps-item"><div class="ps-val" id="prof-posts">0</div><div class="ps-lbl">פוסטים</div></div>
+      <div class="ps-item"><div class="ps-val">128</div><div class="ps-lbl">עוקבים</div></div>
+      <div class="ps-item"><div class="ps-val">8.4K</div><div class="ps-lbl">לייקים</div></div>
+    </div>
+    <div class="xp-bar-wrap">
+      <div class="xp-bar-head"><span>⚡ Level <span id="prof-lvl">7</span></span><span id="prof-xp-txt" style="color:#7070a0">65/100 XP</span></div>
+      <div class="xp-bar-track"><div class="xp-bar-fill" id="prof-xp-bar" style="width:65%"></div></div>
+    </div>
+    <button class="logout-btn" onclick="doLogout()">🚪 התנתקות</button>
+  </div>
+  <div class="profile-grid" id="prof-grid"></div>
+  <div style="height:80px"></div>
+</div>
+```
+
+  </div>
+
+  <!-- Bottom nav -->
+
+  <nav class="bottom-nav">
+    <button class="nav-item on" id="nv-feed" onclick="switchTab('feed')">
+      <span class="nicon">🏠</span><span>פיד</span>
+    </button>
+    <button class="nav-item" id="nv-studio" onclick="switchTab('studio')">
+      <span class="nicon">🎨</span><span>סטודיו</span>
+    </button>
+    <button class="nav-item nav-center" id="nv-create" onclick="switchTab('create')">
+      <span class="nicon">✨</span><span>צור</span>
+    </button>
+    <button class="nav-item" id="nv-tasks" onclick="switchTab('tasks')">
+      <span class="nicon">🎯</span><span>משימות</span>
+    </button>
+    <button class="nav-item" id="nv-profile" onclick="switchTab('profile')">
+      <span class="nicon">👤</span><span>פרופיל</span>
+    </button>
+  </nav>
+</div>
+
+<!-- Story viewer -->
+
+<div id="story-viewer">
+  <div class="sv-progress" id="sv-progress"></div>
+  <div class="sv-body" id="sv-body">
+    <div class="sv-tap-l" onclick="svPrev()"></div>
+    <div class="sv-tap-r" onclick="svNext()"></div>
+    <div class="sv-head">
+      <div class="sv-av" id="sv-av">👤</div>
+      <div>
+        <div class="sv-uname" id="sv-uname">User</div>
+      </div>
+      <span class="sv-close" onclick="svClose()">✕</span>
+    </div>
+  </div>
+  <div class="sv-bottom">
+    <input class="sv-reply" placeholder="שלח תגובה...">
+    <span class="sv-heart" onclick="toast('❤️')">🤍</span>
+  </div>
+</div>
+
+<!-- Add story sheet -->
+
+<div id="add-story-sheet">
+  <div class="sheet-bg" onclick="closeAddStory()"></div>
+  <div class="sheet-panel">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Story חדש ✨</div>
+    <div class="sheet-sub">שתף רגע — נעלם אחרי 24 שעות</div>
+    <input type="file" id="story-file" accept="image/*" onchange="onStoryFile(event)">
+    <div class="story-upload-zone" id="story-upload-zone" onclick="$('story-file').click()">
+      <div style="font-size:36px;margin-bottom:8px">📸</div>
+      <div style="font-size:14px;font-weight:700;color:#7070a0">בחר תמונה</div>
+    </div>
+    <div id="story-preview-wrap" style="display:none">
+      <div class="story-preview-img-wrap"><img id="story-preview" src="" alt=""></div>
+      <button class="btn-primary" onclick="publishStory()" style="margin-top:4px">פרסם Story 🚀</button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading -->
+
+<div id="loading">
+  <div class="spin"></div>
+  <div class="loading-title" id="load-title">רגע...</div>
+  <div class="loading-sub" id="load-sub">אנא המתן</div>
+</div>
+
+<!-- Toast -->
+
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════
+const $ = id => document.getElementById(id);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+let S = {
+  user: null,
+  coins: 250,
+  xp: 65,
+  posts: [],
+  stories: [],
+  tasks: {},
+  liked: {}
+};
+let createB64 = null;
+let createStyle = 'Y2K רטרו ✨';
+let storyB64 = null;
+let svIdx = 0;
+let svTimer = null;
+let currentTab = 'feed';
+let authMode = 'signup';
+let selectedBg = null;
+
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+window.addEventListener('load', () => {
+  loadState();
+  buildStyles();
+  buildBgGrid('all');
+  buildTasks();
+  if (S.user) enterApp();
+});
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('gu3');
+    if (saved) {
+      const d = JSON.parse(saved);
+      S = {...S, ...d};
+    }
+  } catch(e) {}
+}
+
+function saveState() {
+  try { localStorage.setItem('gu3', JSON.stringify(S)); } catch(e) {}
+}
+
+// ══════════════════════════════════════════
+//  PAGES
+// ══════════════════════════════════════════
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  $(id).classList.add('on');
+  window.scrollTo(0,0);
+}
+
+function goAuth(mode) {
+  setAuthMode(mode);
+  goPage('pg-auth');
+}
+
+// ══════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════
+function setAuthMode(mode) {
+  authMode = mode;
+  $('mbtn-signup').classList.toggle('active', mode === 'signup');
+  $('mbtn-login').classList.toggle('active', mode === 'login');
+  $('sf-name').style.display = mode === 'signup' ? '' : 'none';
+  $('sf-username').style.display = mode === 'signup' ? '' : 'none';
+  $('auth-header-title').textContent = mode === 'signup' ? 'הרשמה חינם' : 'כניסה לחשבון';
+  $('auth-submit').textContent = mode === 'signup' ? 'צור חשבון ✨' : 'כניסה →';
+  hideAuthErr();
+}
+
+function showAuthErr(msg) {
+  const el = $('auth-err');
+  el.textContent = msg;
+  el.classList.add('show');
+  el.style.animation = 'none';
+  el.offsetHeight;
+  el.style.animation = 'shake .4s ease';
+}
+
+function hideAuthErr() {
+  $('auth-err').classList.remove('show');
+}
+
+function setSubmitLoading(on) {
+  const btn = $('auth-submit');
+  btn.disabled = on;
+  if (on) {
+    btn.textContent = '⏳ רגע...';
+  } else {
+    btn.textContent = authMode === 'signup' ? 'צור חשבון ✨' : 'כניסה →';
+  }
+}
+
+function doAuth() {
+  hideAuthErr();
+  const email = $('f-email').value.trim();
+  const pass  = $('f-pass').value;
+
+  if (!email || !email.includes('@')) { showAuthErr('⚠️ הכנס אימייל תקין'); return; }
+  if (pass.length < 6) { showAuthErr('⚠️ סיסמה חייבת להיות לפחות 6 תווים'); return; }
+
+  if (authMode === 'signup') {
+    const name     = $('f-name').value.trim();
+    const username = $('f-username').value.trim().replace('@','').replace(/\s+/g,'_');
+    if (!name) { showAuthErr('⚠️ הכנס שם מלא'); return; }
+    if (!username) { showAuthErr('⚠️ הכנס שם משתמש'); return; }
+    setSubmitLoading(true);
+    setTimeout(() => {
+      S.user = { email, name, username, emoji: pickEmoji(), bio:'✨ יוצר תוכן | GlowUp Addict 🔥' };
+      afterAuth();
+    }, 700);
+  } else {
+    // Login
+    if (!S.user) { showAuthErr('❌ לא מצאנו חשבון — נסה להירשם'); return; }
+    if (S.user.email !== email) { showAuthErr('❌ האימייל לא תואם את החשבון השמור'); return; }
+    setSubmitLoading(true);
+    setTimeout(afterAuth, 600);
+  }
+}
+
+function doGoogleAuth() {
+  S.user = { email:'demo@gmail.com', name:'Demo User', username:'demouser', emoji:'🌟', bio:'✨ GlowUp Addict 🔥' };
+  afterAuth();
+}
+
+function afterAuth() {
+  setSubmitLoading(false);
+  saveState();
+  seedDemoPosts();
+  enterApp();
+}
+
+function pickEmoji() {
+  return ['🌸','🔥','✨','💜','🚀','🎬','🌊','👑','🌟','🦋'][Math.floor(Math.random()*10)];
+}
+
+// ══════════════════════════════════════════
+//  APP ENTRY
+// ══════════════════════════════════════════
+function enterApp() {
+  goPage('pg-app');
+  refreshUI();
+  renderStories();
+  renderPosts();
+  renderProfileGrid();
+}
+
+function refreshUI() {
+  if (!S.user) return;
+  $('ui-coins').textContent = S.coins;
+  $('ui-xp').textContent = S.xp;
+  $('my-av-el').textContent = S.user.emoji;
+  $('prof-av').textContent = S.user.emoji;
+  $('prof-name').textContent = S.user.name;
+  $('prof-handle').textContent = '@' + S.user.username;
+  $('prof-bio').textContent = S.user.bio;
+  $('prof-xp-txt').textContent = S.xp + '/100 XP';
+  $('prof-xp-bar').style.width = S.xp + '%';
+  $('prof-posts').textContent = S.posts.filter(p=>S.user&&p.uid===S.user.email).length;
+}
+
+function addXP(n) { S.xp = Math.min(100, S.xp+n); saveState(); refreshUI(); }
+function addCoins(n) { S.coins += n; saveState(); refreshUI(); }
+
+function doLogout() {
+  S.user = null;
+  saveState();
+  goPage('pg-onboard');
+}
+
+// ══════════════════════════════════════════
+//  TAB SWITCHING
+// ══════════════════════════════════════════
+const TABS = ['feed','studio','create','tasks','profile'];
+function switchTab(tab) {
+  TABS.forEach(t => {
+    $('tab-'+t).style.display = t===tab ? '' : 'none';
+    const nb = $('nv-'+t);
+    if (nb) nb.classList.toggle('on', t===tab);
+  });
+  currentTab = tab;
+  const sc = document.querySelector('.app-scroll'); if(sc) sc.scrollTop = 0;
+  if (tab === 'profile') renderProfileGrid();
+}
+
+// ══════════════════════════════════════════
+//  STORIES
+// ══════════════════════════════════════════
+function renderStories() {
+  const row = $('stories-row');
+  // remove all except first (my story)
+  while (row.children.length > 1) row.removeChild(row.lastChild);
+  S.stories.forEach((s,i) => {
+    const el = document.createElement('div');
+    el.className = 'story-item';
+    el.onclick = () => svOpen(i);
+    el.innerHTML = `
+      <div class="story-ring${s.seen?' unseen':''}">
+        <div class="story-ring-inner">
+          ${s.img ? `<img src="${s.img}">` : s.emoji}
+        </div>
+      </div>
+      <div class="story-name">${s.username}</div>`;
+    row.appendChild(el);
+  });
+}
+
+function openAddStory() {
+  $('add-story-sheet').classList.add('open');
+  $('story-upload-zone').style.display='';
+  $('story-preview-wrap').style.display='none';
+}
+function closeAddStory() { $('add-story-sheet').classList.remove('open'); }
+
+function onStoryFile(e) {
+  const f = e.target.files[0]; if(!f) return;
+  toB64(f, src => {
+    $('story-preview').src = src;
+    $('story-upload-zone').style.display='none';
+    $('story-preview-wrap').style.display='';
+    storyB64 = src;
+  });
+}
+
+function publishStory() {
+  if (!storyB64) return;
+  const s = { uid:S.user.email, username:S.user.username, emoji:S.user.emoji, img:storyB64, ts:Date.now(), seen:false };
+  S.stories.unshift(s);
+  saveState();
+  closeAddStory();
+  renderStories();
+  storyB64 = null;
+  $('story-file').value='';
+  toast('✨ הסטורי פורסם! +10 XP');
+  addXP(10); addCoins(5);
+}
+
+// Story viewer
+function svOpen(idx) {
+  svIdx = idx;
+  $('story-viewer').classList.add('open');
+  svRender();
+}
+
+function svRender() {
+  const s = S.stories[svIdx];
+  if (!s) { svClose(); return; }
+
+  const prog = $('sv-progress');
+  prog.innerHTML = '';
+  S.stories.forEach((_,i) => {
+    const seg = document.createElement('div');
+    seg.className='sv-seg';
+    seg.innerHTML=`<div class="sv-fill" id="svf${i}"></div>`;
+    prog.appendChild(seg);
+  });
+  for(let i=0;i<svIdx;i++) { const f=$(`svf${i}`); if(f) f.style.width='100%'; }
+
+  const body = $('sv-body');
+  body.querySelectorAll('.sv-img,.sv-ph').forEach(e=>e.remove());
+  if (s.img) {
+    const img=document.createElement('img'); img.className='sv-img'; img.src=s.img;
+    body.insertBefore(img, body.firstChild);
+  } else {
+    const ph=document.createElement('div'); ph.className='sv-ph'; ph.textContent=s.emoji;
+    body.insertBefore(ph, body.firstChild);
+  }
+
+  $('sv-av').textContent = s.emoji;
+  $('sv-uname').textContent = s.username;
+
+  S.stories[svIdx].seen = true;
+  saveState();
+
+  clearTimeout(svTimer);
+  setTimeout(()=>{ const f=$(`svf${svIdx}`); if(f) f.style.width='100%'; }, 50);
+  svTimer = setTimeout(svNext, 5100);
+}
+
+function svNext() { clearTimeout(svTimer); svIdx < S.stories.length-1 ? (svIdx++, svRender()) : svClose(); }
+function svPrev() { clearTimeout(svTimer); svIdx > 0 ? (svIdx--, svRender()) : null; }
+function svClose() { clearTimeout(svTimer); $('story-viewer').classList.remove('open'); renderStories(); }
+
+// ══════════════════════════════════════════
+//  POSTS / FEED
+// ══════════════════════════════════════════
+function seedDemoPosts() {
+  if (S.posts.length > 0) return;
+  S.posts = [
+    { uid:'demo1', username:'maya.glowstar', emoji:'🌸', caption:'soft life is not a choice, its a lifestyle ✨', tags:'#SoftLife #GlowUp', likes:4200, ai:true, placeholder:'🌸', ts:Date.now()-7200000 },
+    { uid:'demo2', username:'noam.vibes', emoji:'🔥', caption:'כשהעיר נהיית הסטודיו שלך 🎬', tags:'#CinematicDay #Glow', likes:2800, ai:true, placeholder:'🌆', ts:Date.now()-18000000 },
+    { uid:'demo3', username:'queen.rachel', emoji:'💜', caption:'Y2K forever baby 🪩✨', tags:'#Y2K #Revival', likes:9100, ai:false, placeholder:'🪩', ts:Date.now()-86400000 }
+  ];
+  saveState();
+}
+
+function renderPosts() {
+  const c = $('posts-list');
+  c.innerHTML='';
+  [...S.posts].reverse().forEach((p,ri) => {
+    const idx = S.posts.length-1-ri;
+    c.appendChild(buildPost(p, idx, ri));
+  });
+}
+
+function buildPost(p, idx, anim) {
+  const liked = S.liked[idx]||false;
+  const div = document.createElement('div');
+  div.className='post-card';
+  div.style.animationDelay=(anim*.07)+'s';
+  div.innerHTML=`
+    <div class="post-head">
+      <div class="post-av">${p.postImg?`<img src="${p.postImg}">`:`<span style="position:relative;z-index:1">${p.emoji}</span>`}</div>
+      <div class="post-user-info">
+        <div class="post-uname">${p.username}</div>
+        <div class="post-meta-row">${timeAgo(p.ts)}${p.ai?' · <span style="color:#b44dff">✨ AI</span>':''}</div>
+      </div>
+      ${p.ai?'<div class="post-ai-badge">🤖 AI GlowUp</div>':''}
+    </div>
+    <div class="post-img">${p.postImg?`<img src="${p.postImg}">`:`<span>${p.placeholder||'✨'}</span>`}</div>
+    <div class="post-actions">
+      <button class="act${liked?' liked':''}" id="lb${idx}" onclick="toggleLike(${idx})">${liked?'❤️':'🤍'}</button>
+      <span class="act-count" id="lc${idx}">${fmtN(p.likes+(liked?1:0))}</span>
+      <button class="act" onclick="toast('💬 תגובות בקרוב!')">💬</button>
+      <button class="act" onclick="toast('🔗 הועתק!')">🔗</button>
+      <div class="post-spacer"></div>
+      <button class="act" onclick="toast('🔖 נשמר!')">🔖</button>
+    </div>
+    <div class="post-caption"><b>${p.username}</b> ${p.caption} ${p.tags?`<span class="post-tags">${p.tags}</span>`:''}
+    </div>`;
+  return div;
+}
+
+function toggleLike(idx) {
+  S.liked[idx]=!S.liked[idx];
+  const on=S.liked[idx];
+  const lb=$(`lb${idx}`); const lc=$(`lc${idx}`);
+  lb.textContent=on?'❤️':'🤍';
+  lb.classList.toggle('liked',on);
+  lc.textContent=fmtN(S.posts[idx].likes+(on?1:0));
+  if(on){ toast('❤️ לייק!'); addXP(3); }
+  saveState();
+}
+
+function renderProfileGrid() {
+  const g=$('prof-grid'); g.innerHTML='';
+  S.posts.filter(p=>S.user&&p.uid===S.user.email).slice().reverse().forEach(p=>{
+    const c=document.createElement('div'); c.className='pg-cell';
+    c.innerHTML=p.postImg?`<img src="${p.postImg}">`:`<span>${p.placeholder||'✨'}</span>`;
+    g.appendChild(c);
+  });
+}
+
+// ══════════════════════════════════════════
+//  CREATE + AI ANALYZE
+// ══════════════════════════════════════════
+const AI_STYLES = [
+  { id:'y2k',     name:'Y2K ✨',         bg:'linear-gradient(135deg,#ff9de2,#b44dff)', emoji:'🪩' },
+  { id:'soft',    name:'SoftLife 🌸',    bg:'linear-gradient(135deg,#ffd6e7,#ffafd7)', emoji:'🌸' },
+  { id:'cinema',  name:'Cinematic 🎬',   bg:'linear-gradient(135deg,#1a1a2e,#16213e)', emoji:'🎬' },
+  { id:'street',  name:'Street 🔥',      bg:'linear-gradient(135deg,#ff4500,#ff8c00)', emoji:'🔥' },
+  { id:'fantasy', name:'Fantasy 🌌',     bg:'linear-gradient(135deg,#2d1b69,#7c3aed)', emoji:'🌌' },
+  { id:'summer',  name:'Summer ☀️',     bg:'linear-gradient(135deg,#ffd700,#ff6b35)', emoji:'☀️' },
+];
+
+function buildStyles() {
+  const g=$('styles-grid'); if(!g)return;
+  g.innerHTML='';
+  AI_STYLES.forEach((s,i)=>{
+    const div=document.createElement('div');
+    div.className='style-card'+(i===0?' picked':'');
+    div.onclick=()=>pickStyle(div,s.name);
+    div.innerHTML=`
+      <div class="style-card-bg" style="background:${s.bg}">${s.emoji}</div>
+      <div class="style-card-name">${s.name}</div>
+      <div class="style-card-check">✓</div>`;
+    g.appendChild(div);
+  });
+  createStyle = AI_STYLES[0].name;
+}
+
+function pickStyle(el, name) {
+  document.querySelectorAll('.style-card').forEach(c=>c.classList.remove('picked'));
+  el.classList.add('picked');
+  createStyle = name;
+}
+
+function onCreateFile(e) {
+  const f=e.target.files[0]; if(!f)return;
+  toB64(f, src=>{
+    createB64 = src.split(',')[1];
+    $('create-preview').src=src;
+    $('create-upload').style.display='none';
+    $('create-after').style.display='';
+    $('create-ai-result').style.display='none';
+    $('create-ai-result').innerHTML='';
+    $('btn-publish').disabled=false;
+  });
+}
+
+function resetCreate() {
+  createB64=null;
+  $('create-file').value='';
+  $('create-preview').src='';
+  $('create-upload').style.display='';
+  $('create-after').style.display='none';
+  $('create-caption').value='';
+  $('create-ai-result').innerHTML='';
+  $('btn-publish').disabled=true;
+}
+
+async function runCreateAI() {
+  if(!createB64) return;
+  const prompt=$('create-prompt').value.trim();
+  $('btn-ai-run').disabled=true;
+  showLoad('🤖 AI מנתח את ה-GlowUp שלך...','מחשב וייב · מציא טרנד · כותב קפשן ✨');
+  try {
+    const res=await callClaude([{
+      role:'user',
+      content:[
+        {type:'image',source:{type:'base64',media_type:'image/jpeg',data:createB64}},
+        {type:'text',text:`אתה מנהל GlowUp, פלטפורמת תוכן ויראלי לנוער ישראלי.
+סגנון נבחר: ${createStyle}
+${prompt?'הקשר: '+prompt:''}
+
+נתח את התמונה ותחזיר JSON בלבד (ללא markdown, ללא backticks):
+{
+  "glowScore": מספר 1-100,
+  "vibe": "תיאור הוייב בעברית, 1 משפט",
+  "whatWorks": "מה יפה בתמונה",
+  "tips": ["טיפ 1","טיפ 2","טיפ 3"],
+  "trend": "הטרנד המתאים",
+  "caption_he": "קפשן עברית ויראלי עם אימוג'ים",
+  "caption_en": "viral english caption with emojis",
+  "tags_he": ["#תג1","#תג2","#תג3","#תג4"],
+  "tags_en": ["#tag1","#tag2","#tag3"]
+}`}
+      ]
+    }]);
+    hideLoad();
+    let r;
+    try { r=JSON.parse(res.replace(/```json|```/g,'').trim()); }
+    catch { r={glowScore:77,vibe:'ויב חזק ואותנטי ✨',whatWorks:'קומפוזיציה טבעית ואנרגטית',tips:['אור טבעי','פילטר עדין','זווית שונה'],trend:'GlowUp2025',caption_he:'הוייב מדבר לבד ✨🔥',caption_en:'when the vibe speaks ✨🔥',tags_he:['#GlowUp','#ויראלי','#ישראל'],tags_en:['#GlowUp','#Viral']}; }
+    showCreateResult(r);
+    $('create-caption').value=r.caption_he+'\n'+r.tags_he.join(' ');
+    addXP(50); addCoins(15);
+    toast('🎉 GlowUp Score: '+r.glowScore+'/100 · +50 XP');
+  } catch(e) { hideLoad(); toast('❌ שגיאה, נסה שוב'); }
+  $('btn-ai-run').disabled=false;
+}
+
+function showCreateResult(r) {
+  const sc=r.glowScore>=80?'var(--cyan,#00e5ff)':r.glowScore>=60?'#b44dff':'#ff2d78';
+  $('create-ai-result').innerHTML=`
+    <div class="ai-result-box">
+      <div class="result-row">
+        <span style="font-size:24px">${r.glowScore>=80?'🔥':r.glowScore>=60?'✨':'💪'}</span>
+        <div class="result-title">ה-GlowUp שלך</div>
+        <div class="score-badge">${r.glowScore}/100</div>
+      </div>
+      <div class="res-label">🌊 הוייב</div>
+      <div class="res-text">${r.vibe}</div>
+      <div class="res-label">💫 מה עובד</div>
+      <div class="res-text">${r.whatWorks}</div>
+      <div class="res-label">🚀 טיפים</div>
+      <div style="margin-bottom:14px">${r.tips.map((t,i)=>`<div class="tip-item"><span class="tip-n">${i+1}</span><span>${t}</span></div>`).join('')}</div>
+      <div class="res-label">📝 קפשן עברית</div>
+      <div class="caption-block">${r.caption_he}<button class="copy-btn" onclick="cp(this,'${esc(r.caption_he+' '+r.tags_he.join(' '))}')">📋 העתק</button></div>
+      <div class="res-label">🌍 English Caption</div>
+      <div class="caption-block">${r.caption_en}<button class="copy-btn" onclick="cp(this,'${esc(r.caption_en+' '+r.tags_en.join(' '))}')">📋 העתק</button></div>
+      <div class="res-label">🔖 האשטאגים</div>
+      <div class="tags-wrap">${r.tags_he.map(t=>`<span class="tag-chip">${t}</span>`).join('')}${r.tags_en.map(t=>`<span class="tag-chip" style="color:#b44dff;background:rgba(180,77,255,.08);border-color:rgba(180,77,255,.25)">${t}</span>`).join('')}</div>
+    </div>`;
+  $('create-ai-result').style.display='';
+}
+
+async function publishPost() {
+  if(!createB64) return;
+  showLoad('מפרסם...','הפוסט שלך עולה לפיד 🚀');
+  await sleep(600);
+  const cap=$('create-caption').value.trim();
+  const tags=(cap.match(/#\S+/g)||[]).join(' ');
+  const clean=cap.replace(/#\S+/g,'').trim();
+  S.posts.push({
+    uid:S.user.email, username:S.user.username, emoji:S.user.emoji,
+    postImg:$('create-preview').src, caption:clean||'GlowUp חדש ✨',
+    tags, likes:0, ai:$('create-ai-result').innerHTML.length>10,
+    placeholder:'✨', ts:Date.now()
+  });
+  saveState();
+  hideLoad();
+  resetCreate();
+  renderPosts();
+  renderProfileGrid();
+  addXP(100); addCoins(25);
+  toast('🎉 פורסם! +100 XP · +25 🪙');
+  switchTab('feed');
+}
+
+// ══════════════════════════════════════════
+//  AI STUDIO — Backgrounds
+// ══════════════════════════════════════════
+const BG_DATA = {
+  all: [
+    {id:'rio',     cat:'עולם',    name:'ריו 🌴',       emoji:'🏖️', bg:'linear-gradient(135deg,#006994,#00c896)', prompt:'Rio de Janeiro carnival sunset beach'},
+    {id:'tokyo',   cat:'עולם',    name:'טוקיו 🌸',     emoji:'🏯', bg:'linear-gradient(135deg,#1a0533,#ff6eb4)', prompt:'Tokyo neon streets night cherry blossom'},
+    {id:'paris',   cat:'עולם',    name:'פריז 🗼',      emoji:'🗼', bg:'linear-gradient(135deg,#c9a96e,#1a1a2e)', prompt:'Paris Eiffel Tower golden hour romantic'},
+    {id:'nyc',     cat:'עולם',    name:'ניו יורק 🌆',  emoji:'🌆', bg:'linear-gradient(135deg,#1a1a2e,#4a4a6e)', prompt:'New York City skyline night lights'},
+    {id:'ibiza',   cat:'מסיבות',  name:'אביזה 🎉',     emoji:'🎉', bg:'linear-gradient(135deg,#ff6b6b,#feca57)', prompt:'Ibiza beach party sunset DJ stage'},
+    {id:'festival',cat:'מסיבות',  name:'פסטיבל 🎪',   emoji:'🎪', bg:'linear-gradient(135deg,#6c5ce7,#fd79a8)', prompt:'Music festival neon lights confetti crowd'},
+    {id:'galaxy',  cat:'פנטזיה',  name:'גלקסיה 🌌',   emoji:'🌌', bg:'linear-gradient(135deg,#0f0c29,#302b63)', prompt:'Galaxy space stars nebula purple cosmic'},
+    {id:'forest',  cat:'טבע',     name:'יער קסום 🌲', emoji:'🌲', bg:'linear-gradient(135deg,#134e5e,#71b280)', prompt:'Enchanted magical forest glowing fireflies'},
+    {id:'beach',   cat:'טבע',     name:'חוף זהב ☀️',  emoji:'☀️', bg:'linear-gradient(135deg,#ffd700,#ff6b35)', prompt:'Perfect golden sand beach tropical sunset'},
+    {id:'y2k',     cat:'סגנון',   name:'Y2K ✨',       emoji:'🪩', bg:'linear-gradient(135deg,#ff9de2,#b44dff)', prompt:'Y2K aesthetic retro futuristic disco metallic'},
+    {id:'cyber',   cat:'סגנון',   name:'סייבר 🤖',    emoji:'🤖', bg:'linear-gradient(135deg,#0f0f23,#00e5ff)', prompt:'Cyberpunk city neon blue digital matrix'},
+    {id:'cottagecore',cat:'סגנון',name:'Cottagecore 🌺',emoji:'🌺', bg:'linear-gradient(135deg,#a8e063,#f5d76e)', prompt:'Cottagecore cozy cottage garden flowers sunlight'},
+  ]
+};
+
+const BG_CATS = ['הכל','עולם','מסיבות','פנטזיה','טבע','סגנון'];
+
+function buildBgGrid(cat) {
+  // Build cat buttons
+  const catsEl=$('bg-cats');
+  if(catsEl && catsEl.children.length===0) {
+    BG_CATS.forEach(c=>{
+      const btn=document.createElement('button');
+      btn.className='bg-cat'+(c==='הכל'?' on':'');
+      btn.textContent=c;
+      btn.onclick=()=>{ document.querySelectorAll('.bg-cat').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); buildBgGrid(c==='הכל'?'all':c); };
+      catsEl.appendChild(btn);
+    });
+  }
+
+  const items = cat==='all' ? BG_DATA.all : BG_DATA.all.filter(b=>b.cat===cat);
+  const grid=$('bg-grid'); if(!grid)return;
+  grid.innerHTML='';
+  items.forEach(b=>{
+    const div=document.createElement('div');
+    div.className='bg-card';
+    div.onclick=()=>pickBg(div,b);
+    div.innerHTML=`
+      <div class="bg-card-inner" style="background:${b.bg}">${b.emoji}</div>
+      <div class="bg-card-label">${b.name}</div>
+      <div class="bg-card-check">✓</div>`;
+    grid.appendChild(div);
+  });
+}
+
+function pickBg(el,b) {
+  document.querySelectorAll('.bg-card').forEach(c=>c.classList.remove('picked'));
+  el.classList.add('picked');
+  selectedBg=b;
+}
+
+async function runStudio() {
+  const customPrompt=$('studio-prompt').value.trim();
+  if(!selectedBg && !customPrompt) { toast('⚠️ בחר רקע או כתוב תיאור'); return; }
+
+  const promptText = customPrompt || (selectedBg?selectedBg.prompt:'beautiful landscape');
+  const fullPrompt = `Create a stunning, vibrant, photorealistic background image: ${promptText}. Perfect for social media post background. Vivid colors, dramatic lighting, high quality.`;
+
+  $('btn-gen').disabled=true;
+  showLoad('🎨 AI יוצר את הרקע שלך...','מייצר תמונה מדהימה עם בינה מלאכותית ✨\nזה עשוי לקחת עד 30 שניות');
+
+  try {
+    // We use Claude to describe what the image would look like (since we can't generate images directly)
+    // In production you'd call DALL-E / Stability / Replicate here
+    const desc = await callClaude([{
+      role:'user',
+      content:`אתה מנהל AI סטודיו לנוער ישראלי. המשתמש ביקש רקע: "${promptText}".
+
+תאר בדיוק כיצד הרקע הזה נראה — צבעים, תאורה, אווירה, פרטים — כך שהמשתמש ידע בדיוק מה AI יצר.
+כתוב תיאור חי, מרגש, ב-2-3 משפטים בעברית.
+אחר כך כתוב איך להשתמש ברקע הזה לפוסט ויראלי.
+פורמט: JSON בלבד:
+{
+  "description": "תיאור חי של הרקע",
+  "useTip": "טיפ לשימוש בפוסט",
+  "hashtagIdea": "#האשטג_מוצלח"
+}`
+    }]);
+
+    let r;
+    try { r=JSON.parse(desc.replace(/```json|```/g,'').trim()); }
+    catch { r={description:'רקע מדהים בסגנון ויראלי עם צבעים עזים ✨',useTip:'שים את עצמך במרכז התמונה לפוסט מנצח',hashtagIdea:'#GlowUp'}; }
+
+    hideLoad();
+    showStudioResult(r, selectedBg||{bg:'linear-gradient(135deg,#ff2d78,#b44dff)',emoji:'🎨',name:'רקע AI'});
+    addXP(30); addCoins(10);
+    toast('🎨 הרקע מוכן! +30 XP');
+  } catch(e) { hideLoad(); toast('❌ שגיאה, נסה שוב'); }
+  $('btn-gen').disabled=false;
+}
+
+function showStudioResult(r, bg) {
+  $('studio-result').innerHTML=`
+    <div class="gen-result">
+      <div class="gen-result-img" style="background:${bg.bg}">
+        <span style="font-size:80px">${bg.emoji}</span>
+        <div class="gen-result-overlay">
+          <div class="gen-result-desc">${r.description}</div>
+        </div>
+      </div>
+      <div class="gen-actions">
+        <button class="gen-action-btn" onclick="toast('💾 שמירה בקרוב!')">💾 שמור</button>
+        <button class="gen-action-btn" onclick="toast('✨ טיפ: ${esc(r.useTip)}')">💡 ${r.useTip.substring(0,20)}...</button>
+        <button class="gen-action-btn" onclick="cp(this,'${esc(r.hashtagIdea)}')">🏷️ העתק תג</button>
+      </div>
+    </div>
+    <div style="background:#14142a;border-radius:16px;padding:14px;margin-bottom:14px;border:1px solid rgba(180,77,255,.2)">
+      <div style="font-size:12px;font-weight:800;color:#7070a0;margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px">💡 טיפ לפוסט</div>
+      <div style="font-size:14px;line-height:1.6">${r.useTip}</div>
+    </div>`;
+  $('studio-result').style.display='';
+}
+
+// ══════════════════════════════════════════
+//  TASKS
+// ══════════════════════════════════════════
+const TASK_DEFS = {
+  basic:[
+    {id:'t1',icon:'📸',bg:'linear-gradient(135deg,#ff2d78,#b44dff)',title:'GlowUp יומי',desc:'צלם תמונה שמציגה את הוויב שלך היום ✨',xp:100,coins:25},
+    {id:'t2',icon:'👍',bg:'linear-gradient(135deg,#b44dff,#00e5ff)',title:'תמוך ב-5 חברים',desc:'תן לייק ל-5 פוסטים של יוצרים אחרים 🤝',xp:50,coins:10},
+    {id:'t3',icon:'💬',bg:'linear-gradient(135deg,#00e5ff,#00c896)',title:'תגובה אמיתית',desc:'השאר תגובה אמיתית ל-3 יוצרים 💜',xp:75,coins:15},
+  ],
+  ai:[
+    {id:'t4',icon:'🤖',bg:'linear-gradient(135deg,#ff2d78,#ff8c00)',title:'AI GlowUp',desc:'השתמש ב-AI לניתוח תמונה וקבל GlowScore ✨',xp:150,coins:35},
+    {id:'t5',icon:'🎨',bg:'linear-gradient(135deg,#b44dff,#ff2d78)',title:'רקע AI',desc:'צור רקע עם AI סטודיו 🎨',xp:120,coins:30},
+    {id:'t6',icon:'📝',bg:'linear-gradient(135deg,#ffd700,#ff6b35)',title:'קפשן ויראלי',desc:'השתמש ב-AI לכתיבת קפשן ויראלי ופרסם 🚀',xp:200,coins:50},
+  ],
+  viral:[
+    {id:'t7',icon:'🔥',bg:'linear-gradient(135deg,#ff4500,#ff8c00)',title:'טרנד השבוע',desc:'צור פוסט עם #Y2K_Revival ותהיה ויראלי 🚀',xp:250,coins:60},
+    {id:'t8',icon:'🌟',bg:'linear-gradient(135deg,#ffd700,#ff2d78)',title:'הזמן חבר',desc:'שתף את האפליקציה עם חבר 🎁',xp:500,coins:100},
+  ]
+};
+
+function buildTasks() {
+  ['basic','ai','viral'].forEach(cat=>{
+    const c=$(  'tasks-'+cat); if(!c)return;
+    c.innerHTML='';
+    TASK_DEFS[cat].forEach(t=>{
+      const done=S.tasks[t.id];
+      const div=document.createElement('div');
+      div.className='task-card'+(done?' done':'');
+      div.id='task-'+t.id;
+      div.onclick=()=>completeTask(t);
+      div.innerHTML=`
+        <div class="task-icon-wrap" style="background:${t.bg}">${t.icon}</div>
+        <div class="task-info">
+          <div class="task-title">${t.title}</div>
+          <div class="task-desc">${t.desc}</div>
+        </div>
+        <div class="task-reward">
+          ${done
+            ? '<div class="task-done-badge">✅ הושלם</div>'
+            : `<div class="task-xp">+${t.xp} XP</div><div class="task-coins">🪙 ${t.coins}</div>`}
+        </div>`;
+      c.appendChild(div);
+    });
+  });
+}
+
+function completeTask(t) {
+  if(S.tasks[t.id]) return;
+  S.tasks[t.id]=true;
+  saveState();
+  const card=$('task-'+t.id);
+  if(card) {
+    card.classList.add('done');
+    card.querySelector('.task-reward').innerHTML='<div class="task-done-badge">✅ הושלם!</div>';
+  }
+  addXP(t.xp); addCoins(t.coins);
+  toast(`🎉 +${t.xp} XP · +${t.coins} 🪙`);
+}
+
+// ══════════════════════════════════════════
+//  CLAUDE API
+// ══════════════════════════════════════════
+async function callClaude(messages) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:1000,
+      messages
+    })
+  });
+  const d = await res.json();
+  if(d.error) throw new Error(d.error.message);
+  return d.content.map(c=>c.text||'').join('');
+}
+
+// ══════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════
+function toB64(file, cb) {
+  const r=new FileReader();
+  r.onload=e=>cb(e.target.result);
+  r.readAsDataURL(file);
+}
+
+function showLoad(title,sub) {
+  $('load-title').textContent=title;
+  $('load-sub').textContent=sub||'';
+  $('loading').classList.add('on');
+}
+function hideLoad() { $('loading').classList.remove('on'); }
+
+function toast(msg) {
+  const el=$('toast');
+  el.textContent=msg;
+  el.classList.add('show');
+  clearTimeout(window._tt);
+  window._tt=setTimeout(()=>el.classList.remove('show'),2400);
+}
+
+function cp(btn, text) {
+  const done=()=>{ btn.textContent='✅ הועתק'; btn.classList.add('ok'); setTimeout(()=>{btn.textContent='📋 העתק';btn.classList.remove('ok');},2000); };
+  if(navigator.clipboard) navigator.clipboard.writeText(text).then(done).catch(()=>legacyCp(text,done));
+  else legacyCp(text,done);
+}
+function legacyCp(text,cb) {
+  const el=document.createElement('textarea');
+  el.value=text; el.style.cssText='position:fixed;opacity:0';
+  document.body.appendChild(el); el.focus(); el.select();
+  try{document.execCommand('copy');cb();}catch(e){}
+  document.body.removeChild(el);
+}
+
+function esc(s){ return (s||'').replace(/'/g,"\\'").replace(/\n/g,' ').replace(/"/g,'\\"'); }
+
+function timeAgo(ts) {
+  const s=Math.floor((Date.now()-ts)/1000);
+  if(s<60)return 'עכשיו';
+  if(s<3600)return `לפני ${Math.floor(s/60)} דק'`;
+  if(s<86400)return `לפני ${Math.floor(s/3600)} שע'`;
+  return `לפני ${Math.floor(s/86400)} ימים`;
+}
+
+function fmtN(n) {
+  return n>=1000?(n/1000).toFixed(1).replace('.0','')+'K':String(n);
+}
+
+// scroll patch removed - handled in switchTab directly
+</script>
+
+</body>
+</html>
