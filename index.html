@@ -965,7 +965,10 @@
 
         // ===== NAV =====
         function setupNav() {
-            document.querySelectorAll('.nav-item').forEach(item => {
+            console.log('🧭 Setting up navigation...');
+            const items = document.querySelectorAll('.nav-item');
+            console.log(`Found ${items.length} nav items`);
+            items.forEach(item => {
                 item.addEventListener('click', () => {
                     const tab = item.dataset.tab;
                     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -979,6 +982,7 @@
 
         // ===== IMAGE =====
         function setupImage() {
+            console.log('📷 Setting up image upload...');
             const input = document.getElementById('imgInput');
             const picker = document.getElementById('picker');
             const deleteBtn = document.getElementById('deleteBtn');
@@ -986,6 +990,11 @@
             const promptInput = document.getElementById('aiPrompt');
             const editBtn = document.getElementById('editBtn');
             const storyBtn = document.getElementById('storyBtn');
+
+            if (!input) {
+                console.error('❌ Image input not found!');
+                return;
+            }
 
             input.addEventListener('change', e => {
                 const file = e.target.files[0];
