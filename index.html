@@ -620,6 +620,13 @@
         <div class="splash-tag">The Next Trend</div>
     </div>
 
+    <!-- Install Banner for PWA -->
+    <div id="installBanner" class="hide" style="display: none; position: fixed; bottom: 80px; left: 20px; right: 20px; background: rgba(0, 255, 255, 0.1); border: 1px solid var(--accent); border-radius: 8px; padding: 12px; text-align: center; z-index: 99;">
+        <p style="margin: 0 0 8px 0;">📲 להתקין את GlowUp כאפליקציה?</p>
+        <button onclick="install()" style="background: var(--accent2); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin: 0 4px;">כן</button>
+        <button onclick="document.getElementById('installBanner').style.display='none'" style="background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 6px 12px; border-radius: 4px; cursor: pointer;">לא</button>
+    </div>
+
     <!-- App -->
     <div id="app">
         <!-- Header -->
@@ -1323,10 +1330,12 @@
         }
 
         // ===== PWA =====
+        let deferredPrompt;
         window.addEventListener('beforeinstallprompt', e => {
             e.preventDefault();
             deferredPrompt = e;
-            document.getElementById('installBanner').classList.remove('hide');
+            const banner = document.getElementById('installBanner');
+            if (banner) banner.style.display = 'block';
         });
 
         function install() {
@@ -1334,7 +1343,8 @@
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then(choice => {
                 if (choice.outcome === 'accepted') {
-                    document.getElementById('installBanner').classList.add('hide');
+                    const banner = document.getElementById('installBanner');
+                    if (banner) banner.style.display = 'none';
                 }
                 deferredPrompt = null;
             });
