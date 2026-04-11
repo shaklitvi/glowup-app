@@ -1304,22 +1304,34 @@
             const langBtn = document.getElementById('langBtn');
             langBtn.textContent = currentLang === 'he' ? 'EN' : 'HE';
 
+            // Hide splash screen faster
             setTimeout(() => {
                 document.getElementById('splash').classList.add('hide');
-                setTimeout(() => {
-                    document.getElementById('app').classList.add('show');
-                    loadFeed();
-                    loadStories();
-                    loadFriends();
-                    newTask();
-                }, 500);
-            }, 2000);
+                document.getElementById('app').classList.add('show');
+                loadFeed();
+                loadStories();
+                loadFriends();
+                newTask();
+            }, 800);
         });
 
         // Service worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('data:text/javascript,self.addEventListener("fetch",e=>e.respondWith(fetch(e.request)));');
         }
+
+        // Fallback init if load event doesn't fire
+        document.addEventListener('DOMContentLoaded', () => {
+            if (document.getElementById('app').style.display === 'none') {
+                const splash = document.getElementById('splash');
+                if (splash.classList.contains('hide') === false) {
+                    setTimeout(() => {
+                        splash.classList.add('hide');
+                        document.getElementById('app').classList.add('show');
+                    }, 500);
+                }
+            }
+        });
     </script>
 </body>
 </html>
