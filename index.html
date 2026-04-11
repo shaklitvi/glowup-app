@@ -620,6 +620,13 @@
         <div class="splash-tag">The Next Trend</div>
     </div>
 
+    <!-- Install Banner for PWA -->
+    <div id="installBanner" class="hide" style="display: none; position: fixed; bottom: 80px; left: 20px; right: 20px; background: rgba(0, 255, 255, 0.1); border: 1px solid var(--accent); border-radius: 8px; padding: 12px; text-align: center; z-index: 99;">
+        <p style="margin: 0 0 8px 0;">📲 להתקין את GlowUp כאפליקציה?</p>
+        <button onclick="install()" style="background: var(--accent2); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin: 0 4px;">כן</button>
+        <button onclick="document.getElementById('installBanner').style.display='none'" style="background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 6px 12px; border-radius: 4px; cursor: pointer;">לא</button>
+    </div>
+
     <!-- App -->
     <div id="app">
         <!-- Header -->
@@ -869,7 +876,13 @@
                 storyUploaded: 'Story הועלה! 🎉\n+15 XP',
                 error: 'שגיאה בעיבוד. נסה שוב.',
                 levelUp: 'רמה',
-                confirmDelete: 'למחוק הכל?'
+                confirmDelete: 'למחוק הכל?',
+                aiPromptRequired: 'כתוב הוראה ל-AI',
+                editFirst: 'ערוך תמונה קודם!',
+                uploadPhoto: 'העלה תמונה',
+                alreadyHave: 'כבר יש לך!',
+                notEnoughCoins: 'אין מספיק קוינס!',
+                purchased: 'רכשת'
             },
             en: {
                 noImage: 'Upload a photo first!',
@@ -881,7 +894,13 @@
                 storyUploaded: 'Story uploaded! 🎉\n+15 XP',
                 error: 'Error processing. Try again.',
                 levelUp: 'Level',
-                confirmDelete: 'Delete everything?'
+                confirmDelete: 'Delete everything?',
+                aiPromptRequired: 'Write an instruction for AI',
+                editFirst: 'Edit photo first!',
+                uploadPhoto: 'Upload photo',
+                alreadyHave: 'You already have it!',
+                notEnoughCoins: 'Not enough coins!',
+                purchased: 'You bought'
             }
         };
 
@@ -1001,7 +1020,7 @@
             const caption = document.getElementById('caption');
 
             picker.classList.remove('has-img');
-            picker.innerHTML = '<div class="placeholder"><div class="placeholder-icon">📷</div><div>העלא תמונה</div></div>';
+            picker.innerHTML = `<div class="placeholder"><div class="placeholder-icon">📷</div><div>${t('uploadPhoto')}</div></div>`;
             deleteBtn.style.display = 'none';
             promptBox.style.display = 'none';
             promptInput.style.display = 'none';
@@ -1015,7 +1034,7 @@
         }
 
         // ===== AI IMAGE EDITING =====
-        async function editImage() {
+        function editImage() {
             if (!img) {
                 alert(t('noImage'));
                 return;
@@ -1023,7 +1042,7 @@
 
             const prompt = document.getElementById('aiPrompt').value.trim();
             if (!prompt) {
-                alert('כתוב הוראה ל-AI');
+                alert(t('aiPromptRequired'));
                 return;
             }
 
@@ -1036,40 +1055,126 @@
             editBtn.disabled = true;
 
             try {
-                // Call backend API
-                const response = await fetch('/api/edit-image', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        image: img,
-                        prompt: prompt
-                    })
-                });
+                // Process image with Canvas API (works on Safari and Chrome)
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img_el = new Image();
 
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.error || 'API error');
-                }
+                img_el.onload = function() {
+                    try {
+                        // Scale down image for faster processing
+                        let w = img_el.width;
+                        let h = img_el.height;
+                        const maxSize = 600;
+                        if (w > maxSize || h > maxSize) {
+                            const ratio = Math.min(maxSize / w, maxSize / h);
+                            w = Math.floor(w * ratio);
+                            h = Math.floor(h * ratio);
+                        }
 
-                const data = await response.json();
-                editedImg = data.image;
+                        canvas.width = w;
+                        canvas.height = h;
+                        ctx.drawImage(img_el, 0, 0, w, h);
 
-                // Show result
-                result.className = 'result result-ok';
-                result.innerHTML = `✨ ${t('edited')}<br><img src="${editedImg}" style="width: 100%; border-radius: 8px; margin-top: 10px;">`;
+                        // Apply artistic filter based on prompt
+                        const imageData = ctx.getImageData(0, 0, w, h);
+                        const data = imageData.data;
 
-                reward(50, 25);
+                        // Parse prompt to apply different effects
+                        const promptLower = prompt.toLowerCase();
+                        let filterType = 'vintage'; // default
 
-                // Show caption input
-                document.getElementById('editedSection').style.display = 'block';
+                        if (promptLower.includes('שחור') || promptLower.includes('black') || promptLower.includes('bw')) filterType = 'grayscale';
+                        if (promptLower.includes('צבעוני') || promptLower.includes('vibrant') || promptLower.includes('color')) filterType = 'saturate';
+                        if (promptLower.includes('חם') || promptLower.includes('warm') || promptLower.includes('sunset')) filterType = 'warm';
+                        if (promptLower.includes('קר') || promptLower.includes('cool') || promptLower.includes('blue')) filterType = 'cool';
+                        if (promptLower.includes('דרמטי') || promptLower.includes('dramatic') || promptLower.includes('dark')) filterType = 'dramatic';
+                        if (promptLower.includes('חלל') || promptLower.includes('space') || promptLower.includes('cosmic')) filterType = 'space';
+
+                        // Apply filter
+                        for (let i = 0; i < data.length; i += 4) {
+                            let r = data[i];
+                            let g = data[i + 1];
+                            let b = data[i + 2];
+                            const a = data[i + 3]; // alpha
+
+                            if (filterType === 'grayscale') {
+                                const gray = r * 0.299 + g * 0.587 + b * 0.114;
+                                data[i] = gray;
+                                data[i + 1] = gray;
+                                data[i + 2] = gray;
+                            } else if (filterType === 'saturate') {
+                                data[i] = Math.min(255, r * 1.6);
+                                data[i + 1] = Math.min(255, g * 1.6);
+                                data[i + 2] = Math.min(255, b * 1.6);
+                            } else if (filterType === 'warm') {
+                                data[i] = Math.min(255, r * 1.3 + 40);
+                                data[i + 1] = Math.min(255, g * 0.9 + 20);
+                                data[i + 2] = Math.min(255, b * 0.5);
+                            } else if (filterType === 'cool') {
+                                data[i] = Math.min(255, r * 0.7);
+                                data[i + 1] = Math.min(255, g * 0.95 + 30);
+                                data[i + 2] = Math.min(255, b * 1.4 + 40);
+                            } else if (filterType === 'dramatic') {
+                                const gray = r * 0.299 + g * 0.587 + b * 0.114;
+                                const diff = (gray - 128) * 2;
+                                data[i] = Math.max(0, Math.min(255, 128 + diff));
+                                data[i + 1] = Math.max(0, Math.min(255, 128 + diff));
+                                data[i + 2] = Math.max(0, Math.min(255, 128 + diff));
+                            } else if (filterType === 'space') {
+                                // Deep space colors: dark purple/blue with stars
+                                const brightness = (r + g + b) / 3;
+                                data[i] = Math.max(20, r * 0.3 + 50);     // Purple-ish
+                                data[i + 1] = Math.max(10, g * 0.2 + 20);
+                                data[i + 2] = Math.min(200, b * 0.8 + 80); // Blue-ish
+                                // Add some "stars" - brighten some pixels randomly
+                                if (brightness > 150 && Math.random() > 0.95) {
+                                    data[i] = 255;
+                                    data[i + 1] = 255;
+                                    data[i + 2] = 255;
+                                }
+                            } else { // vintage
+                                data[i] = Math.min(255, r * 1.0 + 40);
+                                data[i + 1] = Math.min(255, g * 0.85 + 30);
+                                data[i + 2] = Math.min(255, b * 0.6 + 20);
+                            }
+                        }
+
+                        ctx.putImageData(imageData, 0, 0);
+
+                        // Convert to base64
+                        editedImg = canvas.toDataURL('image/jpeg', 0.95);
+
+                        // Show result
+                        result.className = 'result result-ok';
+                        result.innerHTML = `✨ ${t('edited')}<br><img src="${editedImg}" style="width: 100%; border-radius: 8px; margin-top: 10px;">`;
+
+                        reward(50, 25);
+
+                        // Show caption input
+                        document.getElementById('editedSection').style.display = 'block';
+                        editBtn.disabled = false;
+
+                    } catch (e) {
+                        console.error(e);
+                        result.className = 'result result-err';
+                        result.innerHTML = `❌ שגיאה`;
+                        editBtn.disabled = false;
+                    }
+                };
+
+                img_el.onerror = function() {
+                    result.className = 'result result-err';
+                    result.innerHTML = `❌ שגיאה בטעינת תמונה`;
+                    editBtn.disabled = false;
+                };
+
+                // Start processing immediately
+                img_el.src = img;
 
             } catch (error) {
-                console.error('Error:', error);
                 result.className = 'result result-err';
-                result.innerHTML = `❌ שגיאה בעיבוד<br><br>💡 אם זה לא עובד, נסה שוב בעוד דקה<br><br>Error: ${error.message}`;
-            } finally {
+                result.innerHTML = `❌ שגיאה: ${error.message}`;
                 editBtn.disabled = false;
             }
         }
@@ -1077,7 +1182,7 @@
         // ===== POSTS =====
         function publish() {
             if (!editedImg) {
-                alert('ערוך תמונה קודם!');
+                alert(t('editFirst'));
                 return;
             }
 
@@ -1233,15 +1338,15 @@
 
         // ===== STORE =====
         function buy(item, price) {
-            if (D.coins < price) return alert('אין מספיק קוינס!');
-            if (D.filters.includes(item)) return alert('כבר יש לך!');
+            if (D.coins < price) return alert(t('notEnoughCoins'));
+            if (D.filters.includes(item)) return alert(t('alreadyHave'));
 
             D.coins -= price;
             D.filters.push(item);
             save();
             updateUI();
 
-            alert(`רכשת ${item}! ✨`);
+            alert(`${t('purchased')} ${item}! ✨`);
         }
 
         function premium() {
@@ -1252,7 +1357,8 @@
         window.addEventListener('beforeinstallprompt', e => {
             e.preventDefault();
             deferredPrompt = e;
-            document.getElementById('installBanner').classList.remove('hide');
+            const banner = document.getElementById('installBanner');
+            if (banner) banner.style.display = 'block';
         });
 
         function install() {
@@ -1260,7 +1366,8 @@
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then(choice => {
                 if (choice.outcome === 'accepted') {
-                    document.getElementById('installBanner').classList.add('hide');
+                    const banner = document.getElementById('installBanner');
+                    if (banner) banner.style.display = 'none';
                 }
                 deferredPrompt = null;
             });
@@ -1302,21 +1409,27 @@
             }, 800);
         });
 
-        // Service worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('data:text/javascript,self.addEventListener("fetch",e=>e.respondWith(fetch(e.request)));');
-        }
-
-        // Fallback init if load event doesn't fire
+        // Fallback init for Safari and older browsers
         document.addEventListener('DOMContentLoaded', () => {
-            if (document.getElementById('app').style.display === 'none') {
-                const splash = document.getElementById('splash');
-                if (splash.classList.contains('hide') === false) {
-                    setTimeout(() => {
-                        splash.classList.add('hide');
-                        document.getElementById('app').classList.add('show');
-                    }, 500);
-                }
+            const splash = document.getElementById('splash');
+            const app = document.getElementById('app');
+            if (splash && !splash.classList.contains('hide')) {
+                setTimeout(() => {
+                    splash.classList.add('hide');
+                    app.classList.add('show');
+                    try {
+                        load();
+                        updateUI();
+                        setupNav();
+                        setupImage();
+                        loadFeed();
+                        loadStories();
+                        loadFriends();
+                        newTask();
+                    } catch(e) {
+                        console.error('Init error:', e);
+                    }
+                }, 300);
             }
         });
     </script>
