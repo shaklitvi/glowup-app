@@ -627,25 +627,15 @@
             <div class="logo">GlowUp</div>
             <div class="header-right">
                 <button class="lang-btn" id="langBtn" onclick="toggleLanguage()">EN</button>
-                <button class="share-btn" onclick="share()">📤 Share</button>
+                <button class="share-btn" onclick="share()">📤 שתף</button>
             </div>
-        </div>
-
-        <!-- Install Banner -->
-        <div id="installBanner" class="install-banner hide">
-            <div class="install-icon">📱</div>
-            <div class="install-text">
-                <div class="install-title">Install GlowUp</div>
-                <div class="install-desc">Quick access from home screen</div>
-            </div>
-            <button class="btn btn-sm btn-primary" onclick="install()">Install</button>
         </div>
 
         <!-- Home -->
         <div id="home" class="tab active">
             <div class="hero">
-                <div class="hero-title">Welcome 🎉</div>
-                <div class="hero-subtitle">Social platform with AI image editing</div>
+                <div class="hero-title">ברוכים הבאים 🎉</div>
+                <div class="hero-subtitle">הפלטפורמה החברתית עם AI</div>
             </div>
 
             <div class="stats">
@@ -659,7 +649,7 @@
                 </div>
                 <div class="stat">
                     <div class="stat-val" id="level">1</div>
-                    <div class="stat-label">Level</div>
+                    <div class="stat-label">רמה</div>
                 </div>
             </div>
 
@@ -671,45 +661,108 @@
             <div id="feed"></div>
         </div>
 
+        <!-- Friends -->
+        <div id="friends" class="tab">
+            <div class="card">
+                <div class="card-title">👥 אנשים שאולי אתה מכיר</div>
+                <div id="suggested"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🌐 חבר רשתות</div>
+                <button class="btn btn-secondary" onclick="connect('instagram')">📷 Instagram</button>
+                <button class="btn btn-secondary" onclick="connect('tiktok')">🎵 TikTok</button>
+                <button class="btn btn-secondary" onclick="connect('contacts')">📱 אנשי קשר</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">✨ החברים שלך</div>
+                <div id="friendsList"></div>
+            </div>
+        </div>
+
+        <!-- Tasks -->
+        <div id="tasks" class="tab">
+            <div class="card">
+                <div class="card-title">🎯 משימת היום</div>
+                <p id="dailyTask" style="color: var(--dim); margin-bottom: 16px; line-height: 1.6;"></p>
+                <button class="btn btn-primary" onclick="newTask()">משימה חדשה</button>
+                <p style="font-size: 12px; color: var(--dim); margin-top: 12px;">פרס: +50 XP, +20 Coins</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title">⚡ משימות מהירות</div>
+                <button class="btn btn-secondary" onclick="quick(10, 5)">פרסם תמונה (+10 XP)</button>
+                <button class="btn btn-secondary" onclick="quick(15, 7)">העלה Story (+15 XP)</button>
+                <button class="btn btn-secondary" onclick="quick(20, 10)">הגב ל-3 פוסטים (+20 XP)</button>
+            </div>
+        </div>
+
         <!-- Create -->
         <div id="create" class="tab">
             <div class="card">
-                <div class="card-title">🤖 AI Image Editor</div>
+                <div class="card-title">🎨 צור תוכן עם AI</div>
 
                 <label for="imgInput" class="picker" id="picker">
                     <input type="file" id="imgInput" accept="image/*" style="display:none">
                     <div class="placeholder">
                         <div class="placeholder-icon">📷</div>
-                        <div>Upload photo</div>
+                        <div>העלא תמונה</div>
                     </div>
                 </label>
 
-                <button class="btn btn-secondary" id="deleteBtn" style="display:none" onclick="deleteImage()">🗑️ Delete photo</button>
+                <button class="btn btn-secondary" id="deleteBtn" style="display:none" onclick="deleteImage()">🗑️ מחק תמונה</button>
 
                 <div class="ai-instruction" style="display:none" id="aiInstructionBox">
-                    <strong>💡 Example instructions:</strong><br>
-                    "Make me a superhero" • "Put me in space" • "Rio carnival costume" • "Make it rainy"
+                    <strong>💡 דוגמאות:</strong><br>
+                    "שים אותי בקרנבל בריו" • "הפוך אותי לסופרמן" • "שים אותי בחלל"
                 </div>
 
-                <textarea id="aiPrompt" placeholder="Describe the edit you want (e.g., 'Put me in a Rio carnival with costume')" style="display:none"></textarea>
+                <textarea id="aiPrompt" placeholder="תאר מה אתה רוצה AI לעשות לתמונה" style="display:none"></textarea>
 
-                <input type="password" id="hfToken" placeholder="Paste your Hugging Face API token (get free at huggingface.co)" style="display:none" />
-
-                <button class="btn btn-primary" id="editBtn" onclick="editImage()" style="display:none">✨ Edit with AI</button>
+                <button class="btn btn-primary" id="editBtn" onclick="editImage()" style="display:none">✨ ערוך עם AI</button>
 
                 <div id="aiResult" class="result"></div>
 
                 <div style="display: none;" id="editedSection">
-                    <label for="caption" style="display: block; margin-top: 20px; margin-bottom: 10px; font-weight: 600;">Caption for your post:</label>
-                    <textarea id="caption" placeholder="Write caption..."></textarea>
+                    <label for="caption" style="display: block; margin-top: 20px; margin-bottom: 10px; font-weight: 600;">כתוב כיתוב:</label>
+                    <textarea id="caption" placeholder="כתוב כיתוב..."></textarea>
 
-                    <button class="btn btn-primary" onclick="publish()">📤 Publish edited photo</button>
+                    <button class="btn btn-primary" onclick="publish()">📤 פרסם</button>
                 </div>
             </div>
 
             <div class="card" style="margin-top: 20px;">
                 <div class="card-title">📖 Story</div>
-                <button class="btn btn-secondary" id="storyBtn" onclick="uploadStory()" style="display:none">Upload story</button>
+                <button class="btn btn-secondary" id="storyBtn" onclick="uploadStory()" style="display:none">העלה story</button>
+            </div>
+        </div>
+
+        <!-- Store -->
+        <div id="store" class="tab">
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-val" id="storeCoins">50</div>
+                    <div class="stat-label">הקוינס שלך</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">✨ פילטרים</div>
+                <button class="btn btn-secondary" onclick="buy('neon', 100)">Neon - 100💰</button>
+                <button class="btn btn-secondary" onclick="buy('vintage', 150)">Vintage - 150💰</button>
+                <button class="btn btn-secondary" onclick="buy('cyber', 200)">Cyber - 200💰</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">💎 Premium</div>
+                <p style="color: var(--dim); margin-bottom: 16px; line-height: 1.8;">
+                    • ללא מודעות<br>
+                    • AI ללא הגבלה<br>
+                    • כל הפילטרים<br>
+                    • תגית זהב
+                </p>
+                <button class="btn btn-primary" onclick="premium()">שדרג - ₪29.90/חודש</button>
             </div>
         </div>
 
@@ -717,29 +770,44 @@
         <div id="profile" class="tab">
             <div class="card" style="text-align: center;">
                 <div class="avatar avatar-lg" style="margin: 0 auto 16px;"></div>
-                <h2 style="margin-bottom: 8px;">GlowUp User</h2>
+                <h2 style="margin-bottom: 8px;">משתמש GlowUp</h2>
                 <p style="color: var(--dim); margin-bottom: 20px;">@user123</p>
 
                 <div class="stats">
                     <div class="stat">
                         <div class="stat-val" id="postCount">0</div>
-                        <div class="stat-label">Posts</div>
+                        <div class="stat-label">פוסטים</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-val" id="friendCount">0</div>
+                        <div class="stat-label">חברים</div>
                     </div>
                     <div class="stat">
                         <div class="stat-val">0</div>
-                        <div class="stat-label">Followers</div>
+                        <div class="stat-label">עוקב</div>
                     </div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-title">💾 Your Posts</div>
-                <div id="userPosts"></div>
+                <div class="card-title">💰 רווחים</div>
+                <div style="text-align: center; margin-bottom: 16px;">
+                    <div class="stat-val">₪0.00</div>
+                    <div class="stat-label">השבוע</div>
+                </div>
+                <p style="font-size: 13px; color: var(--dim); line-height: 1.7;">
+                    כשיהיו לך 1000+ עוקבים:<br>
+                    • הרווח ממודעות<br>
+                    • שיתופי פעולה עם מותגים<br>
+                    • תוכן ממומן<br>
+                    • טיפים מעוקבים
+                </p>
             </div>
 
             <div class="card">
-                <div class="card-title">⚙️ Settings</div>
-                <button class="btn btn-secondary" onclick="clearAll()">Clear all data</button>
+                <div class="card-title">⚙️ הגדרות</div>
+                <button class="btn btn-secondary" onclick="alert('בקרוב')">ערוך פרופיל</button>
+                <button class="btn btn-secondary" onclick="clearAll()">נקה נתונים</button>
             </div>
         </div>
 
@@ -747,15 +815,27 @@
         <div class="nav">
             <div class="nav-item active" data-tab="home">
                 <div class="nav-icon">🏠</div>
-                <div class="nav-label">Home</div>
+                <div class="nav-label">בית</div>
+            </div>
+            <div class="nav-item" data-tab="friends">
+                <div class="nav-icon">👥</div>
+                <div class="nav-label">חברים</div>
+            </div>
+            <div class="nav-item" data-tab="tasks">
+                <div class="nav-icon">🎯</div>
+                <div class="nav-label">משימות</div>
             </div>
             <div class="nav-item" data-tab="create">
-                <div class="nav-icon">✨</div>
-                <div class="nav-label">Edit</div>
+                <div class="nav-icon">➕</div>
+                <div class="nav-label">צור</div>
+            </div>
+            <div class="nav-item" data-tab="store">
+                <div class="nav-icon">🛍️</div>
+                <div class="nav-label">חנות</div>
             </div>
             <div class="nav-item" data-tab="profile">
                 <div class="nav-icon">👤</div>
-                <div class="nav-label">Profile</div>
+                <div class="nav-label">פרופיל</div>
             </div>
         </div>
     </div>
@@ -768,6 +848,8 @@
             level: 1,
             posts: [],
             stories: [],
+            friends: [],
+            filters: [],
             language: 'he'
         };
 
@@ -783,7 +865,7 @@
                 edited: '✨ התמונה עוכנה בהצלחה!',
                 published: 'הפוסט פורסם! 🎉\n+50 XP, +25 Coins',
                 noPhotos: 'אין פוסטים עדיין',
-                startCreating: 'צור תוכן!',
+                startCreating: 'תתחיל ליצור!',
                 storyUploaded: 'Story הועלה! 🎉\n+15 XP',
                 error: 'שגיאה בעיבוד. נסה שוב.',
                 levelUp: 'רמה',
@@ -842,8 +924,10 @@
         function updateUI() {
             document.getElementById('xp').textContent = D.xp;
             document.getElementById('coins').textContent = D.coins;
+            document.getElementById('storeCoins').textContent = D.coins;
             document.getElementById('level').textContent = D.level;
             document.getElementById('postCount').textContent = D.posts.length;
+            document.getElementById('friendCount').textContent = D.friends.length;
         }
 
         function reward(xp, coins) {
@@ -881,8 +965,8 @@
             const deleteBtn = document.getElementById('deleteBtn');
             const promptBox = document.getElementById('aiInstructionBox');
             const promptInput = document.getElementById('aiPrompt');
-            const hfToken = document.getElementById('hfToken');
             const editBtn = document.getElementById('editBtn');
+            const storyBtn = document.getElementById('storyBtn');
 
             input.addEventListener('change', e => {
                 const file = e.target.files[0];
@@ -896,8 +980,8 @@
                     deleteBtn.style.display = 'block';
                     promptBox.style.display = 'block';
                     promptInput.style.display = 'block';
-                    hfToken.style.display = 'block';
                     editBtn.style.display = 'block';
+                    storyBtn.style.display = 'block';
                 };
                 reader.readAsDataURL(file);
             });
@@ -910,19 +994,21 @@
             const deleteBtn = document.getElementById('deleteBtn');
             const promptBox = document.getElementById('aiInstructionBox');
             const promptInput = document.getElementById('aiPrompt');
-            const hfToken = document.getElementById('hfToken');
             const editBtn = document.getElementById('editBtn');
+            const storyBtn = document.getElementById('storyBtn');
             const aiResult = document.getElementById('aiResult');
             const editedSection = document.getElementById('editedSection');
+            const caption = document.getElementById('caption');
 
             picker.classList.remove('has-img');
-            picker.innerHTML = '<div class="placeholder"><div class="placeholder-icon">📷</div><div>Upload photo</div></div>';
+            picker.innerHTML = '<div class="placeholder"><div class="placeholder-icon">📷</div><div>העלא תמונה</div></div>';
             deleteBtn.style.display = 'none';
             promptBox.style.display = 'none';
             promptInput.style.display = 'none';
-            hfToken.style.display = 'none';
             editBtn.style.display = 'none';
+            storyBtn.style.display = 'none';
             promptInput.value = '';
+            caption.value = '';
             aiResult.style.display = 'none';
             aiResult.innerHTML = '';
             editedSection.style.display = 'none';
@@ -937,13 +1023,7 @@
 
             const prompt = document.getElementById('aiPrompt').value.trim();
             if (!prompt) {
-                alert('Write an instruction for the AI');
-                return;
-            }
-
-            const token = document.getElementById('hfToken').value.trim();
-            if (!token) {
-                alert('Please paste your Hugging Face API token first.\n\n1. Go to huggingface.co\n2. Sign up (free)\n3. Create an API token\n4. Paste it above');
+                alert('כתוב הוראה ל-AI');
                 return;
             }
 
@@ -956,39 +1036,25 @@
             editBtn.disabled = true;
 
             try {
-                // Convert image to blob
-                const base64Data = img.split(',')[1];
-                const binaryData = atob(base64Data);
-                const bytes = new Uint8Array(binaryData.length);
-                for (let i = 0; i < binaryData.length; i++) {
-                    bytes[i] = binaryData.charCodeAt(i);
-                }
-
-                // Use Hugging Face API for image editing
-                const formData = new FormData();
-                formData.append('inputs', prompt);
-
-                // Create blob from base64
-                const blob = new Blob([bytes], { type: 'image/jpeg' });
-                formData.append('inputs', blob);
-
-                // Use free Hugging Face model for image-to-image editing
-                const response = await fetch(
-                    'https://api-inference.huggingface.co/models/timbrooks/instruct-pix2pix',
-                    {
-                        headers: { Authorization: `Bearer ${token}` },
-                        method: 'POST',
-                        body: formData,
-                    }
-                );
+                // Call backend API
+                const response = await fetch('/api/edit-image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        image: img,
+                        prompt: prompt
+                    })
+                });
 
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`API Error: ${response.status} - ${errorText}`);
+                    const error = await response.json();
+                    throw new Error(error.message || 'API Error');
                 }
 
-                const result_data = await response.blob();
-                editedImg = URL.createObjectURL(result_data);
+                const data = await response.json();
+                editedImg = data.image;
 
                 // Show result
                 result.className = 'result result-ok';
@@ -1010,7 +1076,7 @@
         // ===== POSTS =====
         function publish() {
             if (!editedImg) {
-                alert('Edit an image first!');
+                alert('ערוך תמונה קודם!');
                 return;
             }
 
@@ -1020,7 +1086,8 @@
                 id: Date.now(),
                 img: editedImg,
                 caption: cap,
-                time: 'now'
+                time: 'עכשיו',
+                likes: 0
             });
 
             reward(50, 25);
@@ -1045,39 +1112,30 @@
                     <div class="post-header">
                         <div class="avatar"></div>
                         <div class="post-user">
-                            <div class="post-name">${currentLang === 'he' ? 'אתה' : 'You'}</div>
-                            <div class="post-time">${currentLang === 'he' ? 'עכשיו' : 'Now'}</div>
+                            <div class="post-name">אתה</div>
+                            <div class="post-time">${p.time}</div>
                         </div>
                     </div>
                     <img src="${p.img}" class="post-img" alt="Post">
                     ${p.caption ? `<div class="post-caption">${p.caption}</div>` : ''}
-                </div>
-            `).join('');
-        }
-
-        function loadUserPosts() {
-            const userPosts = document.getElementById('userPosts');
-            if (D.posts.length === 0) {
-                userPosts.innerHTML = `<p style="color: var(--dim);">${t('noPhotos')}</p>`;
-                return;
-            }
-
-            userPosts.innerHTML = D.posts.map(p => `
-                <div class="post" style="margin-bottom: 10px;">
-                    <img src="${p.img}" class="post-img" alt="Post" style="height: 150px;">
-                    ${p.caption ? `<div class="post-caption">${p.caption}</div>` : ''}
+                    <div class="post-actions">
+                        <div class="post-action">❤️ ${p.likes}</div>
+                        <div class="post-action">💬 0</div>
+                        <div class="post-action">📤</div>
+                    </div>
                 </div>
             `).join('');
         }
 
         // ===== STORIES =====
         function uploadStory() {
-            if (!editedImg) {
+            if (!img && !editedImg) {
                 alert(t('noImage'));
                 return;
             }
 
-            D.stories.unshift({ id: Date.now(), img: editedImg });
+            const storyImg = editedImg || img;
+            D.stories.unshift({ id: Date.now(), img: storyImg });
             reward(15, 7);
             save();
 
@@ -1090,26 +1148,103 @@
             const stories = document.getElementById('stories');
 
             if (D.stories.length === 0) {
-                stories.innerHTML = `<div style="color: var(--dim); padding: 20px;">No stories</div>`;
+                stories.innerHTML = '<div style="color: var(--dim); padding: 20px;">אין stories עדיין</div>';
                 return;
             }
 
             stories.innerHTML = D.stories.map(s => `<div class="story"><img src="${s.img}" alt="Story"></div>`).join('');
         }
 
-        // ===== SHARE =====
-        async function share() {
-            const text = 'Join me on GlowUp - AI image editing social platform! 🚀';
-            const url = window.location.href;
+        // ===== TASKS =====
+        const tasks = [
+            '📸 צלם selfie עם משהו כחול',
+            '🎨 צייר משהו וצלם',
+            '🌅 צלם שקיעה יפה',
+            '☕ צלם את הקפה של הבוקר',
+            '👟 צלם את הנעליים שלך באופן יצירתי',
+            '🌳 צלם עץ מעניין',
+            '😎 צלם בפוזה מגניבה',
+            '🍕 צלם את האוכל שלך',
+            '🎧 צלם משהו שאתה אוהב',
+            '🌈 מצא משהו צבעוני וצלם'
+        ];
 
-            if (navigator.share) {
-                try {
-                    await navigator.share({ title: 'GlowUp', text, url });
-                } catch(e) {}
+        function newTask() {
+            const el = document.getElementById('dailyTask');
+            el.textContent = tasks[Math.floor(Math.random() * tasks.length)];
+        }
+
+        function quick(xp, coins) {
+            reward(xp, coins);
+            alert(`הושלם! 🎉\n+${xp} XP, +${coins} Coins`);
+        }
+
+        // ===== FRIENDS =====
+        function loadFriends() {
+            const suggested = document.getElementById('suggested');
+            const list = document.getElementById('friendsList');
+
+            const people = [
+                { name: 'דני לוי', meta: '12 חברים משותפים' },
+                { name: 'שירה כהן', meta: '8 חברים משותפים' },
+                { name: 'יובל מזרחי', meta: 'מוכר מ-Instagram' }
+            ];
+
+            suggested.innerHTML = people.map(p => `
+                <div class="friend">
+                    <div class="avatar"></div>
+                    <div class="friend-info">
+                        <div class="friend-name">${p.name}</div>
+                        <div class="friend-meta">${p.meta}</div>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="addFriend('${p.name}')">הוסף</button>
+                </div>
+            `).join('');
+
+            if (D.friends.length === 0) {
+                list.innerHTML = '<div class="empty"><div class="empty-icon">👥</div><div class="empty-title">אין חברים</div></div>';
             } else {
-                navigator.clipboard.writeText(url);
-                alert('Link copied! Share with friends 📤');
+                list.innerHTML = D.friends.map(f => `
+                    <div class="friend">
+                        <div class="avatar"></div>
+                        <div class="friend-info">
+                            <div class="friend-name">${f}</div>
+                            <div class="friend-meta">חבר</div>
+                        </div>
+                    </div>
+                `).join('');
             }
+        }
+
+        function addFriend(name) {
+            if (!D.friends.includes(name)) {
+                D.friends.push(name);
+                reward(20, 10);
+                save();
+                loadFriends();
+                alert(`${name} נוסף! +20 XP`);
+            }
+        }
+
+        function connect(platform) {
+            alert(`חיבור ל-${platform}\nבגרסה הבאה!`);
+        }
+
+        // ===== STORE =====
+        function buy(item, price) {
+            if (D.coins < price) return alert('אין מספיק קוינס!');
+            if (D.filters.includes(item)) return alert('כבר יש לך!');
+
+            D.coins -= price;
+            D.filters.push(item);
+            save();
+            updateUI();
+
+            alert(`רכשת ${item}! ✨`);
+        }
+
+        function premium() {
+            alert('Premium - ₪29.90/חודש\nבגרסה הבאה!');
         }
 
         // ===== PWA =====
@@ -1130,6 +1265,21 @@
             });
         }
 
+        // ===== SHARE =====
+        async function share() {
+            const text = 'הצטרף אליי ל-GlowUp - הפלטפורמה החברתית עם AI! 🚀';
+            const url = window.location.href;
+
+            if (navigator.share) {
+                try {
+                    await navigator.share({ title: 'GlowUp', text, url });
+                } catch(e) {}
+            } else {
+                navigator.clipboard.writeText(url);
+                alert('הקישור הועתק! שתף עם חברים 📤');
+            }
+        }
+
         // ===== INIT =====
         window.addEventListener('load', () => {
             load();
@@ -1146,7 +1296,8 @@
                     document.getElementById('app').classList.add('show');
                     loadFeed();
                     loadStories();
-                    loadUserPosts();
+                    loadFriends();
+                    newTask();
                 }, 500);
             }, 2000);
         });

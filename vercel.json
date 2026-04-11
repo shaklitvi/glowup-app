@@ -1,0 +1,9 @@
+{
+  "buildCommand": "echo 'Building...'",
+  "devCommand": "echo 'Dev server'",
+  "env": {
+    "HUGGING_FACE_API_KEY": {
+      "description": "Your Hugging Face API key"
+    }
+  }
+}
