@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GlowUp - The Next Trend</title>
+    <meta name="description" content="הפלטפורמה החברתית החדשה עם AI - שתף, צור, והתחבר">
+    <meta name="theme-color" content="#0a0015">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="GlowUp">
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiR2xvd1VwIC0gVGhlIE5leHQgVHJlbmQiLCJzaG9ydF9uYW1lIjoiR2xvd1VwIiwic3RhcnRfdXJsIjoiLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwYTAwMTUiLCJ0aGVtZV9jb2xvciI6IiMwYTAwMTUiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTWpBd0lpQm9aV2xuYUhROUlqSXdNQ0lnZG1sbGQwSnZlRDBpTUNBd0lESXdNQ0F5TURBaUlIaHRiRzV6UFNKb2RIUndPaTh2ZDNkM0xuY3pMbTl5Wnk4eU1EQXdMM04yWnlJK1BHUmxabk0rUEd4cGJtVmhja2R5WVdScFpXNTBJR2xrUFNKbklpQjRNVDBpTUNVaUlIZ3lQU0l4TURBbElpQjVNVDBpTUNVaUlIa3lQU0l4TURBbElqNDhjM1J2Y0NCdlptWnpaWFE5SWpBbElpQnpkSEp2Y0dVdFkyOXNiM0k5SWlObVpqQXdabVlpTHo0OGMzUnZjQ0J2Wm1aelpYUTlJakV3TUNVaUlITjBjbTl3WlMxamIyeHZjajBpSTJabUF3Wm1ZaUx6NDhMMnhwYm1WaGNrZHlZV1JwWlc1MFBqd3ZaR1ZtY3o0OGNtVmpkQ0IzYVdSMGFEMGlNVEF3SlNJZ2FHVnBaMmgwUFNJeE1EQWxJaUJtYVd4c1BTSjFjbXdvSTJjcElpQnllRDBpTXpBaUx6NDhkR1Y0ZENCNFBTSTFNQ1VpSUhrOUlqVXdKU0lnWm1sc2JEMGlJMlptWmlJZ1ptOXVkQzF6YVhwbFBTSXhNREFpSUdadmJuUXRkMlZwWjJoMFBTSTRNREFpSUhSbGVIUXRZVzVqYUc5eVBTSnRhV1JrYkdVaVBrY3hQQzkwWlhoMFBqd3ZjM1puUGc9PSIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9wbmcifV19">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+```
+    :root {
+        --bg: #0a0015;
+        --card: rgba(30, 10, 50, 0.7);
+        --border: rgba(255, 255, 255, 0.15);
+        --text: #ffffff;
+        --dim: rgba(255, 255, 255, 0.6);
+        --accent: #00ffff;
+        --accent2: #ff00ff;
+    }
+
+    html, body {
+        height: 100%;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+    }
+
+    input, textarea, select, button {
+        font-size: 16px !important;
+    }
+
+    /* Animated BG */
+    body::before {
+        content: '';
+        position: fixed;
+        inset: -50%;
+        width: 200%;
+        height: 200%;
+        background: 
+            radial-gradient(circle at 20% 50%, rgba(255, 0, 255, 0.15), transparent 50%),
+            radial-gradient(circle at 80% 50%, rgba(0, 255, 255, 0.15), transparent 50%);
+        animation: bgMove 20s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    @keyframes bgMove {
+        0%, 100% { transform: translate(0, 0); }
+        50% { transform: translate(-10%, -10%); }
+    }
+
+    /* Splash */
+    #splash {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #0a0015, #1a0a2e, #0a0015);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        transition: opacity 0.5s;
+    }
+
+    #splash.hide {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .splash-logo {
+        font-size: 72px;
+        font-weight: 900;
+        background: linear-gradient(45deg, var(--accent2), var(--accent));
+        background-size: 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gradient 3s ease infinite;
+        margin-bottom: 20px;
+    }
+
+    .splash-tag {
+        font-size: 14px;
+        letter-spacing: 4px;
+        opacity: 0.8;
+        text-transform: uppercase;
+    }
+
+    @keyframes gradient {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    /* App */
+    #app {
+        display: none;
+        position: relative;
+        z-index: 1;
+        min-height: 100vh;
+        padding-bottom: 80px;
+    }
+
+    #app.show { display: block; }
+
+    /* Header */
+    .header {
+        position: sticky;
+        top: 0;
+        height: 60px;
+        background: rgba(10, 0, 21, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        padding-top: env(safe-area-inset-top);
+        z-index: 100;
+    }
+
+    .logo {
+        font-size: 24px;
+        font-weight: 800;
+        background: linear-gradient(45deg, var(--accent2), var(--accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .share-btn {
+        background: rgba(0, 255, 255, 0.2);
+        border: 1px solid rgba(0, 255, 255, 0.4);
+        color: var(--accent);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    /* Tabs */
+    .tab {
+        display: none;
+        padding: 20px;
+        min-height: calc(100vh - 140px);
+    }
+
+    .tab.active { display: block; }
+
+    /* Stats */
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .stat {
+        background: var(--card);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px;
+        text-align: center;
+    }
+
+    .stat-val {
+        font-size: 22px;
+        font-weight: 700;
+        background: linear-gradient(45deg, var(--accent2), var(--accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 4px;
+    }
+
+    .stat-label {
+        font-size: 10px;
+        color: var(--dim);
+        text-transform: uppercase;
+    }
+
+    /* Card */
+    .card {
+        background: var(--card);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 16px;
+    }
+
+    .card-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+
+    /* Button */
+    .btn {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s;
+        -webkit-appearance: none;
+        margin-bottom: 10px;
+    }
+
+    .btn:active { transform: scale(0.98); }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--accent2), var(--accent));
+        color: white;
+        box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+    }
+
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+        border: 1px solid var(--border);
+    }
+
+    .btn-sm {
+        padding: 8px 16px;
+        width: auto;
+        font-size: 13px;
+    }
+
+    /* Input */
+    input, textarea {
+        width: 100%;
+        padding: 14px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        color: white;
+        margin-bottom: 12px;
+        -webkit-appearance: none;
+    }
+
+    input::placeholder, textarea::placeholder {
+        color: var(--dim);
+    }
+
+    textarea {
+        min-height: 100px;
+        resize: vertical;
+        font-family: inherit;
+    }
+
+    /* Image Picker */
+    .picker {
+        position: relative;
+        width: 100%;
+        min-height: 250px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px dashed var(--border);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+    .picker.has-img { border-style: solid; }
+
+    .picker img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .placeholder {
+        text-align: center;
+        color: var(--dim);
+    }
+
+    .placeholder-icon {
+        font-size: 56px;
+        margin-bottom: 12px;
+        opacity: 0.5;
+    }
+
+    /* Post */
+    .post {
+        background: var(--card);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+
+    .post-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent2), var(--accent));
+        flex-shrink: 0;
+    }
+
+    .avatar-lg { width: 80px; height: 80px; }
+
+    .post-user { flex: 1; }
+
+    .post-name {
+        font-weight: 600;
+        font-size: 15px;
+        margin-bottom: 2px;
+    }
+
+    .post-time {
+        font-size: 12px;
+        color: var(--dim);
+    }
+
+    .post-img {
+        width: 100%;
+        display: block;
+    }
+
+    .post-caption {
+        padding: 16px;
+        line-height: 1.5;
+        font-size: 14px;
+    }
+
+    .post-actions {
+        display: flex;
+        gap: 24px;
+        padding: 12px 16px;
+        border-top: 1px solid var(--border);
+    }
+
+    .post-action {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+        color: var(--dim);
+        cursor: pointer;
+    }
+
+    /* Friend */
+    .friend {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 12px;
+        margin-bottom: 10px;
+    }
+
+    .friend-info { flex: 1; }
+
+    .friend-name {
+        font-weight: 600;
+        font-size: 15px;
+        margin-bottom: 2px;
+    }
+
+    .friend-meta {
+        font-size: 12px;
+        color: var(--dim);
+    }
+
+    /* Story */
+    .story {
+        width: 80px;
+        height: 120px;
+        border-radius: 12px;
+        background: var(--card);
+        border: 2px solid var(--border);
+        overflow: hidden;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    .story img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .stories {
+        display: flex;
+        gap: 12px;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .stories::-webkit-scrollbar { display: none; }
+
+    /* Empty */
+    .empty {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .empty-icon {
+        font-size: 72px;
+        margin-bottom: 16px;
+        opacity: 0.3;
+    }
+
+    .empty-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--dim);
+    }
+
+    .empty-text {
+        font-size: 14px;
+        color: var(--dim);
+        opacity: 0.7;
+    }
+
+    /* Result */
+    .result {
+        padding: 16px;
+        border-radius: 12px;
+        margin-top: 16px;
+        line-height: 1.6;
+        font-size: 14px;
+    }
+
+    .result-ok {
+        background: rgba(0, 255, 255, 0.1);
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        color: var(--accent);
+    }
+
+    .result-err {
+        background: rgba(255, 0, 255, 0.1);
+        border: 1px solid rgba(255, 0, 255, 0.3);
+        color: var(--accent2);
+    }
+
+    /* Nav */
+    .nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+        background: rgba(10, 0, 21, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid var(--border);
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        padding-bottom: env(safe-area-inset-bottom);
+        z-index: 100;
+    }
+
+    .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        cursor: pointer;
+        color: var(--dim);
+        transition: color 0.2s;
+        -webkit-user-select: none;
+    }
+
+    .nav-item.active { color: var(--accent); }
+
+    .nav-icon { font-size: 22px; }
+
+    .nav-label {
+        font-size: 10px;
+        font-weight: 500;
+    }
+
+    /* Hero */
+    .hero {
+        text-align: center;
+        padding: 40px 20px;
+        margin-bottom: 30px;
+        background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(0, 255, 255, 0.1));
+        border-radius: 20px;
+        border: 1px solid var(--border);
+    }
+
+    .hero-title {
+        font-size: 32px;
+        font-weight: 800;
+        margin-bottom: 12px;
+        background: linear-gradient(45deg, var(--accent2), var(--accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+        font-size: 16px;
+        color: var(--dim);
+        line-height: 1.6;
+    }
+
+    /* Install Banner */
+    .install-banner {
+        background: linear-gradient(135deg, var(--accent2), var(--accent));
+        padding: 16px 20px;
+        margin: 0 20px 20px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .install-banner.hide { display: none; }
+
+    .install-icon {
+        font-size: 32px;
+    }
+
+    .install-text {
+        flex: 1;
+    }
+
+    .install-title {
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .install-desc {
+        font-size: 13px;
+        opacity: 0.9;
+    }
+</style>
+```
+
+</head>
+<body>
+    <!-- Splash -->
+    <div id="splash">
+        <div class="splash-logo">GlowUp</div>
+        <div class="splash-tag">The Next Trend</div>
+    </div>
+
+```
+<!-- App -->
+<div id="app">
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">GlowUp</div>
+        <button class="share-btn" onclick="share()">📤 שתף</button>
+    </div>
+
+    <!-- Install Banner -->
+    <div id="installBanner" class="install-banner hide">
+        <div class="install-icon">📱</div>
+        <div class="install-text">
+            <div class="install-title">התקן את GlowUp</div>
+            <div class="install-desc">גישה מהירה ממסך הבית</div>
+        </div>
+        <button class="btn btn-sm btn-primary" onclick="install()">התקן</button>
+    </div>
+
+    <!-- Home -->
+    <div id="home" class="tab active">
+        <div class="hero">
+            <div class="hero-title">ברוכים הבאים 🎉</div>
+            <div class="hero-subtitle">הפלטפורמה החברתית עם AI</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-val" id="xp">0</div>
+                <div class="stat-label">XP</div>
+            </div>
+            <div class="stat">
+                <div class="stat-val" id="coins">50</div>
+                <div class="stat-label">💰 Coins</div>
+            </div>
+            <div class="stat">
+                <div class="stat-val" id="level">1</div>
+                <div class="stat-label">Level</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📖 Stories</div>
+            <div class="stories" id="stories"></div>
+        </div>
+
+        <div id="feed"></div>
+    </div>
+
+    <!-- Friends -->
+    <div id="friends" class="tab">
+        <div class="card">
+            <div class="card-title">👥 אנשים שאולי אתה מכיר</div>
+            <div id="suggested"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🌐 חבר רשתות</div>
+            <button class="btn btn-secondary" onclick="connect('instagram')">📷 Instagram</button>
+            <button class="btn btn-secondary" onclick="connect('tiktok')">🎵 TikTok</button>
+            <button class="btn btn-secondary" onclick="connect('contacts')">📱 אנשי קשר</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">✨ החברים שלך</div>
+            <div id="friendsList"></div>
+        </div>
+    </div>
+
+    <!-- Tasks -->
+    <div id="tasks" class="tab">
+        <div class="card">
+            <div class="card-title">🎯 משימת היום</div>
+            <p id="dailyTask" style="color: var(--dim); margin-bottom: 16px; line-height: 1.6;"></p>
+            <button class="btn btn-primary" onclick="newTask()">משימה חדשה</button>
+            <p style="font-size: 12px; color: var(--dim); margin-top: 12px;">פרס: +50 XP, +20 Coins</p>
+        </div>
+
+        <div class="card">
+            <div class="card-title">⚡ משימות מהירות</div>
+            <button class="btn btn-secondary" onclick="quick(10, 5)">פרסם תמונה (+10 XP)</button>
+            <button class="btn btn-secondary" onclick="quick(15, 7)">העלה Story (+15 XP)</button>
+            <button class="btn btn-secondary" onclick="quick(20, 10)">הגב ל-3 פוסטים (+20 XP)</button>
+        </div>
+    </div>
+
+    <!-- Create -->
+    <div id="create" class="tab">
+        <div class="card">
+            <div class="card-title">📸 צור תוכן</div>
+            
+            <label for="imgInput" class="picker" id="picker">
+                <input type="file" id="imgInput" accept="image/*" style="display:none">
+                <div class="placeholder">
+                    <div class="placeholder-icon">📷</div>
+                    <div>העלה תמונה</div>
+                </div>
+            </label>
+
+            <textarea id="caption" placeholder="כתוב כיתוב..."></textarea>
+            
+            <button class="btn btn-primary" onclick="aiCaption()">✨ כיתוב AI</button>
+            <button class="btn btn-primary" onclick="aiGlow()">🔥 GlowScore</button>
+            <button class="btn btn-primary" onclick="aiBg()">🎨 רקע AI</button>
+            <button class="btn btn-primary" onclick="aiDesign()">✏️ עיצוב AI</button>
+
+            <div id="aiResult" style="display:none"></div>
+
+            <button class="btn btn-primary" onclick="publish()">פרסם פוסט</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📖 Story</div>
+            <button class="btn btn-secondary" onclick="uploadStory()">העלה Story</button>
+        </div>
+    </div>
+
+    <!-- Store -->
+    <div id="store" class="tab">
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-val" id="storeCoins">50</div>
+                <div class="stat-label">הקוינס שלך</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">✨ פילטרים</div>
+            <button class="btn btn-secondary" onclick="buy('neon', 100)">Neon - 100💰</button>
+            <button class="btn btn-secondary" onclick="buy('vintage', 150)">Vintage - 150💰</button>
+            <button class="btn btn-secondary" onclick="buy('cyber', 200)">Cyber - 200💰</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">💎 Premium</div>
+            <p style="color: var(--dim); margin-bottom: 16px; line-height: 1.8;">
+                • ללא מודעות<br>
+                • AI ללא הגבלה<br>
+                • כל הפילטרים<br>
+                • תגית זהב
+            </p>
+            <button class="btn btn-primary" onclick="premium()">שדרג - ₪29.90/חודש</button>
+        </div>
+    </div>
+
+    <!-- Profile -->
+    <div id="profile" class="tab">
+        <div class="card" style="text-align: center;">
+            <div class="avatar avatar-lg" style="margin: 0 auto 16px;"></div>
+            <h2 style="margin-bottom: 8px;">משתמש GlowUp</h2>
+            <p style="color: var(--dim); margin-bottom: 20px;">@user123</p>
+            
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-val" id="postCount">0</div>
+                    <div class="stat-label">פוסטים</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val" id="friendCount">0</div>
+                    <div class="stat-label">חברים</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">0</div>
+                    <div class="stat-label">עוקב</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">💰 רווחים</div>
+            <div style="text-align: center; margin-bottom: 16px;">
+                <div class="stat-val">₪0.00</div>
+                <div class="stat-label">השבוע</div>
+            </div>
+            <p style="font-size: 13px; color: var(--dim); line-height: 1.7;">
+                כשיהיו לך 1000+ עוקבים:<br>
+                • הרווח ממודעות<br>
+                • שיתופי פעולה עם מותגים<br>
+                • תוכן ממומן<br>
+                • טיפים מעוקבים
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="card-title">⚙️ הגדרות</div>
+            <button class="btn btn-secondary" onclick="alert('בקרוב')">ערוך פרופיל</button>
+            <button class="btn btn-secondary" onclick="clearAll()">נקה נתונים</button>
+        </div>
+    </div>
+
+    <!-- Nav -->
+    <div class="nav">
+        <div class="nav-item active" data-tab="home">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">בית</div>
+        </div>
+        <div class="nav-item" data-tab="friends">
+            <div class="nav-icon">👥</div>
+            <div class="nav-label">חברים</div>
+        </div>
+        <div class="nav-item" data-tab="tasks">
+            <div class="nav-icon">🎯</div>
+            <div class="nav-label">משימות</div>
+        </div>
+        <div class="nav-item" data-tab="create">
+            <div class="nav-icon">➕</div>
+            <div class="nav-label">צור</div>
+        </div>
+        <div class="nav-item" data-tab="store">
+            <div class="nav-icon">🛍️</div>
+            <div class="nav-label">חנות</div>
+        </div>
+        <div class="nav-item" data-tab="profile">
+            <div class="nav-icon">👤</div>
+            <div class="nav-label">פרופיל</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ===== STATE =====
+    let D = {
+        xp: 0,
+        coins: 50,
+        level: 1,
+        posts: [],
+        stories: [],
+        friends: [],
+        filters: []
+    };
+
+    let img = null;
+    let deferredPrompt = null;
+
+    // ===== STORAGE =====
+    function save() {
+        try {
+            localStorage.setItem('glowup', JSON.stringify(D));
+        } catch(e) {}
+    }
+
+    function load() {
+        try {
+            const s = localStorage.getItem('glowup');
+            if (s) D = JSON.parse(s);
+        } catch(e) {}
+    }
+
+    function clearAll() {
+        if (confirm('למחוק הכל?')) {
+            localStorage.clear();
+            location.reload();
+        }
+    }
+
+    // ===== UI =====
+    function updateUI() {
+        document.getElementById('xp').textContent = D.xp;
+        document.getElementById('coins').textContent = D.coins;
+        document.getElementById('storeCoins').textContent = D.coins;
+        document.getElementById('level').textContent = D.level;
+        document.getElementById('postCount').textContent = D.posts.length;
+        document.getElementById('friendCount').textContent = D.friends.length;
+    }
+
+    function reward(xp, coins) {
+        D.xp += xp;
+        D.coins += coins;
+        
+        const newLvl = Math.floor(D.xp / 100) + 1;
+        if (newLvl > D.level) {
+            D.level = newLvl;
+            alert(`🎉 רמה ${newLvl}!`);
+        }
+        
+        updateUI();
+        save();
+    }
+
+    // ===== NAV =====
+    function setupNav() {
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const tab = item.dataset.tab;
+                
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                
+                document.getElementById(tab).classList.add('active');
+                item.classList.add('active');
+                
+                window.scrollTo(0, 0);
+            });
+        });
+    }
+
+    // ===== IMAGE =====
+    function setupImage() {
+        const input = document.getElementById('imgInput');
+        const picker = document.getElementById('picker');
+        
+        input.addEventListener('change', e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = ev => {
+                img = ev.target.result;
+                picker.classList.add('has-img');
+                picker.innerHTML = `<img src="${img}">`;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // ===== LOCAL AI =====
+    const tasks = [
+        '📸 צלם selfie עם משהו כחול',
+        '🎨 צייר משהו וצלם',
+        '🌅 צלם שקיעה יפה',
+        '☕ צלם את הקפה של הבוקר',
+        '👟 צלם את הנעליים שלך באופן יצירתי',
+        '🌳 צלם עץ מעניין',
+        '😎 צלם בפוזה מגניבה',
+        '🍕 צלם את האוכל שלך',
+        '🎧 צלם משהו שאתה אוהב',
+        '🌈 מצא משהו צבעוני וצלם'
+    ];
+
+    const captions = [
+        'הרגע המושלם 📸✨',
+        'חיים טובים 🌟',
+        'עוד יום מדהים 🔥',
+        'פשוט אני 💫',
+        'רגעים שכאלה 🌈',
+        'Living my best life 💎',
+        'Good vibes only ✨',
+        'כי למה לא 🤷‍♂️',
+        'צילום היום 📷',
+        'אנרגיות חיוביות 🌟'
+    ];
+
+    function aiCaption() {
+        if (!img) return alert('העלה תמונה!');
+        
+        const result = document.getElementById('aiResult');
+        result.className = 'result result-ok';
+        result.style.display = 'block';
+        
+        const cap = captions[Math.floor(Math.random() * captions.length)];
+        document.getElementById('caption').value = cap;
+        result.innerHTML = '✨ כיתוב נוצר!';
+        
+        reward(10, 5);
+    }
+
+    function aiGlow() {
+        if (!img) return alert('העלה תמונה!');
+        
+        const result = document.getElementById('aiResult');
+        result.className = 'result result-ok';
+        result.style.display = 'block';
+        
+        const score = 70 + Math.floor(Math.random() * 25);
+        result.innerHTML = `🔥 GlowScore: ${score}/100<br>תמונה מעולה עם אנרגיה טובה!`;
+        
+        reward(15, 10);
+    }
+
+    function aiBg() {
+        if (!img) return alert('העלה תמונה!');
+        
+        const result = document.getElementById('aiResult');
+        result.className = 'result result-ok';
+        result.style.display = 'block';
+        
+        const bgs = [
+            '🌆 רקע עירוני עם אורות ניאון',
+            '🌴 חוף טרופי בשקיעה',
+            '✨ גלקסיה מנצנצת',
+            '🎨 רקע אומנותי צבעוני',
+            '🌈 שמיים מלאי צבעים'
+        ];
+        
+        result.innerHTML = `🎨 הצעת רקע:<br>${bgs[Math.floor(Math.random() * bgs.length)]}`;
+        
+        reward(20, 15);
+    }
+
+    function aiDesign() {
+        if (!img) return alert('העלה תמונה!');
+        
+        const result = document.getElementById('aiResult');
+        result.className = 'result result-ok';
+        result.style.display = 'block';
+        
+        result.innerHTML = `✏️ רעיונות עיצוב:<br>
+        1. הוסף פילטר Vintage<br>
+        2. שחק עם הבהירות<br>
+        3. הוסף טקסט מעוצב`;
+        
+        reward(20, 15);
+    }
+
+    // ===== POSTS =====
+    function publish() {
+        if (!img) return alert('העלה תמונה!');
+        
+        const cap = document.getElementById('caption').value || '';
+        
+        D.posts.unshift({
+            id: Date.now(),
+            img,
+            caption: cap,
+            time: 'עכשיו',
+            likes: 0
+        });
+        
+        reward(25, 15);
+        save();
+        
+        alert('פורסם! 🎉\n+25 XP, +15 Coins');
+        
+        // Reset
+        img = null;
+        document.getElementById('picker').classList.remove('has-img');
+        document.getElementById('picker').innerHTML = '<div class="placeholder"><div class="placeholder-icon">📷</div><div>העלה תמונה</div></div>';
+        document.getElementById('caption').value = '';
+        document.getElementById('aiResult').style.display = 'none';
+        
+        loadFeed();
+        document.querySelector('[data-tab="home"]').click();
+    }
+
+    function loadFeed() {
+        const feed = document.getElementById('feed');
+        
+        if (D.posts.length === 0) {
+            feed.innerHTML = '<div class="empty"><div class="empty-icon">📸</div><div class="empty-title">אין פוסטים</div><div class="empty-text">תתחיל ליצור!</div></div>';
+            return;
+        }
+        
+        feed.innerHTML = D.posts.map(p => `
+            <div class="post">
+                <div class="post-header">
+                    <div class="avatar"></div>
+                    <div class="post-user">
+                        <div class="post-name">אתה</div>
+                        <div class="post-time">${p.time}</div>
+                    </div>
+                </div>
+                <img src="${p.img}" class="post-img">
+                ${p.caption ? `<div class="post-caption">${p.caption}</div>` : ''}
+                <div class="post-actions">
+                    <div class="post-action">❤️ ${p.likes}</div>
+                    <div class="post-action">💬 0</div>
+                    <div class="post-action">📤</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // ===== STORIES =====
+    function uploadStory() {
+        if (!img) return alert('העלה תמונה קודם!');
+        
+        D.stories.unshift({ id: Date.now(), img });
+        reward(15, 7);
+        save();
+        
+        alert('Story הועלה! 🎉\n+15 XP, +7 Coins');
+        loadStories();
+    }
+
+    function loadStories() {
+        const stories = document.getElementById('stories');
+        
+        if (D.stories.length === 0) {
+            stories.innerHTML = '<div style="color: var(--dim); padding: 20px;">אין stories עדיין</div>';
+            return;
+        }
+        
+        stories.innerHTML = D.stories.map(s => `<div class="story"><img src="${s.img}"></div>`).join('');
+    }
+
+    // ===== TASKS =====
+    function newTask() {
+        const el = document.getElementById('dailyTask');
+        el.textContent = tasks[Math.floor(Math.random() * tasks.length)];
+    }
+
+    function quick(xp, coins) {
+        reward(xp, coins);
+        alert(`הושלם! 🎉\n+${xp} XP, +${coins} Coins`);
+    }
+
+    // ===== FRIENDS =====
+    function loadFriends() {
+        const suggested = document.getElementById('suggested');
+        const list = document.getElementById('friendsList');
+        
+        const people = [
+            { name: 'דני לוי', meta: '12 חברים משותפים' },
+            { name: 'שירה כהן', meta: '8 חברים משותפים' },
+            { name: 'יובל מזרחי', meta: 'מוכר מ-Instagram' }
+        ];
+        
+        suggested.innerHTML = people.map(p => `
+            <div class="friend">
+                <div class="avatar"></div>
+                <div class="friend-info">
+                    <div class="friend-name">${p.name}</div>
+                    <div class="friend-meta">${p.meta}</div>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="addFriend('${p.name}')">הוסף</button>
+            </div>
+        `).join('');
+        
+        if (D.friends.length === 0) {
+            list.innerHTML = '<div class="empty"><div class="empty-icon">👥</div><div class="empty-title">אין חברים</div></div>';
+        } else {
+            list.innerHTML = D.friends.map(f => `
+                <div class="friend">
+                    <div class="avatar"></div>
+                    <div class="friend-info">
+                        <div class="friend-name">${f}</div>
+                        <div class="friend-meta">חבר</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    function addFriend(name) {
+        if (!D.friends.includes(name)) {
+            D.friends.push(name);
+            reward(20, 10);
+            save();
+            loadFriends();
+            alert(`${name} נוסף! +20 XP`);
+        }
+    }
+
+    function connect(platform) {
+        alert(`חיבור ל-${platform}\nבגרסה הבאה!`);
+    }
+
+    // ===== STORE =====
+    function buy(item, price) {
+        if (D.coins < price) return alert('אין מספיק קוינס!');
+        if (D.filters.includes(item)) return alert('כבר יש לך!');
+        
+        D.coins -= price;
+        D.filters.push(item);
+        save();
+        updateUI();
+        
+        alert(`רכשת ${item}! ✨`);
+    }
+
+    function premium() {
+        alert('Premium - ₪29.90/חודש\nבגרסה הבאה!');
+    }
+
+    // ===== PWA =====
+    window.addEventListener('beforeinstallprompt', e => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('installBanner').classList.remove('hide');
+    });
+
+    function install() {
+        if (!deferredPrompt) return;
+        
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(choice => {
+            if (choice.outcome === 'accepted') {
+                document.getElementById('installBanner').classList.add('hide');
+            }
+            deferredPrompt = null;
+        });
+    }
+
+    // ===== SHARE =====
+    async function share() {
+        const text = 'הצטרף אליי ל-GlowUp - הפלטפורמה החברתית החדשה עם AI! 🚀';
+        const url = window.location.href;
+        
+        if (navigator.share) {
+            try {
+                await navigator.share({ title: 'GlowUp', text, url });
+            } catch(e) {}
+        } else {
+            navigator.clipboard.writeText(url);
+            alert('הקישור הועתק! שתף עם חברים 📤');
+        }
+    }
+
+    // ===== INIT =====
+    window.addEventListener('load', () => {
+        load();
+        updateUI();
+        setupNav();
+        setupImage();
+        
+        setTimeout(() => {
+            document.getElementById('splash').classList.add('hide');
+            setTimeout(() => {
+                document.getElementById('app').classList.add('show');
+                loadFeed();
+                loadStories();
+                loadFriends();
+                newTask();
+            }, 500);
+        }, 2000);
+    });
+
+    // Register service worker for offline
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('data:text/javascript,');
+    }
+</script>
+```
+
+</body>
+</html>
