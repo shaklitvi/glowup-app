@@ -253,6 +253,11 @@
 
         .btn:active { transform: scale(0.98); }
 
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .btn-primary {
             background: linear-gradient(135deg, var(--accent2), var(--accent));
             color: white;
@@ -484,9 +489,9 @@
         }
 
         .result-err {
-            background: rgba(255, 0, 255, 0.1);
-            border: 1px solid rgba(255, 0, 255, 0.3);
-            color: var(--accent2);
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #ff6b6b;
         }
 
         .nav {
@@ -592,13 +597,27 @@
             margin-right: 10px;
             vertical-align: middle;
         }
+
+        .ai-instruction {
+            background: rgba(255, 0, 255, 0.1);
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            color: var(--accent2);
+            font-size: 13px;
+        }
+
+        .ai-instruction strong {
+            color: var(--accent);
+        }
     </style>
 </head>
 <body>
     <!-- Splash -->
     <div id="splash">
         <div class="splash-logo">GlowUp</div>
-        <div class="splash-tag" data-i18n="tagline">The Next Trend</div>
+        <div class="splash-tag">The Next Trend</div>
     </div>
 
     <!-- App -->
@@ -608,25 +627,15 @@
             <div class="logo">GlowUp</div>
             <div class="header-right">
                 <button class="lang-btn" id="langBtn" onclick="toggleLanguage()">EN</button>
-                <button class="share-btn" onclick="share()" data-i18n="share">📤 Share</button>
+                <button class="share-btn" onclick="share()">📤 שתף</button>
             </div>
-        </div>
-
-        <!-- Install Banner -->
-        <div id="installBanner" class="install-banner hide">
-            <div class="install-icon">📱</div>
-            <div class="install-text">
-                <div class="install-title" data-i18n="installTitle">Install GlowUp</div>
-                <div class="install-desc" data-i18n="installDesc">Quick access from home screen</div>
-            </div>
-            <button class="btn btn-sm btn-primary" onclick="install()" data-i18n="installBtn">Install</button>
         </div>
 
         <!-- Home -->
         <div id="home" class="tab active">
             <div class="hero">
-                <div class="hero-title" data-i18n="welcome">Welcome 🎉</div>
-                <div class="hero-subtitle" data-i18n="subtitle">Social platform with AI</div>
+                <div class="hero-title">ברוכים הבאים 🎉</div>
+                <div class="hero-subtitle">הפלטפורמה החברתית עם AI</div>
             </div>
 
             <div class="stats">
@@ -640,12 +649,12 @@
                 </div>
                 <div class="stat">
                     <div class="stat-val" id="level">1</div>
-                    <div class="stat-label" data-i18n="level">Level</div>
+                    <div class="stat-label">רמה</div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-title" data-i18n="stories">📖 Stories</div>
+                <div class="card-title">📖 Stories</div>
                 <div class="stories" id="stories"></div>
             </div>
 
@@ -655,19 +664,19 @@
         <!-- Friends -->
         <div id="friends" class="tab">
             <div class="card">
-                <div class="card-title" data-i18n="suggested">👥 People you might know</div>
+                <div class="card-title">👥 אנשים שאולי אתה מכיר</div>
                 <div id="suggested"></div>
             </div>
 
             <div class="card">
-                <div class="card-title" data-i18n="connect">🌐 Connect networks</div>
+                <div class="card-title">🌐 חבר רשתות</div>
                 <button class="btn btn-secondary" onclick="connect('instagram')">📷 Instagram</button>
                 <button class="btn btn-secondary" onclick="connect('tiktok')">🎵 TikTok</button>
-                <button class="btn btn-secondary" onclick="connect('contacts')">📱 <span data-i18n="contacts">Contacts</span></button>
+                <button class="btn btn-secondary" onclick="connect('contacts')">📱 אנשי קשר</button>
             </div>
 
             <div class="card">
-                <div class="card-title" data-i18n="yourFriends">✨ Your friends</div>
+                <div class="card-title">✨ החברים שלך</div>
                 <div id="friendsList"></div>
             </div>
         </div>
@@ -675,54 +684,57 @@
         <!-- Tasks -->
         <div id="tasks" class="tab">
             <div class="card">
-                <div class="card-title" data-i18n="dailyTask">🎯 Daily task</div>
+                <div class="card-title">🎯 משימת היום</div>
                 <p id="dailyTask" style="color: var(--dim); margin-bottom: 16px; line-height: 1.6;"></p>
-                <button class="btn btn-primary" onclick="newTask()" data-i18n="newTask">New task</button>
-                <p style="font-size: 12px; color: var(--dim); margin-top: 12px;" data-i18n="reward">Reward: +50 XP, +20 Coins</p>
+                <button class="btn btn-primary" onclick="newTask()">משימה חדשה</button>
+                <p style="font-size: 12px; color: var(--dim); margin-top: 12px;">פרס: +50 XP, +20 Coins</p>
             </div>
 
             <div class="card">
-                <div class="card-title" data-i18n="quickTasks">⚡ Quick tasks</div>
-                <button class="btn btn-secondary" onclick="quick(10, 5)" data-i18n="photoTask">Post photo (+10 XP)</button>
-                <button class="btn btn-secondary" onclick="quick(15, 7)" data-i18n="storyTask">Upload story (+15 XP)</button>
-                <button class="btn btn-secondary" onclick="quick(20, 10)" data-i18n="commentTask">Reply to 3 posts (+20 XP)</button>
+                <div class="card-title">⚡ משימות מהירות</div>
+                <button class="btn btn-secondary" onclick="quick(10, 5)">פרסם תמונה (+10 XP)</button>
+                <button class="btn btn-secondary" onclick="quick(15, 7)">העלה Story (+15 XP)</button>
+                <button class="btn btn-secondary" onclick="quick(20, 10)">הגב ל-3 פוסטים (+20 XP)</button>
             </div>
         </div>
 
         <!-- Create -->
         <div id="create" class="tab">
             <div class="card">
-                <div class="card-title" data-i18n="create">📸 Create content</div>
+                <div class="card-title">🎨 צור תוכן עם AI</div>
 
                 <label for="imgInput" class="picker" id="picker">
                     <input type="file" id="imgInput" accept="image/*" style="display:none">
                     <div class="placeholder">
                         <div class="placeholder-icon">📷</div>
-                        <div data-i18n="uploadPhoto">Upload photo</div>
+                        <div>העלא תמונה</div>
                     </div>
                 </label>
 
-                <button class="btn btn-secondary" id="deleteBtn" style="display:none" onclick="deleteImage()" data-i18n="deletePhoto">🗑️ Delete photo</button>
+                <button class="btn btn-secondary" id="deleteBtn" style="display:none" onclick="deleteImage()">🗑️ מחק תמונה</button>
 
-                <textarea id="caption" placeholder="Write caption..."></textarea>
+                <div class="ai-instruction" style="display:none" id="aiInstructionBox">
+                    <strong>💡 דוגמאות:</strong><br>
+                    "שים אותי בקרנבל בריו" • "הפוך אותי לסופרמן" • "שים אותי בחלל"
+                </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <button class="btn btn-primary" onclick="aiCaption()" data-i18n="aiCaption">✨ Caption</button>
-                    <button class="btn btn-primary" onclick="aiGlow()" data-i18n="aiScore">🔥 Score</button>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                    <button class="btn btn-primary" onclick="aiBg()" data-i18n="aiBg">🎨 Background</button>
-                    <button class="btn btn-primary" onclick="aiDesign()" data-i18n="aiDesign">✏️ Design</button>
-                </div>
+                <textarea id="aiPrompt" placeholder="תאר מה אתה רוצה AI לעשות לתמונה" style="display:none"></textarea>
+
+                <button class="btn btn-primary" id="editBtn" onclick="editImage()" style="display:none">✨ ערוך עם AI</button>
 
                 <div id="aiResult" class="result"></div>
 
-                <button class="btn btn-primary" onclick="publish()" data-i18n="publish">Publish post</button>
+                <div style="display: none;" id="editedSection">
+                    <label for="caption" style="display: block; margin-top: 20px; margin-bottom: 10px; font-weight: 600;">כתוב כיתוב:</label>
+                    <textarea id="caption" placeholder="כתוב כיתוב..."></textarea>
+
+                    <button class="btn btn-primary" onclick="publish()">📤 פרסם</button>
+                </div>
             </div>
 
-            <div class="card">
-                <div class="card-title" data-i18n="storyTab">📖 Story</div>
-                <button class="btn btn-secondary" onclick="uploadStory()" data-i18n="uploadStory">Upload story</button>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-title">📖 Story</div>
+                <button class="btn btn-secondary" id="storyBtn" onclick="uploadStory()" style="display:none">העלה story</button>
             </div>
         </div>
 
@@ -731,26 +743,26 @@
             <div class="stats">
                 <div class="stat">
                     <div class="stat-val" id="storeCoins">50</div>
-                    <div class="stat-label" data-i18n="yourCoins">Your coins</div>
+                    <div class="stat-label">הקוינס שלך</div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-title" data-i18n="filters">✨ Filters</div>
+                <div class="card-title">✨ פילטרים</div>
                 <button class="btn btn-secondary" onclick="buy('neon', 100)">Neon - 100💰</button>
                 <button class="btn btn-secondary" onclick="buy('vintage', 150)">Vintage - 150💰</button>
                 <button class="btn btn-secondary" onclick="buy('cyber', 200)">Cyber - 200💰</button>
             </div>
 
             <div class="card">
-                <div class="card-title" data-i18n="premium">💎 Premium</div>
+                <div class="card-title">💎 Premium</div>
                 <p style="color: var(--dim); margin-bottom: 16px; line-height: 1.8;">
-                    • <span data-i18n="noAds">No ads</span><br>
-                    • <span data-i18n="unlimitedAI">Unlimited AI</span><br>
-                    • <span data-i18n="allFilters">All filters</span><br>
-                    • <span data-i18n="goldBadge">Gold badge</span>
+                    • ללא מודעות<br>
+                    • AI ללא הגבלה<br>
+                    • כל הפילטרים<br>
+                    • תגית זהב
                 </p>
-                <button class="btn btn-primary" onclick="premium()" data-i18n="upgradeBtn">Upgrade - $9.99/month</button>
+                <button class="btn btn-primary" onclick="premium()">שדרג - ₪29.90/חודש</button>
             </div>
         </div>
 
@@ -758,44 +770,44 @@
         <div id="profile" class="tab">
             <div class="card" style="text-align: center;">
                 <div class="avatar avatar-lg" style="margin: 0 auto 16px;"></div>
-                <h2 style="margin-bottom: 8px;" data-i18n="glowupUser">GlowUp User</h2>
+                <h2 style="margin-bottom: 8px;">משתמש GlowUp</h2>
                 <p style="color: var(--dim); margin-bottom: 20px;">@user123</p>
 
                 <div class="stats">
                     <div class="stat">
                         <div class="stat-val" id="postCount">0</div>
-                        <div class="stat-label" data-i18n="posts">Posts</div>
+                        <div class="stat-label">פוסטים</div>
                     </div>
                     <div class="stat">
                         <div class="stat-val" id="friendCount">0</div>
-                        <div class="stat-label" data-i18n="friends">Friends</div>
+                        <div class="stat-label">חברים</div>
                     </div>
                     <div class="stat">
                         <div class="stat-val">0</div>
-                        <div class="stat-label" data-i18n="followers">Followers</div>
+                        <div class="stat-label">עוקב</div>
                     </div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-title" data-i18n="earnings">💰 Earnings</div>
+                <div class="card-title">💰 רווחים</div>
                 <div style="text-align: center; margin-bottom: 16px;">
-                    <div class="stat-val">$0.00</div>
-                    <div class="stat-label" data-i18n="thisWeek">This week</div>
+                    <div class="stat-val">₪0.00</div>
+                    <div class="stat-label">השבוע</div>
                 </div>
                 <p style="font-size: 13px; color: var(--dim); line-height: 1.7;">
-                    <span data-i18n="earningHint">When you have 1000+ followers:</span><br>
-                    • <span data-i18n="adRevenue">Ad revenue</span><br>
-                    • <span data-i18n="brandCollab">Brand collaborations</span><br>
-                    • <span data-i18n="sponsoredContent">Sponsored content</span><br>
-                    • <span data-i18n="followerTips">Follower tips</span>
+                    כשיהיו לך 1000+ עוקבים:<br>
+                    • הרווח ממודעות<br>
+                    • שיתופי פעולה עם מותגים<br>
+                    • תוכן ממומן<br>
+                    • טיפים מעוקבים
                 </p>
             </div>
 
             <div class="card">
-                <div class="card-title" data-i18n="settings">⚙️ Settings</div>
-                <button class="btn btn-secondary" onclick="alert('Coming soon')" data-i18n="editProfile">Edit profile</button>
-                <button class="btn btn-secondary" onclick="clearAll()" data-i18n="clearData">Clear data</button>
+                <div class="card-title">⚙️ הגדרות</div>
+                <button class="btn btn-secondary" onclick="alert('בקרוב')">ערוך פרופיל</button>
+                <button class="btn btn-secondary" onclick="clearAll()">נקה נתונים</button>
             </div>
         </div>
 
@@ -803,242 +815,32 @@
         <div class="nav">
             <div class="nav-item active" data-tab="home">
                 <div class="nav-icon">🏠</div>
-                <div class="nav-label" data-i18n="navHome">Home</div>
+                <div class="nav-label">בית</div>
             </div>
             <div class="nav-item" data-tab="friends">
                 <div class="nav-icon">👥</div>
-                <div class="nav-label" data-i18n="navFriends">Friends</div>
+                <div class="nav-label">חברים</div>
             </div>
             <div class="nav-item" data-tab="tasks">
                 <div class="nav-icon">🎯</div>
-                <div class="nav-label" data-i18n="navTasks">Tasks</div>
+                <div class="nav-label">משימות</div>
             </div>
             <div class="nav-item" data-tab="create">
                 <div class="nav-icon">➕</div>
-                <div class="nav-label" data-i18n="navCreate">Create</div>
+                <div class="nav-label">צור</div>
             </div>
             <div class="nav-item" data-tab="store">
                 <div class="nav-icon">🛍️</div>
-                <div class="nav-label" data-i18n="navStore">Store</div>
+                <div class="nav-label">חנות</div>
             </div>
             <div class="nav-item" data-tab="profile">
                 <div class="nav-icon">👤</div>
-                <div class="nav-label" data-i18n="navProfile">Profile</div>
+                <div class="nav-label">פרופיל</div>
             </div>
         </div>
     </div>
 
     <script>
-        // ===== TRANSLATION SYSTEM =====
-        const translations = {
-            he: {
-                // UI Labels
-                tagline: 'The Next Trend',
-                share: '📤 שתף',
-                installTitle: 'התקן את GlowUp',
-                installDesc: 'גישה מהירה ממסך הבית',
-                installBtn: 'התקן',
-                welcome: 'ברוכים הבאים 🎉',
-                subtitle: 'הפלטפורמה החברתית עם AI',
-                level: 'רמה',
-                stories: '📖 Stories',
-                suggested: '👥 אנשים שאולי אתה מכיר',
-                connect: '🌐 חבר רשתות',
-                contacts: 'אנשי קשר',
-                yourFriends: '✨ החברים שלך',
-                dailyTask: '🎯 משימת היום',
-                newTask: 'משימה חדשה',
-                reward: 'פרס: +50 XP, +20 Coins',
-                quickTasks: '⚡ משימות מהירות',
-                photoTask: 'פרסם תמונה (+10 XP)',
-                storyTask: 'העלה Story (+15 XP)',
-                commentTask: 'הגב ל-3 פוסטים (+20 XP)',
-                create: '📸 צור תוכן',
-                uploadPhoto: 'העלה תמונה',
-                deletePhoto: '🗑️ מחק תמונה',
-                aiCaption: '✨ כיתוב',
-                aiScore: '🔥 Score',
-                aiBg: '🎨 רקע',
-                aiDesign: '✏️ עיצוב',
-                publish: 'פרסם פוסט',
-                storyTab: '📖 Story',
-                uploadStory: 'העלה Story',
-                filters: '✨ פילטרים',
-                premium: '💎 Premium',
-                noAds: 'ללא מודעות',
-                unlimitedAI: 'AI ללא הגבלה',
-                allFilters: 'כל הפילטרים',
-                goldBadge: 'תגית זהב',
-                upgradeBtn: 'שדרג - ₪29.90/חודש',
-                yourCoins: 'הקוינס שלך',
-                glowupUser: 'משתמש GlowUp',
-                posts: 'פוסטים',
-                friends: 'חברים',
-                followers: 'עוקב',
-                earnings: '💰 רווחים',
-                thisWeek: 'השבוע',
-                earningHint: 'כשיהיו לך 1000+ עוקבים:',
-                adRevenue: 'הרווח ממודעות',
-                brandCollab: 'שיתופי פעולה עם מותגים',
-                sponsoredContent: 'תוכן ממומן',
-                followerTips: 'טיפים מעוקבים',
-                settings: '⚙️ הגדרות',
-                editProfile: 'ערוך פרופיל',
-                clearData: 'נקה נתונים',
-                navHome: 'בית',
-                navFriends: 'חברים',
-                navTasks: 'משימות',
-                navCreate: 'צור',
-                navStore: 'חנות',
-                navProfile: 'פרופיל',
-
-                // Messages
-                noImage: 'העלה תמונה קודם!',
-                captionGenerated: '✨ כיתוב נוצר בהצלחה!',
-                generatingCaption: 'AI מייצר כיתוב...',
-                computingScore: 'AI מחשב GlowScore...',
-                scoreResult: 'תמונה מעולה עם אנרגיה טובה! הפוסט הזה עתיד להיות ויראלי 🚀',
-                generatingBg: 'AI מייצר רעיונות...',
-                bgHint: 'הצעת רקע AI:',
-                analyzingImage: 'AI מנתח את התמונה...',
-                designHint: 'רעיונות עיצוב AI:',
-                designTip1: 'הוסף פילטר Vintage לאווירה נוסטלגית',
-                designTip2: 'שחק עם הבהירות והניגודיות',
-                designTip3: 'הוסף טקסט מעוצב עם אימוג\'י',
-                postPublished: 'הפוסט פורסם בהצלחה!\n\n+25 XP\n+15 Coins',
-                noPhotos: 'אין פוסטים',
-                startCreating: 'תתחיל ליצור!',
-                storyUploaded: 'Story הועלה! 🎉\n+15 XP, +7 Coins',
-                noStories: 'אין stories עדיין',
-                taskCompleted: 'הושלם! 🎉',
-                levelUp: 'רמה',
-                confirmDelete: 'למחוק הכל?',
-                urlCopied: 'הקישור הועתק! שתף עם חברים 📤',
-                friendAdded: 'נוסף! +20 XP',
-                notEnoughCoins: 'אין מספיק קוינס!',
-                alreadyOwned: 'כבר יש לך!',
-                purchased: '✨',
-                connectingTo: 'חיבור ל-',
-                coming: 'בגרסה הבאה!',
-
-                // Task examples
-                task1: '📸 צלם selfie עם משהו כחול',
-                task2: '🎨 צייר משהו וצלם',
-                task3: '🌅 צלם שקיעה יפה',
-                task4: '☕ צלם את הקפה של הבוקר',
-                task5: '👟 צלם את הנעליים שלך באופן יצירתי',
-                task6: '🌳 צלם עץ מעניין',
-                task7: '😎 צלם בפוזה מגניבה',
-                task8: '🍕 צלם את האוכל שלך',
-                task9: '🎧 צלם משהו שאתה אוהב',
-                task10: '🌈 מצא משהו צבעוני וצלם'
-            },
-            en: {
-                // UI Labels
-                tagline: 'The Next Trend',
-                share: '📤 Share',
-                installTitle: 'Install GlowUp',
-                installDesc: 'Quick access from home screen',
-                installBtn: 'Install',
-                welcome: 'Welcome 🎉',
-                subtitle: 'Social platform with AI',
-                level: 'Level',
-                stories: '📖 Stories',
-                suggested: '👥 People you might know',
-                connect: '🌐 Connect networks',
-                contacts: 'Contacts',
-                yourFriends: '✨ Your friends',
-                dailyTask: '🎯 Daily task',
-                newTask: 'New task',
-                reward: 'Reward: +50 XP, +20 Coins',
-                quickTasks: '⚡ Quick tasks',
-                photoTask: 'Post photo (+10 XP)',
-                storyTask: 'Upload story (+15 XP)',
-                commentTask: 'Reply to 3 posts (+20 XP)',
-                create: '📸 Create content',
-                uploadPhoto: 'Upload photo',
-                deletePhoto: '🗑️ Delete photo',
-                aiCaption: '✨ Caption',
-                aiScore: '🔥 Score',
-                aiBg: '🎨 Background',
-                aiDesign: '✏️ Design',
-                publish: 'Publish post',
-                storyTab: '📖 Story',
-                uploadStory: 'Upload story',
-                filters: '✨ Filters',
-                premium: '💎 Premium',
-                noAds: 'No ads',
-                unlimitedAI: 'Unlimited AI',
-                allFilters: 'All filters',
-                goldBadge: 'Gold badge',
-                upgradeBtn: 'Upgrade - $9.99/month',
-                yourCoins: 'Your coins',
-                glowupUser: 'GlowUp User',
-                posts: 'Posts',
-                friends: 'Friends',
-                followers: 'Followers',
-                earnings: '💰 Earnings',
-                thisWeek: 'This week',
-                earningHint: 'When you have 1000+ followers:',
-                adRevenue: 'Ad revenue',
-                brandCollab: 'Brand collaborations',
-                sponsoredContent: 'Sponsored content',
-                followerTips: 'Follower tips',
-                settings: '⚙️ Settings',
-                editProfile: 'Edit profile',
-                clearData: 'Clear data',
-                navHome: 'Home',
-                navFriends: 'Friends',
-                navTasks: 'Tasks',
-                navCreate: 'Create',
-                navStore: 'Store',
-                navProfile: 'Profile',
-
-                // Messages
-                noImage: 'Upload a photo first!',
-                captionGenerated: '✨ Caption generated successfully!',
-                generatingCaption: 'AI generating caption...',
-                computingScore: 'AI computing GlowScore...',
-                scoreResult: 'Great photo with good energy! This post is destined to go viral 🚀',
-                generatingBg: 'AI generating ideas...',
-                bgHint: 'AI background suggestion:',
-                analyzingImage: 'AI analyzing image...',
-                designHint: 'AI design ideas:',
-                designTip1: 'Add Vintage filter for nostalgic vibes',
-                designTip2: 'Play with brightness and contrast',
-                designTip3: 'Add stylized text with emojis',
-                postPublished: 'Post published successfully!\n\n+25 XP\n+15 Coins',
-                noPhotos: 'No posts yet',
-                startCreating: 'Start creating!',
-                storyUploaded: 'Story uploaded! 🎉\n+15 XP, +7 Coins',
-                noStories: 'No stories yet',
-                taskCompleted: 'Completed! 🎉',
-                levelUp: 'Level',
-                confirmDelete: 'Delete everything?',
-                urlCopied: 'Link copied! Share with friends 📤',
-                friendAdded: 'Added! +20 XP',
-                notEnoughCoins: 'Not enough coins!',
-                alreadyOwned: 'You already own this!',
-                purchased: '✨',
-                connectingTo: 'Connecting to ',
-                coming: 'Coming in next version!',
-
-                // Task examples
-                task1: '📸 Take selfie with something blue',
-                task2: '🎨 Draw something and photograph it',
-                task3: '🌅 Photograph a beautiful sunset',
-                task4: '☕ Photograph your morning coffee',
-                task5: '👟 Creatively photograph your shoes',
-                task6: '🌳 Photograph an interesting tree',
-                task7: '😎 Take a cool pose photo',
-                task8: '🍕 Photograph your food',
-                task9: '🎧 Photograph something you love',
-                task10: '🌈 Find something colorful and photograph it'
-            }
-        };
-
-        let currentLang = 'he';
-
         // ===== STATE =====
         let D = {
             xp: 0,
@@ -1052,7 +854,52 @@
         };
 
         let img = null;
+        let editedImg = null;
         let deferredPrompt = null;
+        let currentLang = 'he';
+
+        const translations = {
+            he: {
+                noImage: 'העלה תמונה קודם!',
+                editing: 'AI עורך את התמונה...',
+                edited: '✨ התמונה עוכנה בהצלחה!',
+                published: 'הפוסט פורסם! 🎉\n+50 XP, +25 Coins',
+                noPhotos: 'אין פוסטים עדיין',
+                startCreating: 'תתחיל ליצור!',
+                storyUploaded: 'Story הועלה! 🎉\n+15 XP',
+                error: 'שגיאה בעיבוד. נסה שוב.',
+                levelUp: 'רמה',
+                confirmDelete: 'למחוק הכל?',
+                aiPromptRequired: 'כתוב הוראה ל-AI',
+                editFirst: 'ערוך תמונה קודם!',
+                uploadPhoto: 'העלה תמונה',
+                alreadyHave: 'כבר יש לך!',
+                notEnoughCoins: 'אין מספיק קוינס!',
+                purchased: 'רכשת'
+            },
+            en: {
+                noImage: 'Upload a photo first!',
+                editing: 'AI is editing your photo...',
+                edited: '✨ Photo edited successfully!',
+                published: 'Post published! 🎉\n+50 XP, +25 Coins',
+                noPhotos: 'No posts yet',
+                startCreating: 'Start creating!',
+                storyUploaded: 'Story uploaded! 🎉\n+15 XP',
+                error: 'Error processing. Try again.',
+                levelUp: 'Level',
+                confirmDelete: 'Delete everything?',
+                aiPromptRequired: 'Write an instruction for AI',
+                editFirst: 'Edit photo first!',
+                uploadPhoto: 'Upload photo',
+                alreadyHave: 'You already have it!',
+                notEnoughCoins: 'Not enough coins!',
+                purchased: 'You bought'
+            }
+        };
+
+        function t(key) {
+            return translations[currentLang][key] || key;
+        }
 
         // ===== STORAGE =====
         function save() {
@@ -1066,43 +913,22 @@
                 const s = localStorage.getItem('glowup');
                 if (s) D = JSON.parse(s);
                 currentLang = D.language || 'he';
-                updateLanguage();
             } catch(e) {}
         }
 
         function clearAll() {
-            const msg = t('confirmDelete');
-            if (confirm(msg)) {
+            if (confirm(t('confirmDelete'))) {
                 localStorage.clear();
                 location.reload();
             }
         }
 
-        // ===== TRANSLATION =====
-        function t(key, ...args) {
-            const text = translations[currentLang][key] || translations['en'][key] || key;
-            return text;
-        }
-
-        function updateLanguage() {
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.dataset.i18n;
-                el.textContent = t(key);
-            });
-        }
-
         function toggleLanguage() {
             currentLang = currentLang === 'he' ? 'en' : 'he';
             D.language = currentLang;
-
-            const langBtn = document.getElementById('langBtn');
-            langBtn.textContent = currentLang === 'he' ? 'EN' : 'HE';
-
-            const htmlEl = document.documentElement;
-            htmlEl.lang = currentLang;
-            htmlEl.dir = currentLang === 'he' ? 'rtl' : 'ltr';
-
-            updateLanguage();
+            document.getElementById('langBtn').textContent = currentLang === 'he' ? 'EN' : 'HE';
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
             save();
         }
 
@@ -1135,13 +961,10 @@
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const tab = item.dataset.tab;
-
                     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
                     document.getElementById(tab).classList.add('active');
                     item.classList.add('active');
-
                     window.scrollTo(0, 0);
                 });
             });
@@ -1152,6 +975,10 @@
             const input = document.getElementById('imgInput');
             const picker = document.getElementById('picker');
             const deleteBtn = document.getElementById('deleteBtn');
+            const promptBox = document.getElementById('aiInstructionBox');
+            const promptInput = document.getElementById('aiPrompt');
+            const editBtn = document.getElementById('editBtn');
+            const storyBtn = document.getElementById('storyBtn');
 
             input.addEventListener('change', e => {
                 const file = e.target.files[0];
@@ -1163,6 +990,10 @@
                     picker.classList.add('has-img');
                     picker.innerHTML = `<img src="${img}" alt="Selected">`;
                     deleteBtn.style.display = 'block';
+                    promptBox.style.display = 'block';
+                    promptInput.style.display = 'block';
+                    editBtn.style.display = 'block';
+                    storyBtn.style.display = 'block';
                 };
                 reader.readAsDataURL(file);
             });
@@ -1170,161 +1001,157 @@
 
         function deleteImage() {
             img = null;
+            editedImg = null;
             const picker = document.getElementById('picker');
             const deleteBtn = document.getElementById('deleteBtn');
-            const caption = document.getElementById('caption');
+            const promptBox = document.getElementById('aiInstructionBox');
+            const promptInput = document.getElementById('aiPrompt');
+            const editBtn = document.getElementById('editBtn');
+            const storyBtn = document.getElementById('storyBtn');
             const aiResult = document.getElementById('aiResult');
+            const editedSection = document.getElementById('editedSection');
+            const caption = document.getElementById('caption');
 
             picker.classList.remove('has-img');
-            picker.innerHTML = '<div class="placeholder"><div class="placeholder-icon">📷</div><div data-i18n="uploadPhoto">Upload photo</div></div>';
+            picker.innerHTML = `<div class="placeholder"><div class="placeholder-icon">📷</div><div>${t('uploadPhoto')}</div></div>`;
             deleteBtn.style.display = 'none';
+            promptBox.style.display = 'none';
+            promptInput.style.display = 'none';
+            editBtn.style.display = 'none';
+            storyBtn.style.display = 'none';
+            promptInput.value = '';
             caption.value = '';
             aiResult.style.display = 'none';
-
-            updateLanguage();
+            aiResult.innerHTML = '';
+            editedSection.style.display = 'none';
         }
 
-        // ===== AI FUNCTIONS =====
-        const tasks = [
-            { key: 'task1' },
-            { key: 'task2' },
-            { key: 'task3' },
-            { key: 'task4' },
-            { key: 'task5' },
-            { key: 'task6' },
-            { key: 'task7' },
-            { key: 'task8' },
-            { key: 'task9' },
-            { key: 'task10' }
-        ];
+        // ===== AI IMAGE EDITING =====
+        function editImage() {
+            if (!img) {
+                alert(t('noImage'));
+                return;
+            }
 
-        const captions = {
-            he: [
-                'הרגע המושלם 📸✨',
-                'חיים טובים 🌟',
-                'עוד יום מדהים 🔥',
-                'פשוט אני 💫',
-                'רגעים שכאלה 🌈',
-                'חיים הטובים שלי 💎',
-                'אנרגיות חיוביות בלבד ✨',
-                'כי למה לא 🤷‍♂️',
-                'צילום היום 📷',
-                'אנרגיות חיוביות 🌟'
-            ],
-            en: [
-                'The perfect moment 📸✨',
-                'Good life 🌟',
-                'Another amazing day 🔥',
-                'Just me 💫',
-                'Moments like these 🌈',
-                'Living my best life 💎',
-                'Good vibes only ✨',
-                'Why not 🤷‍♂️',
-                'Photo of the day 📷',
-                'Positive vibes 🌟'
-            ]
-        };
+            const prompt = document.getElementById('aiPrompt').value.trim();
+            if (!prompt) {
+                alert(t('aiPromptRequired'));
+                return;
+            }
 
-        const bgs = {
-            he: [
-                '🌆 רקע עירוני עם אורות ניאון צבעוניים',
-                '🌴 חוף טרופי בשקיעה עם צבעים חמים',
-                '✨ גלקסיה מנצנצת עם כוכבים',
-                '🎨 רקע אומנותי צבעוני מופשט',
-                '🌈 שמיים מלאי צבעים ועננים'
-            ],
-            en: [
-                '🌆 Urban background with colorful neon lights',
-                '🌴 Tropical beach at sunset with warm colors',
-                '✨ Glittering galaxy with stars',
-                '🎨 Abstract colorful artistic background',
-                '🌈 Skies full of colors and clouds'
-            ]
-        };
-
-        function showAIResult(text, isLoading = false) {
             const result = document.getElementById('aiResult');
-            result.className = 'result result-ok';
             result.style.display = 'block';
+            result.className = 'result result-ok';
+            result.innerHTML = `<span class="loading"></span>${t('editing')}`;
 
-            if (isLoading) {
-                result.innerHTML = `<div style="text-align: center;">
-                    <span class="loading"></span>
-                    <span>${text}</span>
-                </div>`;
-            } else {
-                result.innerHTML = text;
+            const editBtn = document.getElementById('editBtn');
+            editBtn.disabled = true;
+
+            try {
+                // Process image with Canvas API (works on Safari and Chrome)
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img_el = new Image();
+
+                img_el.onload = function() {
+                    try {
+                        canvas.width = img_el.width;
+                        canvas.height = img_el.height;
+                        ctx.drawImage(img_el, 0, 0);
+
+                        // Apply artistic filter based on prompt
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const data = imageData.data;
+
+                        // Parse prompt to apply different effects
+                        const promptLower = prompt.toLowerCase();
+                        let filterType = 'vintage'; // default
+
+                        if (promptLower.includes('שחור') || promptLower.includes('black') || promptLower.includes('bw')) filterType = 'grayscale';
+                        if (promptLower.includes('צבעוני') || promptLower.includes('vibrant') || promptLower.includes('color')) filterType = 'saturate';
+                        if (promptLower.includes('חם') || promptLower.includes('warm') || promptLower.includes('sunset')) filterType = 'warm';
+                        if (promptLower.includes('קר') || promptLower.includes('cool') || promptLower.includes('blue')) filterType = 'cool';
+                        if (promptLower.includes('דרמטי') || promptLower.includes('dramatic') || promptLower.includes('dark')) filterType = 'dramatic';
+
+                        // Apply filter
+                        for (let i = 0; i < data.length; i += 4) {
+                            let r = data[i];
+                            let g = data[i + 1];
+                            let b = data[i + 2];
+
+                            if (filterType === 'grayscale') {
+                                const gray = r * 0.299 + g * 0.587 + b * 0.114;
+                                data[i] = gray;
+                                data[i + 1] = gray;
+                                data[i + 2] = gray;
+                            } else if (filterType === 'saturate') {
+                                data[i] = Math.min(255, r * 1.4);
+                                data[i + 1] = Math.min(255, g * 1.4);
+                                data[i + 2] = Math.min(255, b * 1.4);
+                            } else if (filterType === 'warm') {
+                                data[i] = Math.min(255, r * 1.2 + 30);
+                                data[i + 1] = Math.min(255, g * 0.95 + 15);
+                                data[i + 2] = Math.min(255, b * 0.7);
+                            } else if (filterType === 'cool') {
+                                data[i] = Math.min(255, r * 0.8);
+                                data[i + 1] = Math.min(255, g * 0.95 + 20);
+                                data[i + 2] = Math.min(255, b * 1.3 + 30);
+                            } else if (filterType === 'dramatic') {
+                                data[i] = Math.min(255, r * 1.3);
+                                data[i + 1] = Math.min(255, g * 0.8);
+                                data[i + 2] = Math.min(255, b * 0.9);
+                            } else { // vintage
+                                data[i] = Math.min(255, r * 0.95 + 30);
+                                data[i + 1] = Math.min(255, g * 0.9 + 20);
+                                data[i + 2] = Math.min(255, b * 0.75);
+                            }
+                        }
+
+                        ctx.putImageData(imageData, 0, 0);
+
+                        // Convert to base64
+                        editedImg = canvas.toDataURL('image/jpeg', 0.95);
+
+                        // Show result
+                        result.className = 'result result-ok';
+                        result.innerHTML = `✨ ${t('edited')}<br><img src="${editedImg}" style="width: 100%; border-radius: 8px; margin-top: 10px;">`;
+
+                        reward(50, 25);
+
+                        // Show caption input
+                        document.getElementById('editedSection').style.display = 'block';
+                        editBtn.disabled = false;
+
+                    } catch (e) {
+                        console.error(e);
+                        result.className = 'result result-err';
+                        result.innerHTML = `❌ שגיאה`;
+                        editBtn.disabled = false;
+                    }
+                };
+
+                img_el.onerror = function() {
+                    result.className = 'result result-err';
+                    result.innerHTML = `❌ שגיאה בטעינת תמונה`;
+                    editBtn.disabled = false;
+                };
+
+                // Add small delay to show loading animation
+                setTimeout(() => {
+                    img_el.src = img;
+                }, 500);
+
+            } catch (error) {
+                result.className = 'result result-err';
+                result.innerHTML = `❌ שגיאה: ${error.message}`;
+                editBtn.disabled = false;
             }
-        }
-
-        function aiCaption() {
-            if (!img) {
-                alert(t('noImage'));
-                return;
-            }
-
-            showAIResult(t('generatingCaption'), true);
-
-            setTimeout(() => {
-                const captions_arr = captions[currentLang];
-                const cap = captions_arr[Math.floor(Math.random() * captions_arr.length)];
-                document.getElementById('caption').value = cap;
-                showAIResult(`✨ ${t('captionGenerated')}`);
-                reward(10, 5);
-            }, 1200);
-        }
-
-        function aiGlow() {
-            if (!img) {
-                alert(t('noImage'));
-                return;
-            }
-
-            showAIResult(t('computingScore'), true);
-
-            setTimeout(() => {
-                const score = 70 + Math.floor(Math.random() * 25);
-                showAIResult(`🔥 <strong>GlowScore: ${score}/100</strong><br>${t('scoreResult')}`);
-                reward(15, 10);
-            }, 1200);
-        }
-
-        function aiBg() {
-            if (!img) {
-                alert(t('noImage'));
-                return;
-            }
-
-            showAIResult(t('generatingBg'), true);
-
-            setTimeout(() => {
-                const bgs_arr = bgs[currentLang];
-                showAIResult(`🎨 <strong>${t('bgHint')}</strong><br>${bgs_arr[Math.floor(Math.random() * bgs_arr.length)]}`);
-                reward(20, 15);
-            }, 1200);
-        }
-
-        function aiDesign() {
-            if (!img) {
-                alert(t('noImage'));
-                return;
-            }
-
-            showAIResult(t('analyzingImage'), true);
-
-            setTimeout(() => {
-                showAIResult(`✏️ <strong>${t('designHint')}</strong><br>
-                    1️⃣ ${t('designTip1')}<br>
-                    2️⃣ ${t('designTip2')}<br>
-                    3️⃣ ${t('designTip3')}`);
-                reward(20, 15);
-            }, 1200);
         }
 
         // ===== POSTS =====
         function publish() {
-            if (!img) {
-                alert(t('noImage'));
+            if (!editedImg) {
+                alert(t('editFirst'));
                 return;
             }
 
@@ -1332,17 +1159,16 @@
 
             D.posts.unshift({
                 id: Date.now(),
-                img,
+                img: editedImg,
                 caption: cap,
-                time: 'now',
+                time: 'עכשיו',
                 likes: 0
             });
 
-            reward(25, 15);
+            reward(50, 25);
             save();
 
-            alert(t('postPublished'));
-
+            alert(t('published'));
             deleteImage();
             loadFeed();
             document.querySelector('[data-tab="home"]').click();
@@ -1361,8 +1187,8 @@
                     <div class="post-header">
                         <div class="avatar"></div>
                         <div class="post-user">
-                            <div class="post-name">${currentLang === 'he' ? 'אתה' : 'You'}</div>
-                            <div class="post-time">${currentLang === 'he' ? 'עכשיו' : 'Now'}</div>
+                            <div class="post-name">אתה</div>
+                            <div class="post-time">${p.time}</div>
                         </div>
                     </div>
                     <img src="${p.img}" class="post-img" alt="Post">
@@ -1378,12 +1204,13 @@
 
         // ===== STORIES =====
         function uploadStory() {
-            if (!img) {
+            if (!img && !editedImg) {
                 alert(t('noImage'));
                 return;
             }
 
-            D.stories.unshift({ id: Date.now(), img });
+            const storyImg = editedImg || img;
+            D.stories.unshift({ id: Date.now(), img: storyImg });
             reward(15, 7);
             save();
 
@@ -1396,7 +1223,7 @@
             const stories = document.getElementById('stories');
 
             if (D.stories.length === 0) {
-                stories.innerHTML = `<div style="color: var(--dim); padding: 20px;">${t('noStories')}</div>`;
+                stories.innerHTML = '<div style="color: var(--dim); padding: 20px;">אין stories עדיין</div>';
                 return;
             }
 
@@ -1404,15 +1231,27 @@
         }
 
         // ===== TASKS =====
+        const tasks = [
+            '📸 צלם selfie עם משהו כחול',
+            '🎨 צייר משהו וצלם',
+            '🌅 צלם שקיעה יפה',
+            '☕ צלם את הקפה של הבוקר',
+            '👟 צלם את הנעליים שלך באופן יצירתי',
+            '🌳 צלם עץ מעניין',
+            '😎 צלם בפוזה מגניבה',
+            '🍕 צלם את האוכל שלך',
+            '🎧 צלם משהו שאתה אוהב',
+            '🌈 מצא משהו צבעוני וצלם'
+        ];
+
         function newTask() {
             const el = document.getElementById('dailyTask');
-            const taskKey = tasks[Math.floor(Math.random() * tasks.length)].key;
-            el.textContent = t(taskKey);
+            el.textContent = tasks[Math.floor(Math.random() * tasks.length)];
         }
 
         function quick(xp, coins) {
             reward(xp, coins);
-            alert(`${t('taskCompleted')}\n+${xp} XP, +${coins} Coins`);
+            alert(`הושלם! 🎉\n+${xp} XP, +${coins} Coins`);
         }
 
         // ===== FRIENDS =====
@@ -1421,9 +1260,9 @@
             const list = document.getElementById('friendsList');
 
             const people = [
-                { name: 'Danny Levy', meta: currentLang === 'he' ? '12 חברים משותפים' : '12 mutual friends' },
-                { name: 'Sarah Cohen', meta: currentLang === 'he' ? '8 חברים משותפים' : '8 mutual friends' },
-                { name: 'Yuval Mizrahi', meta: currentLang === 'he' ? 'מוכר מ-Instagram' : 'Known from Instagram' }
+                { name: 'דני לוי', meta: '12 חברים משותפים' },
+                { name: 'שירה כהן', meta: '8 חברים משותפים' },
+                { name: 'יובל מזרחי', meta: 'מוכר מ-Instagram' }
             ];
 
             suggested.innerHTML = people.map(p => `
@@ -1433,19 +1272,19 @@
                         <div class="friend-name">${p.name}</div>
                         <div class="friend-meta">${p.meta}</div>
                     </div>
-                    <button class="btn btn-primary btn-sm" onclick="addFriend('${p.name}')">${currentLang === 'he' ? 'הוסף' : 'Add'}</button>
+                    <button class="btn btn-primary btn-sm" onclick="addFriend('${p.name}')">הוסף</button>
                 </div>
             `).join('');
 
             if (D.friends.length === 0) {
-                list.innerHTML = `<div class="empty"><div class="empty-icon">👥</div><div class="empty-title">${currentLang === 'he' ? 'אין חברים' : 'No friends'}</div></div>`;
+                list.innerHTML = '<div class="empty"><div class="empty-icon">👥</div><div class="empty-title">אין חברים</div></div>';
             } else {
                 list.innerHTML = D.friends.map(f => `
                     <div class="friend">
                         <div class="avatar"></div>
                         <div class="friend-info">
                             <div class="friend-name">${f}</div>
-                            <div class="friend-meta">${currentLang === 'he' ? 'חבר' : 'Friend'}</div>
+                            <div class="friend-meta">חבר</div>
                         </div>
                     </div>
                 `).join('');
@@ -1458,35 +1297,29 @@
                 reward(20, 10);
                 save();
                 loadFriends();
-                alert(`${name} ${t('friendAdded')}`);
+                alert(`${name} נוסף! +20 XP`);
             }
         }
 
         function connect(platform) {
-            alert(`${t('connectingTo')}${platform}\n${t('coming')}`);
+            alert(`חיבור ל-${platform}\nבגרסה הבאה!`);
         }
 
         // ===== STORE =====
         function buy(item, price) {
-            if (D.coins < price) {
-                alert(t('notEnoughCoins'));
-                return;
-            }
-            if (D.filters.includes(item)) {
-                alert(t('alreadyOwned'));
-                return;
-            }
+            if (D.coins < price) return alert(t('notEnoughCoins'));
+            if (D.filters.includes(item)) return alert(t('alreadyHave'));
 
             D.coins -= price;
             D.filters.push(item);
             save();
             updateUI();
 
-            alert(`${t('purchased')} ${item}`);
+            alert(`${t('purchased')} ${item}! ✨`);
         }
 
         function premium() {
-            alert(`Premium - $9.99/month\n${t('coming')}`);
+            alert('Premium - ₪29.90/חודש\nבגרסה הבאה!');
         }
 
         // ===== PWA =====
@@ -1498,7 +1331,6 @@
 
         function install() {
             if (!deferredPrompt) return;
-
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then(choice => {
                 if (choice.outcome === 'accepted') {
@@ -1510,9 +1342,7 @@
 
         // ===== SHARE =====
         async function share() {
-            const text = currentLang === 'he'
-                ? 'הצטרף אליי ל-GlowUp - הפלטפורמה החברתית החדשה עם AI! 🚀'
-                : 'Join me on GlowUp - the new social platform with AI! 🚀';
+            const text = 'הצטרף אליי ל-GlowUp - הפלטפורמה החברתית עם AI! 🚀';
             const url = window.location.href;
 
             if (navigator.share) {
@@ -1521,7 +1351,7 @@
                 } catch(e) {}
             } else {
                 navigator.clipboard.writeText(url);
-                alert(t('urlCopied'));
+                alert('הקישור הועתק! שתף עם חברים 📤');
             }
         }
 
@@ -1535,22 +1365,34 @@
             const langBtn = document.getElementById('langBtn');
             langBtn.textContent = currentLang === 'he' ? 'EN' : 'HE';
 
+            // Hide splash screen faster
             setTimeout(() => {
                 document.getElementById('splash').classList.add('hide');
-                setTimeout(() => {
-                    document.getElementById('app').classList.add('show');
-                    loadFeed();
-                    loadStories();
-                    loadFriends();
-                    newTask();
-                }, 500);
-            }, 2000);
+                document.getElementById('app').classList.add('show');
+                loadFeed();
+                loadStories();
+                loadFriends();
+                newTask();
+            }, 800);
         });
 
         // Service worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('data:text/javascript,self.addEventListener("fetch",e=>e.respondWith(fetch(e.request)));');
         }
+
+        // Fallback init if load event doesn't fire
+        document.addEventListener('DOMContentLoaded', () => {
+            if (document.getElementById('app').style.display === 'none') {
+                const splash = document.getElementById('splash');
+                if (splash.classList.contains('hide') === false) {
+                    setTimeout(() => {
+                        splash.classList.add('hide');
+                        document.getElementById('app').classList.add('show');
+                    }, 500);
+                }
+            }
+        });
     </script>
 </body>
 </html>
