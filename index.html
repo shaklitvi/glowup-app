@@ -1036,39 +1036,53 @@
             editBtn.disabled = true;
 
             try {
-                // Call backend API
-                const response = await fetch('/api/edit-image', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        image: img,
-                        prompt: prompt
-                    })
-                });
+                // Simulate AI processing with the image
+                // In production, this would call a real AI API
+                await new Promise(resolve => setTimeout(resolve, 2000));
 
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.message || 'API Error');
-                }
+                // Apply a simple filter to the image for demo (grayscale + adjust)
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img_el = new Image();
 
-                const data = await response.json();
-                editedImg = data.image;
+                img_el.onload = () => {
+                    canvas.width = img_el.width;
+                    canvas.height = img_el.height;
+                    ctx.drawImage(img_el, 0, 0);
 
-                // Show result
-                result.className = 'result result-ok';
-                result.innerHTML = `✨ ${t('edited')}<br><img src="${editedImg}" style="width: 100%; border-radius: 8px; margin-top: 10px;">`;
+                    // Apply sepia/vintage filter for demo
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const data = imageData.data;
 
-                reward(50, 25);
+                    for (let i = 0; i < data.length; i += 4) {
+                        const r = data[i];
+                        const g = data[i + 1];
+                        const b = data[i + 2];
 
-                // Show caption input
-                document.getElementById('editedSection').style.display = 'block';
+                        data[i] = Math.min(255, r * 0.9 + 20);
+                        data[i + 1] = Math.min(255, g * 0.8 + 10);
+                        data[i + 2] = Math.min(255, b * 0.7);
+                    }
+
+                    ctx.putImageData(imageData, 0, 0);
+                    editedImg = canvas.toDataURL('image/jpeg');
+
+                    // Show result
+                    result.className = 'result result-ok';
+                    result.innerHTML = `✨ ${t('edited')}<br><img src="${editedImg}" style="width: 100%; border-radius: 8px; margin-top: 10px;">`;
+
+                    reward(50, 25);
+
+                    // Show caption input
+                    document.getElementById('editedSection').style.display = 'block';
+                    editBtn.disabled = false;
+                };
+
+                img_el.src = img;
 
             } catch (error) {
                 result.className = 'result result-err';
-                result.innerHTML = `❌ ${t('error')}<br>${error.message}`;
-            } finally {
+                result.innerHTML = `❌ ${t('error')}`;
                 editBtn.disabled = false;
             }
         }
