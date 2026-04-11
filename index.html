@@ -1389,49 +1389,50 @@
         }
 
         // ===== INIT =====
-        window.addEventListener('load', () => {
-            load();
-            updateUI();
-            setupNav();
-            setupImage();
+        function initApp() {
+            try {
+                console.log('🔧 Initializing GlowUp...');
+                load();
+                updateUI();
+                setupNav();
+                setupImage();
 
-            const langBtn = document.getElementById('langBtn');
-            langBtn.textContent = currentLang === 'he' ? 'EN' : 'HE';
+                const langBtn = document.getElementById('langBtn');
+                if (langBtn) {
+                    langBtn.textContent = currentLang === 'he' ? 'EN' : 'HE';
+                }
 
-            // Hide splash screen faster
-            setTimeout(() => {
-                document.getElementById('splash').classList.add('hide');
-                document.getElementById('app').classList.add('show');
-                loadFeed();
-                loadStories();
-                loadFriends();
-                newTask();
-            }, 800);
-        });
-
-        // Fallback init for Safari and older browsers
-        document.addEventListener('DOMContentLoaded', () => {
-            const splash = document.getElementById('splash');
-            const app = document.getElementById('app');
-            if (splash && !splash.classList.contains('hide')) {
+                // Hide splash screen
                 setTimeout(() => {
-                    splash.classList.add('hide');
-                    app.classList.add('show');
+                    const splash = document.getElementById('splash');
+                    const app = document.getElementById('app');
+                    if (splash) splash.classList.add('hide');
+                    if (app) app.classList.add('show');
+
                     try {
-                        load();
-                        updateUI();
-                        setupNav();
-                        setupImage();
                         loadFeed();
                         loadStories();
                         loadFriends();
                         newTask();
                     } catch(e) {
-                        console.error('Init error:', e);
+                        console.error('Error loading data:', e);
                     }
-                }, 300);
+                }, 500);
+
+                console.log('✓ GlowUp initialized successfully');
+            } catch(e) {
+                console.error('❌ Init error:', e);
             }
-        });
+        }
+
+        // Try multiple ways to initialize for better Safari compatibility
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+
+        window.addEventListener('load', initApp);
     </script>
 </body>
 </html>
