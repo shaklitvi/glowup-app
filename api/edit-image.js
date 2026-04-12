@@ -46,11 +46,11 @@ export default async function handler(req, res) {
 
     console.log('✅ [API] Image validated, base64 length:', base64Data.length);
 
-    // Call Hugging Face API with Instruct Pix2Pix model
-    console.log('🚀 [API] Calling Hugging Face API...');
+    // Call Hugging Face API with OpenJourney model (dramatic AI transformations)
+    console.log('🚀 [API] Calling OpenJourney AI API...');
 
     const hfResponse = await fetch(
-      'https://api-inference.huggingface.co/models/timbrooks/instruct-pix2pix',
+      'https://api-inference.huggingface.co/models/prompthero/openjourney-v4',
       {
         headers: {
           Authorization: `Bearer ${apiKey}`,
@@ -58,10 +58,7 @@ export default async function handler(req, res) {
         },
         method: 'POST',
         body: JSON.stringify({
-          inputs: {
-            image: base64Data,
-            text: prompt,
-          },
+          inputs: `Transform this image: ${prompt}, dramatic, cinematic, high quality, detailed`,
         }),
         timeout: 120000, // 2 minutes timeout
       }
