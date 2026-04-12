@@ -494,6 +494,22 @@
             color: #ff6b6b;
         }
 
+        #authScreen {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #0a0015, #1a0a2e, #0a0015);
+            z-index: 5000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            flex-direction: column;
+        }
+
+        #authScreen.show {
+            display: flex;
+        }
+
         .nav {
             position: fixed;
             bottom: 0;
@@ -615,7 +631,7 @@
 </head>
 <body>
     <!-- Auth Screen (Login/Register) -->
-    <div id="authScreen" style="display: none; position: fixed; inset: 0; background: linear-gradient(135deg, #0a0015, #1a0a2e, #0a0015); z-index: 5000; align-items: center; justify-content: center; padding: 20px;">
+    <div id="authScreen">
         <div style="width: 100%; max-width: 400px;">
             <!-- Login Form -->
             <div id="loginForm" style="text-align: center;">
@@ -1051,7 +1067,7 @@
                 localStorage.setItem('glowup_session', username);
             } catch(e) {}
 
-            document.getElementById('authScreen').style.display = 'none';
+            document.getElementById('authScreen').classList.remove('show');
             document.getElementById('splash').style.display = 'flex';
             document.getElementById('app').style.display = 'none';
 
@@ -1646,7 +1662,7 @@
                     console.log('📋 [INIT] No auth - showing login screen');
                     const authScreen = document.getElementById('authScreen');
                     const splash = document.getElementById('splash');
-                    if (authScreen) authScreen.style.display = 'flex';
+                    if (authScreen) authScreen.classList.add('show');
                     if (splash) splash.style.display = 'none';
                     showLogin();
                     return;
@@ -1675,7 +1691,7 @@
                 const app = document.getElementById('app');
                 const authScreen = document.getElementById('authScreen');
 
-                if (authScreen) authScreen.style.display = 'none';
+                if (authScreen) authScreen.classList.remove('show');
                 if (splash) {
                     splash.style.display = 'none';
                     splash.style.opacity = '0';
