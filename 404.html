@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlowUp - AI Social Media</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .lang-toggle {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.3s;
+        }
+
+        .lang-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .content {
+            padding: 30px 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        button.secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .nav-tabs {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .tab-btn {
+            padding: 10px;
+            background: transparent;
+            border: 2px solid #e0e0e0;
+            color: #666;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.3s;
+            margin: 0;
+            width: 100%;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 250px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            object-fit: cover;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-weight: 600;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-msg {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .success-msg {
+            background: #d4edda;
+            border: 1px solid #28a745;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .post-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .post-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .post-meta {
+            font-size: 12px;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        .friend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .friend-item button {
+            width: 80px;
+            padding: 8px;
+            margin: 0;
+        }
+
+        .store-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .store-item button {
+            width: 80px;
+            padding: 8px;
+            margin: 0;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-input-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #f0f0f0;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            color: #667eea;
+            font-weight: 600;
+            transition: 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .file-input-btn:hover {
+            background: #e8e8ff;
+        }
+
+        .prompt-input {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            width: 100%;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .delete-btn {
+            background: #dc3545 !important;
+        }
+
+        .delete-btn:hover {
+            background: #c82333 !important;
+        }
+
+        h3 {
+            margin: 20px 0 10px 0;
+            color: #333;
+        }
+
+        p {
+            color: #666;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="lang-toggle" onclick="toggleLanguage()">English</button>
+            <h1>✨ GlowUp</h1>
+            <p id="headerSub" style="opacity: 0.9; margin: 0;">AI Social Media</p>
+        </div>
+
+        <div class="content">
+            <!-- Login Screen -->
+            <div id="loginScreen" class="screen active">
+                <h2 style="text-align: center; margin-bottom: 20px; color: #333;">כניסה</h2>
+                <div class="form-group">
+                    <label id="loginUserLabel">שם משתמש</label>
+                    <input type="text" id="loginUser" placeholder="username">
+                </div>
+                <div class="form-group">
+                    <label id="loginPassLabel">סיסמה</label>
+                    <input type="password" id="loginPass" placeholder="password">
+                </div>
+                <button onclick="login()">כניסה</button>
+                <button class="secondary" onclick="showRegister()">הרשמה חדשה</button>
+            </div>
+
+            <!-- Register Screen -->
+            <div id="registerScreen" class="screen">
+                <h2 style="text-align: center; margin-bottom: 20px; color: #333;">הרשמה</h2>
+                <div class="form-group">
+                    <label>שם משתמש</label>
+                    <input type="text" id="regUser" placeholder="username">
+                </div>
+                <div class="form-group">
+                    <label>אימייל</label>
+                    <input type="email" id="regEmail" placeholder="email@example.com">
+                </div>
+                <div class="form-group">
+                    <label>סיסמה (6+ תווים)</label>
+                    <input type="password" id="regPass" placeholder="password">
+                </div>
+                <button onclick="register()">הרשמה</button>
+                <button class="secondary" onclick="showLogin()">חזור לכניסה</button>
+            </div>
+
+            <!-- Main App Screen -->
+            <div id="appScreen" class="screen">
+                <div class="info-box">
+                    <span>שלום</span>, <strong id="currentUserDisplay">User</strong>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="stat-value" id="xpDisplay">0</div>
+                        <div class="stat-label">XP</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="coinsDisplay">50</div>
+                        <div class="stat-label">מטבעות</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="levelDisplay">1</div>
+                        <div class="stat-label">רמה</div>
+                    </div>
+                </div>
+
+                <div class="nav-tabs">
+                    <button class="tab-btn active" onclick="switchTab('home')">🏠</button>
+                    <button class="tab-btn" onclick="switchTab('create')">➕</button>
+                    <button class="tab-btn" onclick="switchTab('friends')">👥</button>
+                    <button class="tab-btn" onclick="switchTab('store')">🛍️</button>
+                    <button class="tab-btn" onclick="switchTab('profile')">⚙️</button>
+                </div>
+
+                <div id="errorMsg" class="error-msg"></div>
+                <div id="successMsg" class="success-msg"></div>
+
+                <!-- Home Tab -->
+                <div id="homeTab" class="tab-content active">
+                    <h3>📰 הפוסטים שלי</h3>
+                    <div id="feedContainer"></div>
+                    <h3>📸 הסטוריז שלי</h3>
+                    <div id="storiesContainer"></div>
+                </div>
+
+                <!-- Create Tab -->
+                <div id="createTab" class="tab-content">
+                    <h3>צור פוסט</h3>
+                    <label for="imageFile" class="file-input-btn">📸 בחר תמונה</label>
+                    <input type="file" id="imageFile" accept="image/*" onchange="handleImageUpload(event)">
+                    <img id="imagePreview" class="image-preview">
+
+                    <div id="aiSection" style="display: none;">
+                        <label id="promptLabel">📝 תיאור AI:</label>
+                        <input type="text" id="aiPrompt" class="prompt-input" placeholder="סופרמן, חלל, זהב, קר...">
+                        <button onclick="editImage()">🤖 עריכה עם AI</button>
+                        <button class="delete-btn" onclick="deleteImage()">🗑️ מחק</button>
+                    </div>
+
+                    <div id="loadingMsg" class="loading">
+                        <div class="spinner"></div>
+                        <p>עיבוד התמונה...</p>
+                    </div>
+
+                    <button onclick="publish()" id="publishBtn" style="display: none; margin-top: 20px;">📤 פרסם</button>
+
+                    <h3 style="margin-top: 30px;">📱 העלה סטוריה</h3>
+                    <label for="storyFile" class="file-input-btn">📸 בחר תמונה</label>
+                    <input type="file" id="storyFile" accept="image/*" onchange="handleStoryUpload(event)">
+                    <button onclick="uploadStory()" id="storyBtn" style="display: none;">📤 העלה סטוריה</button>
+                </div>
+
+                <!-- Friends Tab -->
+                <div id="friendsTab" class="tab-content">
+                    <h3>👥 החברים שלי</h3>
+                    <div id="friendsContainer"></div>
+                    <h3 style="margin-top: 20px;">💡 הצעות חברות</h3>
+                    <div id="suggestionsContainer"></div>
+                </div>
+
+                <!-- Store Tab -->
+                <div id="storeTab" class="tab-content">
+                    <h3>🛍️ חנות פילטרים</h3>
+                    <div id="storeContainer"></div>
+                </div>
+
+                <!-- Profile Tab -->
+                <div id="profileTab" class="tab-content">
+                    <h3>⚙️ הפרופיל שלי</h3>
+                    <h4 style="margin-top: 15px;">📋 משימות יומיות</h4>
+                    <button onclick="newTask()" id="taskBtn">הגרל משימה חדשה</button>
+                    <div id="taskDisplay" style="margin-top: 15px; background: #f9f9f9; padding: 15px; border-radius: 8px; color: #333;"></div>
+                    <button onclick="clearAllData()" class="delete-btn" style="margin-top: 20px;">🗑️ נקה את כל הנתונים</button>
+                    <button onclick="logout()" class="delete-btn" style="margin-top: 10px;">🚪 התנתקות</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            he: {
+                headerSub: 'AI Social Media'
+            },
+            en: {
+                headerSub: 'AI Social Media'
+            }
+        };
+
+        let currentLang = 'he';
+        let currentUser = null;
+        let currentImage = null;
+        let currentEditedImage = null;
+        let currentStory = null;
+
+        let userData = {
+            xp: 0,
+            coins: 50,
+            level: 1,
+            posts: [],
+            stories: [],
+            friends: [],
+            filters: []
+        };
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            const session = localStorage.getItem('glowup_session');
+            if (session) {
+                try {
+                    const sessionData = JSON.parse(session);
+                    currentUser = sessionData.username;
+                    loadUserData();
+                    showAppScreen();
+                } catch (e) {
+                    showLoginScreen();
+                }
+            } else {
+                showLoginScreen();
+            }
+        });
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'he' ? 'en' : 'he';
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
+            document.querySelector('.lang-toggle').textContent = currentLang === 'he' ? 'English' : 'עברית';
+        }
+
+        function showLoginScreen() {
+            document.getElementById('loginScreen').classList.add('active');
+            document.getElementById('registerScreen').classList.remove('active');
+            document.getElementById('appScreen').classList.remove('active');
+        }
+
+        function showRegister() {
+            document.getElementById('loginScreen').classList.remove('active');
+            document.getElementById('registerScreen').classList.add('active');
+            document.getElementById('appScreen').classList.remove('active');
+        }
+
+        function showLogin() {
+            document.getElementById('loginScreen').classList.add('active');
+            document.getElementById('registerScreen').classList.remove('active');
+            document.getElementById('appScreen').classList.remove('active');
+        }
+
+        function showAppScreen() {
+            document.getElementById('loginScreen').classList.remove('active');
+            document.getElementById('registerScreen').classList.remove('active');
+            document.getElementById('appScreen').classList.add('active');
+            document.getElementById('currentUserDisplay').textContent = currentUser;
+            loadFeed();
+        }
+
+        function register() {
+            const username = document.getElementById('regUser').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPass').value;
+
+            if (!username || username.length < 3) {
+                showError('שם משתמש חייב להיות 3+ תווים');
+                return;
+            }
+            if (!email) {
+                showError('אימייל נדרש');
+                return;
+            }
+            if (password.length < 6) {
+                showError('סיסמה חייבת להיות 6+ תווים');
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem('glowup_users') || '{}');
+            if (users[username]) {
+                showError('שם משתמש כבר קיים');
+                return;
+            }
+
+            users[username] = {
+                email,
+                password,
+                xp: 0,
+                coins: 50,
+                level: 1,
+                posts: [],
+                stories: [],
+                friends: [],
+                filters: []
+            };
+
+            localStorage.setItem('glowup_users', JSON.stringify(users));
+            showSuccess('הרשמה בהצלחה!');
+
+            setTimeout(() => {
+                document.getElementById('regUser').value = '';
+                document.getElementById('regEmail').value = '';
+                document.getElementById('regPass').value = '';
+                showLogin();
+            }, 1000);
+        }
+
+        function login() {
+            const username = document.getElementById('loginUser').value.trim();
+            const password = document.getElementById('loginPass').value;
+
+            if (!username || !password) {
+                showError('שם משתמש וסיסמה נדרשים');
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem('glowup_users') || '{}');
+            if (!users[username] || users[username].password !== password) {
+                showError('שם משתמש או סיסמה שגויים');
+                return;
+            }
+
+            currentUser = username;
+            localStorage.setItem('glowup_session', JSON.stringify({ username }));
+            loadUserData();
+
+            document.getElementById('loginUser').value = '';
+            document.getElementById('loginPass').value = '';
+            showAppScreen();
+        }
+
+        function logout() {
+            saveUserData();
+            localStorage.removeItem('glowup_session');
+            currentUser = null;
+            showLoginScreen();
+        }
+
+        function loadUserData() {
+            const users = JSON.parse(localStorage.getItem('glowup_users') || '{}');
+            if (users[currentUser]) {
+                userData = { ...users[currentUser] };
+            }
+            updateStats();
+        }
+
+        function saveUserData() {
+            let users = JSON.parse(localStorage.getItem('glowup_users') || '{}');
+            users[currentUser] = userData;
+            localStorage.setItem('glowup_users', JSON.stringify(users));
+        }
+
+        function updateStats() {
+            document.getElementById('xpDisplay').textContent = userData.xp;
+            document.getElementById('coinsDisplay').textContent = userData.coins;
+            document.getElementById('levelDisplay').textContent = userData.level;
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentImage = e.target.result;
+                document.getElementById('imagePreview').src = currentImage;
+                document.getElementById('imagePreview').style.display = 'block';
+                document.getElementById('aiSection').style.display = 'block';
+                document.getElementById('publishBtn').style.display = 'none';
+                currentEditedImage = null;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleStoryUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentStory = e.target.result;
+                document.getElementById('storyBtn').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function editImage() {
+            if (!currentImage) {
+                showError('לא נבחרה תמונה');
+                return;
+            }
+
+            const prompt = document.getElementById('aiPrompt').value.trim();
+            if (!prompt) {
+                showError('כתוב תיאור AI!');
+                return;
+            }
+
+            document.getElementById('loadingMsg').style.display = 'block';
+            document.getElementById('aiSection').style.display = 'none';
+
+            try {
+                const response = await fetch('/api/edit-image', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        image: currentImage,
+                        prompt: prompt
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'שגיאה בעיבוד');
+                }
+
+                currentEditedImage = data.image;
+                document.getElementById('imagePreview').src = currentEditedImage;
+                document.getElementById('loadingMsg').style.display = 'none';
+                document.getElementById('publishBtn').style.display = 'block';
+                showSuccess('התמונה עודכנה! ✨');
+
+            } catch (error) {
+                document.getElementById('loadingMsg').style.display = 'none';
+                document.getElementById('aiSection').style.display = 'block';
+                showError('שגיאה: ' + error.message);
+            }
+        }
+
+        function deleteImage() {
+            currentImage = null;
+            currentEditedImage = null;
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('aiSection').style.display = 'none';
+            document.getElementById('publishBtn').style.display = 'none';
+            document.getElementById('imageFile').value = '';
+            document.getElementById('aiPrompt').value = '';
+        }
+
+        function publish() {
+            if (!currentEditedImage && !currentImage) {
+                showError('עדכן תמונה עם AI תחילה');
+                return;
+            }
+
+            const post = {
+                id: Date.now(),
+                image: currentEditedImage || currentImage,
+                prompt: document.getElementById('aiPrompt').value,
+                timestamp: new Date().toLocaleString()
+            };
+
+            userData.posts.unshift(post);
+            userData.xp += 50;
+            saveUserData();
+            updateStats();
+
+            deleteImage();
+            loadFeed();
+            showSuccess('פורסם בהצלחה! ✨');
+        }
+
+        function uploadStory() {
+            if (!currentStory) return;
+
+            const story = {
+                id: Date.now(),
+                image: currentStory,
+                timestamp: new Date().toLocaleString()
+            };
+
+            userData.stories.unshift(story);
+            saveUserData();
+
+            currentStory = null;
+            document.getElementById('storyFile').value = '';
+            document.getElementById('storyBtn').style.display = 'none';
+            loadFeed();
+            showSuccess('סטוריה הועלתה! 📸');
+        }
+
+        function loadFeed() {
+            const feedContainer = document.getElementById('feedContainer');
+            if (userData.posts.length === 0) {
+                feedContainer.innerHTML = '<p style="text-align: center; color: #999;">אין פוסטים עדיין</p>';
+            } else {
+                feedContainer.innerHTML = userData.posts.map(post => `
+                    <div class="post-item">
+                        <img src="${post.image}" alt="post">
+                        <p><strong>📝</strong> ${post.prompt}</p>
+                        <div class="post-meta">${post.timestamp}</div>
+                    </div>
+                `).join('');
+            }
+
+            const storiesContainer = document.getElementById('storiesContainer');
+            if (userData.stories.length === 0) {
+                storiesContainer.innerHTML = '<p style="text-align: center; color: #999;">אין סטוריז עדיין</p>';
+            } else {
+                storiesContainer.innerHTML = userData.stories.map(story => `
+                    <div class="post-item">
+                        <img src="${story.image}" alt="story">
+                        <div class="post-meta">${story.timestamp}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(tab + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+
+            if (tab === 'home') loadFeed();
+            if (tab === 'friends') loadFriends();
+            if (tab === 'store') loadStore();
+            if (tab === 'profile') loadProfile();
+        }
+
+        function loadFriends() {
+            const friendsContainer = document.getElementById('friendsContainer');
+            if (userData.friends.length === 0) {
+                friendsContainer.innerHTML = '<p style="text-align: center; color: #999;">אין חברים עדיין</p>';
+            } else {
+                friendsContainer.innerHTML = userData.friends.map(friend => `
+                    <div class="friend-item">
+                        <span>👤 ${friend}</span>
+                    </div>
+                `).join('');
+            }
+
+            const suggestions = ['Alice', 'Bob', 'Charlie', 'David', 'Emma'];
+            const suggestionsContainer = document.getElementById('suggestionsContainer');
+            suggestionsContainer.innerHTML = suggestions.filter(s => !userData.friends.includes(s)).map(friend => `
+                <div class="friend-item">
+                    <span>${friend}</span>
+                    <button onclick="addFriend('${friend}')">הוסף</button>
+                </div>
+            `).join('');
+        }
+
+        function addFriend(name) {
+            if (!userData.friends.includes(name)) {
+                userData.friends.push(name);
+                userData.xp += 10;
+                userData.coins += 5;
+                saveUserData();
+                updateStats();
+                loadFriends();
+                showSuccess(`הוסף ${name} כחבר! ✨`);
+            }
+        }
+
+        function loadStore() {
+            const filters = [
+                { name: 'סופרמן', price: 50 },
+                { name: 'חלל', price: 75 },
+                { name: 'זהב', price: 60 },
+                { name: 'חם', price: 40 }
+            ];
+
+            const storeContainer = document.getElementById('storeContainer');
+            storeContainer.innerHTML = filters.map(filter => `
+                <div class="store-item">
+                    <div>
+                        <strong>${filter.name}</strong><br>
+                        <span style="color: #667eea; font-weight: 700;">${filter.price} 💰</span>
+                    </div>
+                    <button onclick="buyFilter('${filter.name}', ${filter.price})">קנה</button>
+                </div>
+            `).join('');
+        }
+
+        function buyFilter(name, price) {
+            if (userData.coins >= price) {
+                userData.coins -= price;
+                if (!userData.filters.includes(name)) {
+                    userData.filters.push(name);
+                }
+                saveUserData();
+                updateStats();
+                showSuccess('קנייה בהצלחה! ✨');
+            } else {
+                showError('אין מספיק מטבעות');
+            }
+        }
+
+        function loadProfile() {
+            const taskDisplay = document.getElementById('taskDisplay');
+            const tasks = [
+                '📸 העלה 3 פוסטים',
+                '👥 הוסף 2 חברים',
+                '🛍️ קנה 1 פילטר',
+                '📱 העלה 2 סטוריז',
+                '⭐ צבור 100 XP'
+            ];
+            const task = tasks[Math.floor(Math.random() * tasks.length)];
+            taskDisplay.textContent = task;
+        }
+
+        function newTask() {
+            loadProfile();
+            userData.xp += 20;
+            saveUserData();
+            updateStats();
+            showSuccess('קיבלת 20 XP! 🎉');
+        }
+
+        function clearAllData() {
+            if (confirm('בטוח שאתה רוצה למחוק את כל הנתונים?')) {
+                userData = {
+                    xp: 0,
+                    coins: 50,
+                    level: 1,
+                    posts: [],
+                    stories: [],
+                    friends: [],
+                    filters: []
+                };
+                saveUserData();
+                updateStats();
+                loadFeed();
+                showSuccess('הנתונים נמחקו');
+            }
+        }
+
+        function showError(msg) {
+            const errorMsg = document.getElementById('errorMsg');
+            errorMsg.textContent = '❌ ' + msg;
+            errorMsg.style.display = 'block';
+            setTimeout(() => { errorMsg.style.display = 'none'; }, 3000);
+        }
+
+        function showSuccess(msg) {
+            const successMsg = document.getElementById('successMsg');
+            successMsg.textContent = '✅ ' + msg;
+            successMsg.style.display = 'block';
+            setTimeout(() => { successMsg.style.display = 'none'; }, 3000);
+        }
+    </script>
+</body>
+</html>
