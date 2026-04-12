@@ -495,19 +495,19 @@
         }
 
         #authScreen {
-            display: none;
             position: fixed;
             inset: 0;
             background: linear-gradient(135deg, #0a0015, #1a0a2e, #0a0015);
             z-index: 5000;
+            padding: 20px;
+            display: none;
             align-items: center;
             justify-content: center;
-            padding: 20px;
             flex-direction: column;
         }
 
         #authScreen.show {
-            display: flex;
+            display: flex !important;
         }
 
         .nav {
@@ -1655,76 +1655,74 @@
             console.log('🔧 [INIT] Starting initialization...');
 
             try {
-                // Check authentication first
-                const isAuthenticated = checkAuth();
-
-                if (!isAuthenticated) {
-                    console.log('📋 [INIT] No auth - showing login screen');
-                    const authScreen = document.getElementById('authScreen');
-                    const splash = document.getElementById('splash');
-                    if (authScreen) authScreen.classList.add('show');
-                    if (splash) splash.style.display = 'none';
-                    showLogin();
-                    return;
-                }
-
-                console.log('🔓 [INIT] User authenticated:', currentUser);
-
-                // Load data for authenticated user
-                updateUI();
-                setupNav();
-                setupImage();
-
-                const langBtn = document.getElementById('langBtn');
-                if (langBtn) {
-                    langBtn.textContent = currentLang === 'he' ? 'EN' : 'HE';
-                }
-
-                // Update user display
-                const userDisplay = document.getElementById('currentUserDisplay');
-                if (userDisplay) {
-                    userDisplay.textContent = `👤 ${currentUser}`;
-                }
-
-                // Force show app immediately (don't wait)
+                // Get elements
                 const splash = document.getElementById('splash');
                 const app = document.getElementById('app');
                 const authScreen = document.getElementById('authScreen');
 
-                if (authScreen) authScreen.classList.remove('show');
-                if (splash) {
-                    splash.style.display = 'none';
-                    splash.style.opacity = '0';
-                    splash.classList.add('hide');
-                    console.log('✓ [INIT] Splash hidden');
-                }
+                console.log('✓ [INIT] Elements found - splash:', !!splash, 'app:', !!app, 'auth:', !!authScreen);
 
-                if (app) {
-                    app.style.display = 'block';
-                    app.style.opacity = '1';
-                    app.classList.add('show');
-                    console.log('✓ [INIT] App shown');
-                }
+                // Hide splash immediately
+                if (splash) splash.style.display = 'none';
 
-                // Load content after short delay to ensure rendering
-                setTimeout(() => {
-                    try {
-                        loadFeed();
-                        loadStories();
-                        loadFriends();
-                        newTask();
-                        console.log('✓ [INIT] All content loaded');
-                    } catch(e) {
-                        console.error('❌ [INIT] Content load error:', e);
+                // Check authentication
+                const isAuthenticated = checkAuth();
+                console.log('📋 [INIT] Auth check result:', isAuthenticated, 'user:', currentUser);
+
+                if (!isAuthenticated) {
+                    console.log('🔐 [INIT] Not authenticated - showing login');
+                    if (authScreen) {
+                        authScreen.classList.add('show');
+                        console.log('✓ [INIT] Auth screen shown');
                     }
-                }, 100);
+                    showLogin();
+                    return;
+                }
 
-                console.log('✓ [INIT] Initialization complete!');
+                console.log('✅ [INIT] User authenticated, loading app...');
+
+                // Setup app for authenticated user
+                try {
+                    updateUI();
+                    setupNav();
+                    setupImage();
+
+                    const langBtn = document.getElementById('langBtn');
+                    if (langBtn) langBtn.textContent = currentLang === 'he' ? 'EN' : 'HE';
+
+                    const userDisplay = document.getElementById('currentUserDisplay');
+                    if (userDisplay) userDisplay.textContent = `👤 ${currentUser}`;
+
+                    // Show app
+                    if (authScreen) authScreen.classList.remove('show');
+                    if (app) {
+                        app.style.display = 'block';
+                        app.classList.add('show');
+                        console.log('✓ [INIT] App displayed');
+                    }
+
+                    // Load content
+                    setTimeout(() => {
+                        try {
+                            loadFeed();
+                            loadStories();
+                            loadFriends();
+                            newTask();
+                            console.log('✓ [INIT] All content ready');
+                        } catch(e) {
+                            console.error('❌ [INIT] Content error:', e.message);
+                        }
+                    }, 100);
+
+                    console.log('✅ [INIT] App ready!');
+                } catch(e) {
+                    console.error('❌ [INIT] Setup error:', e.message);
+                    if (app) app.style.display = 'block';
+                }
             } catch(e) {
-                console.error('❌ [INIT] Fatal error:', e);
-                // Still try to show something
+                console.error('❌ [INIT] Critical error:', e.message);
                 const authScreen = document.getElementById('authScreen');
-                if (authScreen) authScreen.style.display = 'flex';
+                if (authScreen) authScreen.classList.add('show');
             }
         }
 
@@ -1756,23 +1754,25 @@
             }
         }, 2000);
 
-        // Method 5: Ensure splash is hidden with brute force after 1 second
+        // Method 5: Ensure something is visible after 1.5 seconds
         setTimeout(() => {
             const splash = document.getElementById('splash');
-            if (splash && splash.style.display !== 'none') {
-                console.warn('⚠️  [INIT] Forcing splash hide');
-                splash.style.display = 'none';
-                splash.style.opacity = '0';
-                splash.style.visibility = 'hidden';
-                splash.style.pointerEvents = 'none';
-                const app = document.getElementById('app');
-                if (app) {
-                    app.style.display = 'block';
-                    app.style.opacity = '1';
-                    app.style.visibility = 'visible';
+            const authScreen = document.getElementById('authScreen');
+            const app = document.getElementById('app');
+
+            if (splash) splash.style.display = 'none';
+
+            const isAppVisible = app && app.style.display !== 'none';
+            const isAuthVisible = authScreen && authScreen.classList.contains('show');
+
+            if (!isAppVisible && !isAuthVisible) {
+                console.warn('⚠️  [INIT] Emergency: showing auth screen');
+                if (authScreen) {
+                    authScreen.classList.add('show');
+                    showLogin();
                 }
             }
-        }, 1000);
+        }, 1500);
     </script>
 </body>
 </html>
