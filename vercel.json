@@ -1,5 +1,8 @@
 {
   "version": 2,
+  "public": false,
+  "buildCommand": "exit 0",
+  "outputDirectory": ".",
   "functions": {
     "api/**/*.js": {
       "memory": 1024,
@@ -7,6 +10,12 @@
       "runtime": "nodejs18.x"
     }
   },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
   "env": {
     "HUGGING_FACE_API_KEY": "@hugging_face_api_key"
   }
