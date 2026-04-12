@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing image or prompt' });
     }
 
-    console.log('🎨 [API] Generating AI transformation...');
+    console.log('🎨 Generating real AI transformation...');
 
     // Extract base64 from data URL
     let base64Data = image;
@@ -28,10 +28,9 @@ export default async function handler(req, res) {
 
     const apiKey = process.env.HUGGING_FACE_API_KEY;
 
-    // Use Stable Diffusion XL - img2img for REAL transformations
-    // This creates entirely new images based on the prompt and input image
+    // Try Stable Diffusion 3 - better for realistic transformations
     const response = await fetch(
-      'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl',
+      'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-3-medium',
       {
         headers: {
           Authorization: `Bearer ${apiKey}`,
@@ -39,36 +38,29 @@ export default async function handler(req, res) {
         },
         method: 'POST',
         body: JSON.stringify({
-          inputs: {
-            image: base64Data,
-            prompt: `${prompt}, professional, high quality, detailed, cinematic, masterpiece`,
-            negative_prompt: 'blurry, low quality, distorted, ugly, nsfw',
-            num_inference_steps: 50,
-            guidance_scale: 7.5,
-            strength: 0.9
-          }
+          inputs: `Transform this person: ${prompt}. Professional photo, cinematic lighting, high quality, detailed, masterpiece`
         }),
         timeout: 120000
       }
     );
 
-    console.log('📡 Response status:', response.status);
+    console.log('Response status:', response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('❌ API Error:', errorText);
-      throw new Error(`API Error: ${response.status}`);
+      console.error('API Error:', errorText);
+      throw new Error('Transformation failed');
     }
 
     const arrayBuffer = await response.arrayBuffer();
     const base64Result = Buffer.from(arrayBuffer).toString('base64');
     const dataUrl = `data:image/jpeg;base64,${base64Result}`;
 
-    console.log('✅ [API] AI transformation complete!');
+    console.log('✅ AI transformation complete!');
     return res.status(200).json({ image: dataUrl });
 
   } catch (error) {
-    console.error('❌ [API] Error:', error.message);
+    console.error('Error:', error.message);
     return res.status(500).json({
       error: 'AI transformation failed',
       message: error.message
