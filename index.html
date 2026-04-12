@@ -614,6 +614,42 @@
     </style>
 </head>
 <body>
+    <!-- Auth Screen (Login/Register) -->
+    <div id="authScreen" style="display: none; position: fixed; inset: 0; background: linear-gradient(135deg, #0a0015, #1a0a2e, #0a0015); z-index: 5000; align-items: center; justify-content: center; padding: 20px;">
+        <div style="width: 100%; max-width: 400px;">
+            <!-- Login Form -->
+            <div id="loginForm" style="text-align: center;">
+                <div style="font-size: 48px; margin-bottom: 20px;">✨</div>
+                <h1 style="font-size: 32px; margin-bottom: 10px; background: linear-gradient(45deg, #ff00ff, #00ffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">GlowUp</h1>
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: 30px;">הפלטפורמה החברתית עם AI</p>
+
+                <div style="background: rgba(30, 10, 50, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 24px;">
+                    <h2 style="font-size: 18px; margin-bottom: 20px; color: #fff;">כניסה</h2>
+                    <input type="text" id="loginUsername" placeholder="שם משתמש" style="width: 100%; padding: 12px; margin-bottom: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; font-size: 14px;">
+                    <input type="password" id="loginPassword" placeholder="סיסמה" style="width: 100%; padding: 12px; margin-bottom: 20px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; font-size: 14px;">
+                    <button onclick="loginUser()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #ff00ff, #00ffff); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-bottom: 12px;">כניסה</button>
+                    <p style="color: rgba(255,255,255,0.6); font-size: 13px;">אין לך חשבון? <a href="#" onclick="showRegister(event)" style="color: #00ffff; text-decoration: none; cursor: pointer;">הירשם כאן</a></p>
+                </div>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerForm" style="display: none; text-align: center;">
+                <div style="font-size: 48px; margin-bottom: 20px;">🎉</div>
+                <h1 style="font-size: 32px; margin-bottom: 10px; background: linear-gradient(45deg, #ff00ff, #00ffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">הצטרף</h1>
+
+                <div style="background: rgba(30, 10, 50, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 24px;">
+                    <h2 style="font-size: 18px; margin-bottom: 20px; color: #fff;">הרשמה</h2>
+                    <input type="text" id="regUsername" placeholder="שם משתמש" style="width: 100%; padding: 12px; margin-bottom: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; font-size: 14px;">
+                    <input type="email" id="regEmail" placeholder="אימייל" style="width: 100%; padding: 12px; margin-bottom: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; font-size: 14px;">
+                    <input type="password" id="regPassword" placeholder="סיסמה" style="width: 100%; padding: 12px; margin-bottom: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; font-size: 14px;">
+                    <input type="password" id="regPasswordConfirm" placeholder="אימות סיסמה" style="width: 100%; padding: 12px; margin-bottom: 20px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; font-size: 14px;">
+                    <button onclick="registerUser()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #ff00ff, #00ffff); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-bottom: 12px;">הרשמה</button>
+                    <p style="color: rgba(255,255,255,0.6); font-size: 13px;">כבר יש לך חשבון? <a href="#" onclick="showLogin(event)" style="color: #00ffff; text-decoration: none; cursor: pointer;">כנס כאן</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Splash -->
     <div id="splash">
         <div class="splash-logo">GlowUp</div>
@@ -813,8 +849,12 @@
 
             <div class="card">
                 <div class="card-title">⚙️ הגדרות</div>
+                <div style="background: rgba(0, 255, 255, 0.1); border: 1px solid rgba(0, 255, 255, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 12px; text-align: center;">
+                    <div style="font-weight: 600; color: #00ffff;" id="currentUserDisplay">👤 משתמש</div>
+                </div>
                 <button class="btn btn-secondary" onclick="alert('בקרוב')">ערוך פרופיל</button>
-                <button class="btn btn-secondary" onclick="clearAll()">נקה נתונים</button>
+                <button class="btn btn-secondary" onclick="logoutUser()">התנתק</button>
+                <button class="btn btn-secondary" onclick="clearAllUserData()">נקה נתונים</button>
             </div>
         </div>
 
@@ -864,6 +904,7 @@
         let editedImg = null;
         let deferredPrompt = null;
         let currentLang = 'he';
+        let currentUser = null;
 
         const translations = {
             he: {
@@ -908,10 +949,180 @@
             return translations[currentLang][key] || key;
         }
 
+        // ===== AUTH =====
+        function getAllUsers() {
+            try {
+                const users = localStorage.getItem('glowup_users');
+                return users ? JSON.parse(users) : {};
+            } catch(e) { return {}; }
+        }
+
+        function saveAllUsers(users) {
+            try {
+                localStorage.setItem('glowup_users', JSON.stringify(users));
+            } catch(e) {}
+        }
+
+        function showLogin(e) {
+            if (e) e.preventDefault();
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('loginUsername').focus();
+        }
+
+        function showRegister(e) {
+            if (e) e.preventDefault();
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('regUsername').focus();
+        }
+
+        function registerUser() {
+            const username = document.getElementById('regUsername').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regPasswordConfirm').value;
+
+            if (!username || username.length < 3) {
+                alert('שם משתמש חייב להיות 3 תווים לפחות');
+                return;
+            }
+
+            if (!email || !email.includes('@')) {
+                alert('אימייל לא תקין');
+                return;
+            }
+
+            if (!password || password.length < 6) {
+                alert('סיסמה חייבת להיות 6 תווים לפחות');
+                return;
+            }
+
+            if (password !== confirm) {
+                alert('הסיסמאות אינן תואמות');
+                return;
+            }
+
+            const users = getAllUsers();
+            if (users[username]) {
+                alert('שם משתמש זה כבר קיים');
+                return;
+            }
+
+            users[username] = {
+                email: email,
+                password: password,
+                created: new Date().toISOString(),
+                xp: 0,
+                coins: 50,
+                level: 1,
+                posts: [],
+                stories: [],
+                friends: [],
+                filters: [],
+                language: 'he'
+            };
+
+            saveAllUsers(users);
+            alert('🎉 הרשמה הצליחה! עכשיו כנס לחשבונך');
+            showLogin();
+        }
+
+        function loginUser() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!username || !password) {
+                alert('הזן שם משתמש וסיסמה');
+                return;
+            }
+
+            const users = getAllUsers();
+            if (!users[username] || users[username].password !== password) {
+                alert('שם משתמש או סיסמה לא נכונה');
+                return;
+            }
+
+            currentUser = username;
+            D = users[username];
+            currentLang = D.language || 'he';
+
+            try {
+                localStorage.setItem('glowup_session', username);
+            } catch(e) {}
+
+            document.getElementById('authScreen').style.display = 'none';
+            document.getElementById('splash').style.display = 'flex';
+            document.getElementById('app').style.display = 'none';
+
+            initApp();
+        }
+
+        function logoutUser() {
+            if (confirm('האם בטוח שברצונך להתנתק?')) {
+                saveUserData();
+                currentUser = null;
+                D = {
+                    xp: 0,
+                    coins: 50,
+                    level: 1,
+                    posts: [],
+                    stories: [],
+                    friends: [],
+                    filters: [],
+                    language: 'he'
+                };
+                try {
+                    localStorage.removeItem('glowup_session');
+                } catch(e) {}
+                location.reload();
+            }
+        }
+
+        function saveUserData() {
+            if (!currentUser) return;
+            const users = getAllUsers();
+            if (users[currentUser]) {
+                users[currentUser] = {
+                    ...users[currentUser],
+                    xp: D.xp,
+                    coins: D.coins,
+                    level: D.level,
+                    posts: D.posts,
+                    stories: D.stories,
+                    friends: D.friends,
+                    filters: D.filters,
+                    language: D.language
+                };
+                saveAllUsers(users);
+            }
+        }
+
+        function checkAuth() {
+            const session = localStorage.getItem('glowup_session');
+            if (session) {
+                const users = getAllUsers();
+                if (users[session]) {
+                    currentUser = session;
+                    D = users[session];
+                    currentLang = D.language || 'he';
+                    console.log('✓ [AUTH] User session restored:', currentUser);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         // ===== STORAGE =====
         function save() {
             try {
-                localStorage.setItem('glowup', JSON.stringify(D));
+                // Save to authenticated user account if logged in
+                if (currentUser) {
+                    saveUserData();
+                } else {
+                    // Fallback for non-authenticated users
+                    localStorage.setItem('glowup', JSON.stringify(D));
+                }
             } catch(e) {}
         }
 
@@ -921,6 +1132,34 @@
                 if (s) D = JSON.parse(s);
                 currentLang = D.language || 'he';
             } catch(e) {}
+        }
+
+        function clearAllUserData() {
+            if (confirm('למחוק את כל הנתונים שלך?')) {
+                if (currentUser) {
+                    const users = getAllUsers();
+                    if (users[currentUser]) {
+                        users[currentUser] = {
+                            ...users[currentUser],
+                            xp: 0,
+                            coins: 50,
+                            level: 1,
+                            posts: [],
+                            stories: [],
+                            friends: [],
+                            filters: [],
+                            language: 'he'
+                        };
+                        saveAllUsers(users);
+                        D = users[currentUser];
+                        updateUI();
+                        loadFeed();
+                        loadStories();
+                        loadFriends();
+                        alert('הנתונים נוקו 🗑️');
+                    }
+                }
+            }
         }
 
         function clearAll() {
@@ -1400,8 +1639,22 @@
             console.log('🔧 [INIT] Starting initialization...');
 
             try {
-                // Load data first
-                load();
+                // Check authentication first
+                const isAuthenticated = checkAuth();
+
+                if (!isAuthenticated) {
+                    console.log('📋 [INIT] No auth - showing login screen');
+                    const authScreen = document.getElementById('authScreen');
+                    const splash = document.getElementById('splash');
+                    if (authScreen) authScreen.style.display = 'flex';
+                    if (splash) splash.style.display = 'none';
+                    showLogin();
+                    return;
+                }
+
+                console.log('🔓 [INIT] User authenticated:', currentUser);
+
+                // Load data for authenticated user
                 updateUI();
                 setupNav();
                 setupImage();
@@ -1411,10 +1664,18 @@
                     langBtn.textContent = currentLang === 'he' ? 'EN' : 'HE';
                 }
 
+                // Update user display
+                const userDisplay = document.getElementById('currentUserDisplay');
+                if (userDisplay) {
+                    userDisplay.textContent = `👤 ${currentUser}`;
+                }
+
                 // Force show app immediately (don't wait)
                 const splash = document.getElementById('splash');
                 const app = document.getElementById('app');
+                const authScreen = document.getElementById('authScreen');
 
+                if (authScreen) authScreen.style.display = 'none';
                 if (splash) {
                     splash.style.display = 'none';
                     splash.style.opacity = '0';
@@ -1445,12 +1706,9 @@
                 console.log('✓ [INIT] Initialization complete!');
             } catch(e) {
                 console.error('❌ [INIT] Fatal error:', e);
-                // Still try to show the app even if there was an error
-                const app = document.getElementById('app');
-                if (app) {
-                    app.style.display = 'block';
-                    app.style.opacity = '1';
-                }
+                // Still try to show something
+                const authScreen = document.getElementById('authScreen');
+                if (authScreen) authScreen.style.display = 'flex';
             }
         }
 
