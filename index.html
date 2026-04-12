@@ -1393,7 +1393,21 @@
         // ===== INIT =====
         function initApp() {
             try {
-                console.log('🔧 Initializing GlowUp...');
+                console.log('🔧 Starting GlowUp init...');
+
+                // Hide splash immediately
+                const splash = document.getElementById('splash');
+                const app = document.getElementById('app');
+
+                if (splash) {
+                    splash.style.display = 'none';
+                    splash.classList.add('hide');
+                }
+                if (app) {
+                    app.style.display = 'block';
+                    app.classList.add('show');
+                }
+
                 load();
                 updateUI();
                 setupNav();
@@ -1404,37 +1418,33 @@
                     langBtn.textContent = currentLang === 'he' ? 'EN' : 'HE';
                 }
 
-                // Hide splash screen
+                // Load data after UI is set
                 setTimeout(() => {
-                    const splash = document.getElementById('splash');
-                    const app = document.getElementById('app');
-                    if (splash) splash.classList.add('hide');
-                    if (app) app.classList.add('show');
-
                     try {
                         loadFeed();
                         loadStories();
                         loadFriends();
                         newTask();
+                        console.log('✓ Data loaded');
                     } catch(e) {
-                        console.error('Error loading data:', e);
+                        console.error('Data load error:', e);
                     }
-                }, 500);
+                }, 100);
 
-                console.log('✓ GlowUp initialized successfully');
+                console.log('✓ GlowUp ready!');
             } catch(e) {
                 console.error('❌ Init error:', e);
+                alert('Application Error: ' + e.message);
             }
         }
 
-        // Try multiple ways to initialize for better Safari compatibility
+        // Initialize as soon as DOM is ready (Safari compatible)
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initApp);
         } else {
+            // DOM already loaded
             initApp();
         }
-
-        window.addEventListener('load', initApp);
     </script>
 </body>
 </html>
