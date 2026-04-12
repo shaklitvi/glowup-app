@@ -1,11 +1,10 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "outputDirectory": ".",
   "functions": {
     "api/**/*.js": {
       "memory": 1024,
-      "maxDuration": 120
+      "maxDuration": 120,
+      "runtime": "nodejs18.x"
     }
   },
   "env": {
