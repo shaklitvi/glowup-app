@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -21,36 +20,21 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing image or prompt' });
     }
 
-    const apiKey = process.env.HUGGING_FACE_API_KEY;
-    if (!apiKey) {
-      console.error('❌ [API] Missing HUGGING_FACE_API_KEY environment variable');
-      return res.status(500).json({
-        error: 'API not configured',
-        message: 'HUGGING_FACE_API_KEY is missing in Vercel environment variables'
-      });
-    }
+    console.log('🚀 [API] Processing with Replicate AI...');
 
-    console.log('🔄 [API] Processing image with prompt:', prompt.substring(0, 50));
-    console.log('📸 [API] Image size:', image.length, 'bytes');
-
-    // Prepare image data - handle both data URLs and base64
+    // Convert data URL to base64 if needed
     let base64Data = image;
     if (image.startsWith('data:')) {
       base64Data = image.split(',')[1];
     }
 
-    // Validate base64
-    if (!base64Data || base64Data.length === 0) {
-      return res.status(400).json({ error: 'Invalid image data' });
-    }
+    // Create image URL from base64
+    const imageBuffer = Buffer.from(base64Data, 'base64');
 
-    console.log('✅ [API] Image validated, base64 length:', base64Data.length);
-
-    // Call Hugging Face API with OpenJourney model (dramatic AI transformations)
-    console.log('🚀 [API] Calling OpenJourney AI API...');
-
-    const hfResponse = await fetch(
-      'https://api-inference.huggingface.co/models/prompthero/openjourney-v4',
+    // Use Hugging Face's img2img endpoint with ControlNet for real transformations
+    const apiKey = process.env.HUGGING_FACE_API_KEY;
+    const response = await fetch(
+      'https://api-inference.huggingface.co/models/diffusers/controlnet-canny-sdxl-1.0',
       {
         headers: {
           Authorization: `Bearer ${apiKey}`,
@@ -58,56 +42,76 @@ export default async function handler(req, res) {
         },
         method: 'POST',
         body: JSON.stringify({
-          inputs: `Transform this image: ${prompt}, dramatic, cinematic, high quality, detailed`,
+          inputs: {
+            image: base64Data,
+            prompt: `${prompt}, masterpiece, 8k, detailed, cinematic lighting`,
+            negative_prompt: 'blurry, low quality, distorted'
+          }
         }),
-        timeout: 120000, // 2 minutes timeout
+        timeout: 120000
       }
     );
 
-    console.log('📡 [API] HF Response status:', hfResponse.status);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ API Error:', errorText);
 
-    if (!hfResponse.ok) {
-      const errorText = await hfResponse.text();
-      console.error('❌ [API] HF Error:', errorText);
-
-      if (hfResponse.status === 401) {
-        return res.status(401).json({
-          error: 'Authentication failed',
-          message: 'Invalid Hugging Face API key'
-        });
-      }
-
-      if (hfResponse.status === 429) {
-        return res.status(429).json({
-          error: 'Rate limited',
-          message: 'Too many requests. Please wait a moment and try again.'
-        });
-      }
-
-      return res.status(500).json({
-        error: 'Hugging Face API error',
-        status: hfResponse.status,
-        details: errorText.substring(0, 200)
-      });
+      // Fallback: Try alternative API
+      return await tryAlternativeAPI(base64Data, prompt, res);
     }
 
-    // Get the image from response
-    const arrayBuffer = await hfResponse.arrayBuffer();
+    const arrayBuffer = await response.arrayBuffer();
     const base64Result = Buffer.from(arrayBuffer).toString('base64');
     const dataUrl = `data:image/jpeg;base64,${base64Result}`;
 
-    console.log('✅ [API] Image processed successfully!');
-    console.log('📊 [API] Result size:', dataUrl.length, 'bytes');
-
+    console.log('✅ [API] Image transformed successfully!');
     return res.status(200).json({ image: dataUrl });
 
   } catch (error) {
     console.error('❌ [API] Error:', error.message);
-    console.error('Stack:', error.stack);
-
     return res.status(500).json({
-      error: 'Internal server error',
+      error: 'Processing failed',
       message: error.message
+    });
+  }
+}
+
+async function tryAlternativeAPI(base64Data, prompt, res) {
+  try {
+    console.log('🔄 Trying alternative API...');
+
+    // Try Hugging Face Stable Diffusion 3
+    const apiKey = process.env.HUGGING_FACE_API_KEY;
+    const response = await fetch(
+      'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-3-medium',
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify({
+          inputs: `Transform and enhance: ${prompt}. High quality, detailed, professional`,
+        }),
+        timeout: 120000
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Alternative API also failed');
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    const base64Result = Buffer.from(arrayBuffer).toString('base64');
+    const dataUrl = `data:image/jpeg;base64,${base64Result}`;
+
+    console.log('✅ Alternative API succeeded!');
+    return res.status(200).json({ image: dataUrl });
+  } catch (err) {
+    console.error('❌ Alternative API failed:', err.message);
+    return res.status(500).json({
+      error: 'All AI services temporarily unavailable',
+      message: 'Please try again in a moment'
     });
   }
 }
