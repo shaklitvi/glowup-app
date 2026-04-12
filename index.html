@@ -2,192 +2,184 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GlowUp - The Next Trend</title>
-    <meta name="description" content="הפלטפורמה החברתית החדשה עם AI">
-    <meta name="theme-color" content="#0a0015">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="GlowUp">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlowUp - AI Social Media</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        :root {
-            --bg: #0a0015;
-            --card: rgba(30, 10, 50, 0.7);
-            --border: rgba(255, 255, 255, 0.15);
-            --text: #ffffff;
-            --dim: rgba(255, 255, 255, 0.6);
-            --accent: #00ffff;
-            --accent2: #ff00ff;
-        }
-
-        html, body {
-            height: 100%;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            -webkit-font-smoothing: antialiased;
-        }
-
-        input, textarea, select, button {
-            font-size: 16px !important;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            inset: -50%;
-            width: 200%;
-            height: 200%;
-            background:
-                radial-gradient(circle at 20% 50%, rgba(255, 0, 255, 0.15), transparent 50%),
-                radial-gradient(circle at 80% 50%, rgba(0, 255, 255, 0.15), transparent 50%);
-            animation: bgMove 20s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        @keyframes bgMove {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(-10%, -10%); }
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        #splash {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(135deg, #0a0015, #1a0a2e, #0a0015);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 10000;
-            transition: opacity 0.5s;
+            padding: 20px;
         }
 
-        #splash.hide {
-            opacity: 0;
-            pointer-events: none;
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-in;
         }
 
-        .splash-logo {
-            font-size: 72px;
-            font-weight: 900;
-            background: linear-gradient(45deg, var(--accent2), var(--accent));
-            background-size: 200%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradient 3s ease infinite;
-            margin-bottom: 20px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
-
-        .splash-tag {
-            font-size: 14px;
-            letter-spacing: 4px;
-            opacity: 0.8;
-            text-transform: uppercase;
-        }
-
-        @keyframes gradient {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        #app {
-            display: none;
-            position: relative;
-            z-index: 1;
-            min-height: 100vh;
-            padding-bottom: 80px;
-        }
-
-        #app.show { display: block; }
 
         .header {
-            position: sticky;
-            top: 0;
-            height: 60px;
-            background: rgba(10, 0, 21, 0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            padding-top: env(safe-area-inset-top);
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 800;
-            background: linear-gradient(45deg, var(--accent2), var(--accent));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .lang-btn {
-            background: rgba(0, 255, 255, 0.2);
-            border: 1px solid rgba(0, 255, 255, 0.4);
-            color: var(--accent);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .lang-btn:hover {
-            background: rgba(0, 255, 255, 0.3);
-        }
-
-        .share-btn {
-            background: rgba(0, 255, 255, 0.2);
-            border: 1px solid rgba(0, 255, 255, 0.4);
-            color: var(--accent);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .share-btn:hover {
-            background: rgba(0, 255, 255, 0.3);
-        }
-
-        .tab {
-            display: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             padding: 20px;
-            min-height: calc(100vh - 140px);
+            text-align: center;
+            position: relative;
         }
 
-        .tab.active { display: block; }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .lang-toggle {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.3s;
+        }
+
+        .lang-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .content {
+            padding: 30px 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        button.secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .nav-tabs {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .tab-btn {
+            padding: 10px;
+            background: transparent;
+            border: 2px solid #e0e0e0;
+            color: #666;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.3s;
+            margin: 0;
+            width: 100%;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
 
         .stats {
             display: grid;
@@ -196,1534 +188,784 @@
             margin-bottom: 20px;
         }
 
-        .stat {
-            background: var(--card);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 16px;
+        .stat-box {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
             text-align: center;
         }
 
-        .stat-val {
-            font-size: 22px;
+        .stat-value {
+            font-size: 24px;
             font-weight: 700;
-            background: linear-gradient(45deg, var(--accent2), var(--accent));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 4px;
+            color: #667eea;
         }
 
         .stat-label {
-            font-size: 10px;
-            color: var(--dim);
-            text-transform: uppercase;
-        }
-
-        .card {
-            background: var(--card);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 16px;
-        }
-
-        .card-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-            -webkit-appearance: none;
-            margin-bottom: 10px;
-        }
-
-        .btn:active { transform: scale(0.98); }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent2), var(--accent));
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.08);
-            color: white;
-            border: 1px solid var(--border);
-        }
-
-        .btn-sm {
-            padding: 8px 16px;
-            width: auto;
-            font-size: 13px;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 14px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: white;
-            margin-bottom: 12px;
-            -webkit-appearance: none;
-        }
-
-        input::placeholder, textarea::placeholder {
-            color: var(--dim);
-        }
-
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-            font-family: inherit;
-        }
-
-        .picker {
-            position: relative;
-            width: 100%;
-            min-height: 250px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px dashed var(--border);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 16px;
-            cursor: pointer;
-            overflow: hidden;
-        }
-
-        .picker.has-img { border-style: solid; }
-
-        .picker img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .placeholder {
-            text-align: center;
-            color: var(--dim);
-        }
-
-        .placeholder-icon {
-            font-size: 56px;
-            margin-bottom: 12px;
-            opacity: 0.5;
-        }
-
-        .post {
-            background: var(--card);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 16px;
-        }
-
-        .avatar {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent2), var(--accent));
-            flex-shrink: 0;
-        }
-
-        .avatar-lg { width: 80px; height: 80px; }
-
-        .post-user { flex: 1; }
-
-        .post-name {
-            font-weight: 600;
-            font-size: 15px;
-            margin-bottom: 2px;
-        }
-
-        .post-time {
             font-size: 12px;
-            color: var(--dim);
+            color: #999;
+            margin-top: 5px;
         }
 
-        .post-img {
+        .image-preview {
             width: 100%;
-            display: block;
-        }
-
-        .post-caption {
-            padding: 16px;
-            line-height: 1.5;
-            font-size: 14px;
-        }
-
-        .post-actions {
-            display: flex;
-            gap: 24px;
-            padding: 12px 16px;
-            border-top: 1px solid var(--border);
-        }
-
-        .post-action {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 14px;
-            color: var(--dim);
-            cursor: pointer;
-        }
-
-        .friend {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 12px;
-            margin-bottom: 10px;
-        }
-
-        .friend-info { flex: 1; }
-
-        .friend-name {
-            font-weight: 600;
-            font-size: 15px;
-            margin-bottom: 2px;
-        }
-
-        .friend-meta {
-            font-size: 12px;
-            color: var(--dim);
-        }
-
-        .story {
-            width: 80px;
-            height: 120px;
-            border-radius: 12px;
-            background: var(--card);
-            border: 2px solid var(--border);
-            overflow: hidden;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .story img {
-            width: 100%;
-            height: 100%;
+            height: 250px;
+            background: #f0f0f0;
+            border-radius: 15px;
             object-fit: cover;
-        }
-
-        .stories {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .stories::-webkit-scrollbar { display: none; }
-
-        .empty {
-            text-align: center;
-            padding: 60px 20px;
-        }
-
-        .empty-icon {
-            font-size: 72px;
-            margin-bottom: 16px;
-            opacity: 0.3;
-        }
-
-        .empty-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--dim);
-        }
-
-        .empty-text {
-            font-size: 14px;
-            color: var(--dim);
-            opacity: 0.7;
-        }
-
-        .result {
-            padding: 16px;
-            border-radius: 12px;
-            margin-top: 16px;
-            line-height: 1.6;
-            font-size: 14px;
+            margin: 20px 0;
             display: none;
-        }
-
-        .result-ok {
-            background: rgba(0, 255, 255, 0.1);
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            color: var(--accent);
-        }
-
-        .result-err {
-            background: rgba(255, 0, 0, 0.1);
-            border: 1px solid rgba(255, 0, 0, 0.3);
-            color: #ff6b6b;
-        }
-
-        #authScreen {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(135deg, #0a0015, #1a0a2e, #0a0015);
-            z-index: 5000;
-            padding: 20px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-
-        #authScreen.show {
-            display: flex !important;
-        }
-
-        .nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 70px;
-            background: rgba(10, 0, 21, 0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border);
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            padding-bottom: env(safe-area-inset-bottom);
-            z-index: 100;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            cursor: pointer;
-            color: var(--dim);
-            transition: color 0.2s;
-            -webkit-user-select: none;
-        }
-
-        .nav-item.active { color: var(--accent); }
-
-        .nav-icon { font-size: 22px; }
-
-        .nav-label {
-            font-size: 10px;
-            font-weight: 500;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 40px 20px;
-            margin-bottom: 30px;
-            background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(0, 255, 255, 0.1));
-            border-radius: 20px;
-            border: 1px solid var(--border);
-        }
-
-        .hero-title {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 12px;
-            background: linear-gradient(45deg, var(--accent2), var(--accent));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-subtitle {
-            font-size: 16px;
-            color: var(--dim);
-            line-height: 1.6;
-        }
-
-        .install-banner {
-            background: linear-gradient(135deg, var(--accent2), var(--accent));
-            padding: 16px 20px;
-            margin: 0 20px 20px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .install-banner.hide { display: none; }
-
-        .install-icon {
-            font-size: 32px;
-        }
-
-        .install-text {
-            flex: 1;
-        }
-
-        .install-title {
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .install-desc {
-            font-size: 13px;
-            opacity: 0.9;
         }
 
         .loading {
+            text-align: center;
+            color: #667eea;
+            font-weight: 600;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .spinner {
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(0, 255, 255, 0.3);
-            border-top-color: var(--accent);
+            border: 3px solid rgba(102, 126, 234, 0.3);
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-right: 10px;
-            vertical-align: middle;
+            border-top-color: #667eea;
+            animation: spin 1s linear infinite;
         }
 
-        .ai-instruction {
-            background: rgba(255, 0, 255, 0.1);
-            border: 1px solid rgba(255, 0, 255, 0.3);
-            border-radius: 12px;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-msg {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
             padding: 12px;
-            margin-bottom: 12px;
-            color: var(--accent2);
-            font-size: 13px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
         }
 
-        .ai-instruction strong {
-            color: var(--accent);
+        .success-msg {
+            background: #d4edda;
+            border: 1px solid #28a745;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .post-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .post-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .post-meta {
+            font-size: 12px;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        .friend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .friend-item button {
+            width: 80px;
+            padding: 8px;
+            margin: 0;
+        }
+
+        .store-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .store-item button {
+            width: 80px;
+            padding: 8px;
+            margin: 0;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-input-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #f0f0f0;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            color: #667eea;
+            font-weight: 600;
+            transition: 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .file-input-btn:hover {
+            background: #e8e8ff;
+        }
+
+        .prompt-input {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            width: 100%;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .delete-btn {
+            background: #dc3545 !important;
+        }
+
+        .delete-btn:hover {
+            background: #c82333 !important;
+        }
+
+        h3 {
+            margin: 20px 0 10px 0;
+            color: #333;
+        }
+
+        p {
+            color: #666;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <!-- Auth Screen (Login/Register) -->
-    <div id="authScreen">
-        <div style="width: 100%; max-width: 400px;">
-            <!-- Login Form -->
-            <div id="loginForm" style="text-align: center;">
-                <div style="font-size: 48px; margin-bottom: 20px;">✨</div>
-                <h1 style="font-size: 32px; margin-bottom: 10px; background: linear-gradient(45deg, #ff00ff, #00ffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">GlowUp</h1>
-                <p style="color: rgba(255,255,255,0.7); margin-bottom: 30px;">הפלטפורמה החברתית עם AI</p>
-
-                <div style="background: rgba(30, 10, 50, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 24px;">
-                    <h2 style="font-size: 18px; margin-bottom: 20px; color: #fff;">כניסה</h2>
-                    <input type="text" id="loginUsername" placeholder="שם משתמש" style="width: 100%; padding: 12px; margin-bottom: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; font-size: 14px;">
-                    <input type="password" id="loginPassword" placeholder="סיסמה" style="width: 100%; padding: 12px; margin-bottom: 20px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; font-size: 14px;">
-                    <button onclick="loginUser()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #ff00ff, #00ffff); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-bottom: 12px;">כניסה</button>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 13px;">אין לך חשבון? <a href="#" onclick="showRegister(event)" style="color: #00ffff; text-decoration: none; cursor: pointer;">הירשם כאן</a></p>
-                </div>
-            </div>
-
-            <!-- Register Form -->
-            <div id="registerForm" style="display: none; text-align: center;">
-                <div style="font-size: 48px; margin-bottom: 20px;">🎉</div>
-                <h1 style="font-size: 32px; margin-bottom: 10px; background: linear-gradient(45deg, #ff00ff, #00ffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">הצטרף</h1>
-
-                <div style="background: rgba(30, 10, 50, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 24px;">
-                    <h2 style="font-size: 18px; margin-bottom: 20px; color: #fff;">הרשמה</h2>
-                    <input type="text" id="regUsername" placeholder="שם משתמש" style="width: 100%; padding: 12px; margin-bottom: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; font-size: 14px;">
-                    <input type="email" id="regEmail" placeholder="אימייל" style="width: 100%; padding: 12px; margin-bottom: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; font-size: 14px;">
-                    <input type="password" id="regPassword" placeholder="סיסמה" style="width: 100%; padding: 12px; margin-bottom: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; font-size: 14px;">
-                    <input type="password" id="regPasswordConfirm" placeholder="אימות סיסמה" style="width: 100%; padding: 12px; margin-bottom: 20px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; font-size: 14px;">
-                    <button onclick="registerUser()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #ff00ff, #00ffff); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-bottom: 12px;">הרשמה</button>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 13px;">כבר יש לך חשבון? <a href="#" onclick="showLogin(event)" style="color: #00ffff; text-decoration: none; cursor: pointer;">כנס כאן</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Splash -->
-    <div id="splash">
-        <div class="splash-logo">GlowUp</div>
-        <div class="splash-tag">The Next Trend</div>
-    </div>
-
-    <!-- Install Banner for PWA -->
-    <div id="installBanner" class="hide" style="display: none; position: fixed; bottom: 80px; left: 20px; right: 20px; background: rgba(0, 255, 255, 0.1); border: 1px solid var(--accent); border-radius: 8px; padding: 12px; text-align: center; z-index: 99;">
-        <p style="margin: 0 0 8px 0;">📲 להתקין את GlowUp כאפליקציה?</p>
-        <button onclick="install()" style="background: var(--accent2); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin: 0 4px;">כן</button>
-        <button onclick="document.getElementById('installBanner').style.display='none'" style="background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 6px 12px; border-radius: 4px; cursor: pointer;">לא</button>
-    </div>
-
-    <!-- App -->
-    <div id="app">
-        <!-- Header -->
+    <div class="container">
         <div class="header">
-            <div class="logo">GlowUp</div>
-            <div class="header-right">
-                <button class="lang-btn" id="langBtn" onclick="toggleLanguage()">EN</button>
-                <button class="share-btn" onclick="share()">📤 שתף</button>
-            </div>
+            <button class="lang-toggle" onclick="toggleLanguage()">English</button>
+            <h1>✨ GlowUp</h1>
+            <p id="headerSub" style="opacity: 0.9; margin: 0;">AI Social Media</p>
         </div>
 
-        <!-- Home -->
-        <div id="home" class="tab active">
-            <div class="hero">
-                <div class="hero-title">ברוכים הבאים 🎉</div>
-                <div class="hero-subtitle">הפלטפורמה החברתית עם AI</div>
-            </div>
-
-            <div class="stats">
-                <div class="stat">
-                    <div class="stat-val" id="xp">0</div>
-                    <div class="stat-label">XP</div>
+        <div class="content">
+            <!-- Login Screen -->
+            <div id="loginScreen" class="screen active">
+                <h2 style="text-align: center; margin-bottom: 20px; color: #333;">כניסה</h2>
+                <div class="form-group">
+                    <label id="loginUserLabel">שם משתמש</label>
+                    <input type="text" id="loginUser" placeholder="username">
                 </div>
-                <div class="stat">
-                    <div class="stat-val" id="coins">50</div>
-                    <div class="stat-label">💰 Coins</div>
+                <div class="form-group">
+                    <label id="loginPassLabel">סיסמה</label>
+                    <input type="password" id="loginPass" placeholder="password">
                 </div>
-                <div class="stat">
-                    <div class="stat-val" id="level">1</div>
-                    <div class="stat-label">רמה</div>
+                <button onclick="login()">כניסה</button>
+                <button class="secondary" onclick="showRegister()">הרשמה חדשה</button>
+            </div>
+
+            <!-- Register Screen -->
+            <div id="registerScreen" class="screen">
+                <h2 style="text-align: center; margin-bottom: 20px; color: #333;">הרשמה</h2>
+                <div class="form-group">
+                    <label>שם משתמש</label>
+                    <input type="text" id="regUser" placeholder="username">
                 </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">📖 Stories</div>
-                <div class="stories" id="stories"></div>
-            </div>
-
-            <div id="feed"></div>
-        </div>
-
-        <!-- Friends -->
-        <div id="friends" class="tab">
-            <div class="card">
-                <div class="card-title">👥 אנשים שאולי אתה מכיר</div>
-                <div id="suggested"></div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">🌐 חבר רשתות</div>
-                <button class="btn btn-secondary" onclick="connect('instagram')">📷 Instagram</button>
-                <button class="btn btn-secondary" onclick="connect('tiktok')">🎵 TikTok</button>
-                <button class="btn btn-secondary" onclick="connect('contacts')">📱 אנשי קשר</button>
-            </div>
-
-            <div class="card">
-                <div class="card-title">✨ החברים שלך</div>
-                <div id="friendsList"></div>
-            </div>
-        </div>
-
-        <!-- Tasks -->
-        <div id="tasks" class="tab">
-            <div class="card">
-                <div class="card-title">🎯 משימת היום</div>
-                <p id="dailyTask" style="color: var(--dim); margin-bottom: 16px; line-height: 1.6;"></p>
-                <button class="btn btn-primary" onclick="newTask()">משימה חדשה</button>
-                <p style="font-size: 12px; color: var(--dim); margin-top: 12px;">פרס: +50 XP, +20 Coins</p>
-            </div>
-
-            <div class="card">
-                <div class="card-title">⚡ משימות מהירות</div>
-                <button class="btn btn-secondary" onclick="quick(10, 5)">פרסם תמונה (+10 XP)</button>
-                <button class="btn btn-secondary" onclick="quick(15, 7)">העלה Story (+15 XP)</button>
-                <button class="btn btn-secondary" onclick="quick(20, 10)">הגב ל-3 פוסטים (+20 XP)</button>
-            </div>
-        </div>
-
-        <!-- Create -->
-        <div id="create" class="tab">
-            <div class="card">
-                <div class="card-title">🎨 צור תוכן עם AI</div>
-
-                <label for="imgInput" class="picker" id="picker">
-                    <input type="file" id="imgInput" accept="image/*" style="display:none">
-                    <div class="placeholder">
-                        <div class="placeholder-icon">📷</div>
-                        <div>העלא תמונה</div>
-                    </div>
-                </label>
-
-                <button class="btn btn-secondary" id="deleteBtn" style="display:none" onclick="deleteImage()">🗑️ מחק תמונה</button>
-
-                <div class="ai-instruction" style="display:none" id="aiInstructionBox">
-                    <strong>💡 דוגמאות:</strong><br>
-                    "שים אותי בקרנבל בריו" • "הפוך אותי לסופרמן" • "שים אותי בחלל"
+                <div class="form-group">
+                    <label>אימייל</label>
+                    <input type="email" id="regEmail" placeholder="email@example.com">
                 </div>
-
-                <textarea id="aiPrompt" placeholder="תאר מה אתה רוצה AI לעשות לתמונה" style="display:none"></textarea>
-
-                <button class="btn btn-primary" id="editBtn" onclick="editImage()" style="display:none">✨ ערוך עם AI</button>
-
-                <div id="aiResult" class="result"></div>
-
-                <div style="display: none;" id="editedSection">
-                    <label for="caption" style="display: block; margin-top: 20px; margin-bottom: 10px; font-weight: 600;">כתוב כיתוב:</label>
-                    <textarea id="caption" placeholder="כתוב כיתוב..."></textarea>
-
-                    <button class="btn btn-primary" onclick="publish()">📤 פרסם</button>
+                <div class="form-group">
+                    <label>סיסמה (6+ תווים)</label>
+                    <input type="password" id="regPass" placeholder="password">
                 </div>
+                <button onclick="register()">הרשמה</button>
+                <button class="secondary" onclick="showLogin()">חזור לכניסה</button>
             </div>
 
-            <div class="card" style="margin-top: 20px;">
-                <div class="card-title">📖 Story</div>
-                <button class="btn btn-secondary" id="storyBtn" onclick="uploadStory()" style="display:none">העלה story</button>
-            </div>
-        </div>
-
-        <!-- Store -->
-        <div id="store" class="tab">
-            <div class="stats">
-                <div class="stat">
-                    <div class="stat-val" id="storeCoins">50</div>
-                    <div class="stat-label">הקוינס שלך</div>
+            <!-- Main App Screen -->
+            <div id="appScreen" class="screen">
+                <div class="info-box">
+                    <span>שלום</span>, <strong id="currentUserDisplay">User</strong>
                 </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">✨ פילטרים</div>
-                <button class="btn btn-secondary" onclick="buy('neon', 100)">Neon - 100💰</button>
-                <button class="btn btn-secondary" onclick="buy('vintage', 150)">Vintage - 150💰</button>
-                <button class="btn btn-secondary" onclick="buy('cyber', 200)">Cyber - 200💰</button>
-            </div>
-
-            <div class="card">
-                <div class="card-title">💎 Premium</div>
-                <p style="color: var(--dim); margin-bottom: 16px; line-height: 1.8;">
-                    • ללא מודעות<br>
-                    • AI ללא הגבלה<br>
-                    • כל הפילטרים<br>
-                    • תגית זהב
-                </p>
-                <button class="btn btn-primary" onclick="premium()">שדרג - ₪29.90/חודש</button>
-            </div>
-        </div>
-
-        <!-- Profile -->
-        <div id="profile" class="tab">
-            <div class="card" style="text-align: center;">
-                <div class="avatar avatar-lg" style="margin: 0 auto 16px;"></div>
-                <h2 style="margin-bottom: 8px;">משתמש GlowUp</h2>
-                <p style="color: var(--dim); margin-bottom: 20px;">@user123</p>
 
                 <div class="stats">
-                    <div class="stat">
-                        <div class="stat-val" id="postCount">0</div>
-                        <div class="stat-label">פוסטים</div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="xpDisplay">0</div>
+                        <div class="stat-label">XP</div>
                     </div>
-                    <div class="stat">
-                        <div class="stat-val" id="friendCount">0</div>
-                        <div class="stat-label">חברים</div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="coinsDisplay">50</div>
+                        <div class="stat-label">מטבעות</div>
                     </div>
-                    <div class="stat">
-                        <div class="stat-val">0</div>
-                        <div class="stat-label">עוקב</div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="levelDisplay">1</div>
+                        <div class="stat-label">רמה</div>
                     </div>
                 </div>
-            </div>
 
-            <div class="card">
-                <div class="card-title">💰 רווחים</div>
-                <div style="text-align: center; margin-bottom: 16px;">
-                    <div class="stat-val">₪0.00</div>
-                    <div class="stat-label">השבוע</div>
+                <div class="nav-tabs">
+                    <button class="tab-btn active" onclick="switchTab('home')">🏠</button>
+                    <button class="tab-btn" onclick="switchTab('create')">➕</button>
+                    <button class="tab-btn" onclick="switchTab('friends')">👥</button>
+                    <button class="tab-btn" onclick="switchTab('store')">🛍️</button>
+                    <button class="tab-btn" onclick="switchTab('profile')">⚙️</button>
                 </div>
-                <p style="font-size: 13px; color: var(--dim); line-height: 1.7;">
-                    כשיהיו לך 1000+ עוקבים:<br>
-                    • הרווח ממודעות<br>
-                    • שיתופי פעולה עם מותגים<br>
-                    • תוכן ממומן<br>
-                    • טיפים מעוקבים
-                </p>
-            </div>
 
-            <div class="card">
-                <div class="card-title">⚙️ הגדרות</div>
-                <div style="background: rgba(0, 255, 255, 0.1); border: 1px solid rgba(0, 255, 255, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 12px; text-align: center;">
-                    <div style="font-weight: 600; color: #00ffff;" id="currentUserDisplay">👤 משתמש</div>
+                <div id="errorMsg" class="error-msg"></div>
+                <div id="successMsg" class="success-msg"></div>
+
+                <!-- Home Tab -->
+                <div id="homeTab" class="tab-content active">
+                    <h3>📰 הפוסטים שלי</h3>
+                    <div id="feedContainer"></div>
+                    <h3>📸 הסטוריז שלי</h3>
+                    <div id="storiesContainer"></div>
                 </div>
-                <button class="btn btn-secondary" onclick="alert('בקרוב')">ערוך פרופיל</button>
-                <button class="btn btn-secondary" onclick="logoutUser()">התנתק</button>
-                <button class="btn btn-secondary" onclick="clearAllUserData()">נקה נתונים</button>
-            </div>
-        </div>
 
-        <!-- Nav -->
-        <div class="nav">
-            <div class="nav-item active" data-tab="home">
-                <div class="nav-icon">🏠</div>
-                <div class="nav-label">בית</div>
-            </div>
-            <div class="nav-item" data-tab="friends">
-                <div class="nav-icon">👥</div>
-                <div class="nav-label">חברים</div>
-            </div>
-            <div class="nav-item" data-tab="tasks">
-                <div class="nav-icon">🎯</div>
-                <div class="nav-label">משימות</div>
-            </div>
-            <div class="nav-item" data-tab="create">
-                <div class="nav-icon">➕</div>
-                <div class="nav-label">צור</div>
-            </div>
-            <div class="nav-item" data-tab="store">
-                <div class="nav-icon">🛍️</div>
-                <div class="nav-label">חנות</div>
-            </div>
-            <div class="nav-item" data-tab="profile">
-                <div class="nav-icon">👤</div>
-                <div class="nav-label">פרופיל</div>
+                <!-- Create Tab -->
+                <div id="createTab" class="tab-content">
+                    <h3>צור פוסט</h3>
+                    <label for="imageFile" class="file-input-btn">📸 בחר תמונה</label>
+                    <input type="file" id="imageFile" accept="image/*" onchange="handleImageUpload(event)">
+                    <img id="imagePreview" class="image-preview">
+
+                    <div id="aiSection" style="display: none;">
+                        <label id="promptLabel">📝 תיאור AI:</label>
+                        <input type="text" id="aiPrompt" class="prompt-input" placeholder="סופרמן, חלל, זהב, קר...">
+                        <button onclick="editImage()">🤖 עריכה עם AI</button>
+                        <button class="delete-btn" onclick="deleteImage()">🗑️ מחק</button>
+                    </div>
+
+                    <div id="loadingMsg" class="loading">
+                        <div class="spinner"></div>
+                        <p>עיבוד התמונה...</p>
+                    </div>
+
+                    <button onclick="publish()" id="publishBtn" style="display: none; margin-top: 20px;">📤 פרסם</button>
+
+                    <h3 style="margin-top: 30px;">📱 העלה סטוריה</h3>
+                    <label for="storyFile" class="file-input-btn">📸 בחר תמונה</label>
+                    <input type="file" id="storyFile" accept="image/*" onchange="handleStoryUpload(event)">
+                    <button onclick="uploadStory()" id="storyBtn" style="display: none;">📤 העלה סטוריה</button>
+                </div>
+
+                <!-- Friends Tab -->
+                <div id="friendsTab" class="tab-content">
+                    <h3>👥 החברים שלי</h3>
+                    <div id="friendsContainer"></div>
+                    <h3 style="margin-top: 20px;">💡 הצעות חברות</h3>
+                    <div id="suggestionsContainer"></div>
+                </div>
+
+                <!-- Store Tab -->
+                <div id="storeTab" class="tab-content">
+                    <h3>🛍️ חנות פילטרים</h3>
+                    <div id="storeContainer"></div>
+                </div>
+
+                <!-- Profile Tab -->
+                <div id="profileTab" class="tab-content">
+                    <h3>⚙️ הפרופיל שלי</h3>
+                    <h4 style="margin-top: 15px;">📋 משימות יומיות</h4>
+                    <button onclick="newTask()" id="taskBtn">הגרל משימה חדשה</button>
+                    <div id="taskDisplay" style="margin-top: 15px; background: #f9f9f9; padding: 15px; border-radius: 8px; color: #333;"></div>
+                    <button onclick="clearAllData()" class="delete-btn" style="margin-top: 20px;">🗑️ נקה את כל הנתונים</button>
+                    <button onclick="logout()" class="delete-btn" style="margin-top: 10px;">🚪 התנתקות</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ===== STATE =====
-        let D = {
+        const translations = {
+            he: {
+                headerSub: 'AI Social Media'
+            },
+            en: {
+                headerSub: 'AI Social Media'
+            }
+        };
+
+        let currentLang = 'he';
+        let currentUser = null;
+        let currentImage = null;
+        let currentEditedImage = null;
+        let currentStory = null;
+
+        let userData = {
             xp: 0,
             coins: 50,
             level: 1,
             posts: [],
             stories: [],
             friends: [],
-            filters: [],
-            language: 'he'
+            filters: []
         };
 
-        let img = null;
-        let editedImg = null;
-        let deferredPrompt = null;
-        let currentLang = 'he';
-        let currentUser = null;
-
-        const translations = {
-            he: {
-                noImage: 'העלה תמונה קודם!',
-                editing: 'AI עורך את התמונה...',
-                edited: '✨ התמונה עוכנה בהצלחה!',
-                published: 'הפוסט פורסם! 🎉\n+50 XP, +25 Coins',
-                noPhotos: 'אין פוסטים עדיין',
-                startCreating: 'תתחיל ליצור!',
-                storyUploaded: 'Story הועלה! 🎉\n+15 XP',
-                error: 'שגיאה בעיבוד. נסה שוב.',
-                levelUp: 'רמה',
-                confirmDelete: 'למחוק הכל?',
-                aiPromptRequired: 'כתוב הוראה ל-AI',
-                editFirst: 'ערוך תמונה קודם!',
-                uploadPhoto: 'העלה תמונה',
-                alreadyHave: 'כבר יש לך!',
-                notEnoughCoins: 'אין מספיק קוינס!',
-                purchased: 'רכשת'
-            },
-            en: {
-                noImage: 'Upload a photo first!',
-                editing: 'AI is editing your photo...',
-                edited: '✨ Photo edited successfully!',
-                published: 'Post published! 🎉\n+50 XP, +25 Coins',
-                noPhotos: 'No posts yet',
-                startCreating: 'Start creating!',
-                storyUploaded: 'Story uploaded! 🎉\n+15 XP',
-                error: 'Error processing. Try again.',
-                levelUp: 'Level',
-                confirmDelete: 'Delete everything?',
-                aiPromptRequired: 'Write an instruction for AI',
-                editFirst: 'Edit photo first!',
-                uploadPhoto: 'Upload photo',
-                alreadyHave: 'You already have it!',
-                notEnoughCoins: 'Not enough coins!',
-                purchased: 'You bought'
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            const session = localStorage.getItem('glowup_session');
+            if (session) {
+                try {
+                    const sessionData = JSON.parse(session);
+                    currentUser = sessionData.username;
+                    loadUserData();
+                    showAppScreen();
+                } catch (e) {
+                    showLoginScreen();
+                }
+            } else {
+                showLoginScreen();
             }
-        };
+        });
 
-        function t(key) {
-            return translations[currentLang][key] || key;
+        function toggleLanguage() {
+            currentLang = currentLang === 'he' ? 'en' : 'he';
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
+            document.querySelector('.lang-toggle').textContent = currentLang === 'he' ? 'English' : 'עברית';
         }
 
-        // ===== AUTH =====
-        function getAllUsers() {
-            try {
-                const users = localStorage.getItem('glowup_users');
-                return users ? JSON.parse(users) : {};
-            } catch(e) { return {}; }
+        function showLoginScreen() {
+            document.getElementById('loginScreen').classList.add('active');
+            document.getElementById('registerScreen').classList.remove('active');
+            document.getElementById('appScreen').classList.remove('active');
         }
 
-        function saveAllUsers(users) {
-            try {
-                localStorage.setItem('glowup_users', JSON.stringify(users));
-            } catch(e) {}
+        function showRegister() {
+            document.getElementById('loginScreen').classList.remove('active');
+            document.getElementById('registerScreen').classList.add('active');
+            document.getElementById('appScreen').classList.remove('active');
         }
 
-        function showLogin(e) {
-            if (e) e.preventDefault();
-            document.getElementById('loginForm').style.display = 'block';
-            document.getElementById('registerForm').style.display = 'none';
-            document.getElementById('loginUsername').focus();
+        function showLogin() {
+            document.getElementById('loginScreen').classList.add('active');
+            document.getElementById('registerScreen').classList.remove('active');
+            document.getElementById('appScreen').classList.remove('active');
         }
 
-        function showRegister(e) {
-            if (e) e.preventDefault();
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('registerForm').style.display = 'block';
-            document.getElementById('regUsername').focus();
+        function showAppScreen() {
+            document.getElementById('loginScreen').classList.remove('active');
+            document.getElementById('registerScreen').classList.remove('active');
+            document.getElementById('appScreen').classList.add('active');
+            document.getElementById('currentUserDisplay').textContent = currentUser;
+            loadFeed();
         }
 
-        function registerUser() {
-            const username = document.getElementById('regUsername').value.trim();
+        function register() {
+            const username = document.getElementById('regUser').value.trim();
             const email = document.getElementById('regEmail').value.trim();
-            const password = document.getElementById('regPassword').value;
-            const confirm = document.getElementById('regPasswordConfirm').value;
+            const password = document.getElementById('regPass').value;
 
             if (!username || username.length < 3) {
-                alert('שם משתמש חייב להיות 3 תווים לפחות');
+                showError('שם משתמש חייב להיות 3+ תווים');
+                return;
+            }
+            if (!email) {
+                showError('אימייל נדרש');
+                return;
+            }
+            if (password.length < 6) {
+                showError('סיסמה חייבת להיות 6+ תווים');
                 return;
             }
 
-            if (!email || !email.includes('@')) {
-                alert('אימייל לא תקין');
-                return;
-            }
-
-            if (!password || password.length < 6) {
-                alert('סיסמה חייבת להיות 6 תווים לפחות');
-                return;
-            }
-
-            if (password !== confirm) {
-                alert('הסיסמאות אינן תואמות');
-                return;
-            }
-
-            const users = getAllUsers();
+            let users = JSON.parse(localStorage.getItem('glowup_users') || '{}');
             if (users[username]) {
-                alert('שם משתמש זה כבר קיים');
+                showError('שם משתמש כבר קיים');
                 return;
             }
 
             users[username] = {
-                email: email,
-                password: password,
-                created: new Date().toISOString(),
+                email,
+                password,
                 xp: 0,
                 coins: 50,
                 level: 1,
                 posts: [],
                 stories: [],
                 friends: [],
-                filters: [],
-                language: 'he'
+                filters: []
             };
 
-            saveAllUsers(users);
-            alert('🎉 הרשמה הצליחה! עכשיו כנס לחשבונך');
-            showLogin();
+            localStorage.setItem('glowup_users', JSON.stringify(users));
+            showSuccess('הרשמה בהצלחה!');
+
+            setTimeout(() => {
+                document.getElementById('regUser').value = '';
+                document.getElementById('regEmail').value = '';
+                document.getElementById('regPass').value = '';
+                showLogin();
+            }, 1000);
         }
 
-        function loginUser() {
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value;
+        function login() {
+            const username = document.getElementById('loginUser').value.trim();
+            const password = document.getElementById('loginPass').value;
 
             if (!username || !password) {
-                alert('הזן שם משתמש וסיסמה');
+                showError('שם משתמש וסיסמה נדרשים');
                 return;
             }
 
-            const users = getAllUsers();
+            let users = JSON.parse(localStorage.getItem('glowup_users') || '{}');
             if (!users[username] || users[username].password !== password) {
-                alert('שם משתמש או סיסמה לא נכונה');
+                showError('שם משתמש או סיסמה שגויים');
                 return;
             }
 
             currentUser = username;
-            D = users[username];
-            currentLang = D.language || 'he';
+            localStorage.setItem('glowup_session', JSON.stringify({ username }));
+            loadUserData();
 
-            try {
-                localStorage.setItem('glowup_session', username);
-            } catch(e) {}
-
-            document.getElementById('authScreen').classList.remove('show');
-            document.getElementById('splash').style.display = 'flex';
-            document.getElementById('app').style.display = 'none';
-
-            doInit();
+            document.getElementById('loginUser').value = '';
+            document.getElementById('loginPass').value = '';
+            showAppScreen();
         }
 
-        function logoutUser() {
-            if (confirm('האם בטוח שברצונך להתנתק?')) {
+        function logout() {
+            saveUserData();
+            localStorage.removeItem('glowup_session');
+            currentUser = null;
+            showLoginScreen();
+        }
+
+        function loadUserData() {
+            const users = JSON.parse(localStorage.getItem('glowup_users') || '{}');
+            if (users[currentUser]) {
+                userData = { ...users[currentUser] };
+            }
+            updateStats();
+        }
+
+        function saveUserData() {
+            let users = JSON.parse(localStorage.getItem('glowup_users') || '{}');
+            users[currentUser] = userData;
+            localStorage.setItem('glowup_users', JSON.stringify(users));
+        }
+
+        function updateStats() {
+            document.getElementById('xpDisplay').textContent = userData.xp;
+            document.getElementById('coinsDisplay').textContent = userData.coins;
+            document.getElementById('levelDisplay').textContent = userData.level;
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentImage = e.target.result;
+                document.getElementById('imagePreview').src = currentImage;
+                document.getElementById('imagePreview').style.display = 'block';
+                document.getElementById('aiSection').style.display = 'block';
+                document.getElementById('publishBtn').style.display = 'none';
+                currentEditedImage = null;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleStoryUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentStory = e.target.result;
+                document.getElementById('storyBtn').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function editImage() {
+            if (!currentImage) {
+                showError('לא נבחרה תמונה');
+                return;
+            }
+
+            const prompt = document.getElementById('aiPrompt').value.trim();
+            if (!prompt) {
+                showError('כתוב תיאור AI!');
+                return;
+            }
+
+            document.getElementById('loadingMsg').style.display = 'block';
+            document.getElementById('aiSection').style.display = 'none';
+
+            try {
+                const response = await fetch('/api/edit-image', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        image: currentImage,
+                        prompt: prompt
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'שגיאה בעיבוד');
+                }
+
+                currentEditedImage = data.image;
+                document.getElementById('imagePreview').src = currentEditedImage;
+                document.getElementById('loadingMsg').style.display = 'none';
+                document.getElementById('publishBtn').style.display = 'block';
+                showSuccess('התמונה עודכנה! ✨');
+
+            } catch (error) {
+                document.getElementById('loadingMsg').style.display = 'none';
+                document.getElementById('aiSection').style.display = 'block';
+                showError('שגיאה: ' + error.message);
+            }
+        }
+
+        function deleteImage() {
+            currentImage = null;
+            currentEditedImage = null;
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('aiSection').style.display = 'none';
+            document.getElementById('publishBtn').style.display = 'none';
+            document.getElementById('imageFile').value = '';
+            document.getElementById('aiPrompt').value = '';
+        }
+
+        function publish() {
+            if (!currentEditedImage && !currentImage) {
+                showError('עדכן תמונה עם AI תחילה');
+                return;
+            }
+
+            const post = {
+                id: Date.now(),
+                image: currentEditedImage || currentImage,
+                prompt: document.getElementById('aiPrompt').value,
+                timestamp: new Date().toLocaleString()
+            };
+
+            userData.posts.unshift(post);
+            userData.xp += 50;
+            saveUserData();
+            updateStats();
+
+            deleteImage();
+            loadFeed();
+            showSuccess('פורסם בהצלחה! ✨');
+        }
+
+        function uploadStory() {
+            if (!currentStory) return;
+
+            const story = {
+                id: Date.now(),
+                image: currentStory,
+                timestamp: new Date().toLocaleString()
+            };
+
+            userData.stories.unshift(story);
+            saveUserData();
+
+            currentStory = null;
+            document.getElementById('storyFile').value = '';
+            document.getElementById('storyBtn').style.display = 'none';
+            loadFeed();
+            showSuccess('סטוריה הועלתה! 📸');
+        }
+
+        function loadFeed() {
+            const feedContainer = document.getElementById('feedContainer');
+            if (userData.posts.length === 0) {
+                feedContainer.innerHTML = '<p style="text-align: center; color: #999;">אין פוסטים עדיין</p>';
+            } else {
+                feedContainer.innerHTML = userData.posts.map(post => `
+                    <div class="post-item">
+                        <img src="${post.image}" alt="post">
+                        <p><strong>📝</strong> ${post.prompt}</p>
+                        <div class="post-meta">${post.timestamp}</div>
+                    </div>
+                `).join('');
+            }
+
+            const storiesContainer = document.getElementById('storiesContainer');
+            if (userData.stories.length === 0) {
+                storiesContainer.innerHTML = '<p style="text-align: center; color: #999;">אין סטוריז עדיין</p>';
+            } else {
+                storiesContainer.innerHTML = userData.stories.map(story => `
+                    <div class="post-item">
+                        <img src="${story.image}" alt="story">
+                        <div class="post-meta">${story.timestamp}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(tab + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+
+            if (tab === 'home') loadFeed();
+            if (tab === 'friends') loadFriends();
+            if (tab === 'store') loadStore();
+            if (tab === 'profile') loadProfile();
+        }
+
+        function loadFriends() {
+            const friendsContainer = document.getElementById('friendsContainer');
+            if (userData.friends.length === 0) {
+                friendsContainer.innerHTML = '<p style="text-align: center; color: #999;">אין חברים עדיין</p>';
+            } else {
+                friendsContainer.innerHTML = userData.friends.map(friend => `
+                    <div class="friend-item">
+                        <span>👤 ${friend}</span>
+                    </div>
+                `).join('');
+            }
+
+            const suggestions = ['Alice', 'Bob', 'Charlie', 'David', 'Emma'];
+            const suggestionsContainer = document.getElementById('suggestionsContainer');
+            suggestionsContainer.innerHTML = suggestions.filter(s => !userData.friends.includes(s)).map(friend => `
+                <div class="friend-item">
+                    <span>${friend}</span>
+                    <button onclick="addFriend('${friend}')">הוסף</button>
+                </div>
+            `).join('');
+        }
+
+        function addFriend(name) {
+            if (!userData.friends.includes(name)) {
+                userData.friends.push(name);
+                userData.xp += 10;
+                userData.coins += 5;
                 saveUserData();
-                currentUser = null;
-                D = {
+                updateStats();
+                loadFriends();
+                showSuccess(`הוסף ${name} כחבר! ✨`);
+            }
+        }
+
+        function loadStore() {
+            const filters = [
+                { name: 'סופרמן', price: 50 },
+                { name: 'חלל', price: 75 },
+                { name: 'זהב', price: 60 },
+                { name: 'חם', price: 40 }
+            ];
+
+            const storeContainer = document.getElementById('storeContainer');
+            storeContainer.innerHTML = filters.map(filter => `
+                <div class="store-item">
+                    <div>
+                        <strong>${filter.name}</strong><br>
+                        <span style="color: #667eea; font-weight: 700;">${filter.price} 💰</span>
+                    </div>
+                    <button onclick="buyFilter('${filter.name}', ${filter.price})">קנה</button>
+                </div>
+            `).join('');
+        }
+
+        function buyFilter(name, price) {
+            if (userData.coins >= price) {
+                userData.coins -= price;
+                if (!userData.filters.includes(name)) {
+                    userData.filters.push(name);
+                }
+                saveUserData();
+                updateStats();
+                showSuccess('קנייה בהצלחה! ✨');
+            } else {
+                showError('אין מספיק מטבעות');
+            }
+        }
+
+        function loadProfile() {
+            const taskDisplay = document.getElementById('taskDisplay');
+            const tasks = [
+                '📸 העלה 3 פוסטים',
+                '👥 הוסף 2 חברים',
+                '🛍️ קנה 1 פילטר',
+                '📱 העלה 2 סטוריז',
+                '⭐ צבור 100 XP'
+            ];
+            const task = tasks[Math.floor(Math.random() * tasks.length)];
+            taskDisplay.textContent = task;
+        }
+
+        function newTask() {
+            loadProfile();
+            userData.xp += 20;
+            saveUserData();
+            updateStats();
+            showSuccess('קיבלת 20 XP! 🎉');
+        }
+
+        function clearAllData() {
+            if (confirm('בטוח שאתה רוצה למחוק את כל הנתונים?')) {
+                userData = {
                     xp: 0,
                     coins: 50,
                     level: 1,
                     posts: [],
                     stories: [],
                     friends: [],
-                    filters: [],
-                    language: 'he'
+                    filters: []
                 };
-                try {
-                    localStorage.removeItem('glowup_session');
-                } catch(e) {}
-                location.reload();
+                saveUserData();
+                updateStats();
+                loadFeed();
+                showSuccess('הנתונים נמחקו');
             }
         }
 
-        function saveUserData() {
-            if (!currentUser) return;
-            const users = getAllUsers();
-            if (users[currentUser]) {
-                users[currentUser] = {
-                    ...users[currentUser],
-                    xp: D.xp,
-                    coins: D.coins,
-                    level: D.level,
-                    posts: D.posts,
-                    stories: D.stories,
-                    friends: D.friends,
-                    filters: D.filters,
-                    language: D.language
-                };
-                saveAllUsers(users);
-            }
+        function showError(msg) {
+            const errorMsg = document.getElementById('errorMsg');
+            errorMsg.textContent = '❌ ' + msg;
+            errorMsg.style.display = 'block';
+            setTimeout(() => { errorMsg.style.display = 'none'; }, 3000);
         }
 
-        function checkAuth() {
-            const session = localStorage.getItem('glowup_session');
-            if (session) {
-                const users = getAllUsers();
-                if (users[session]) {
-                    currentUser = session;
-                    D = users[session];
-                    currentLang = D.language || 'he';
-                    console.log('✓ [AUTH] User session restored:', currentUser);
-                    return true;
-                }
-            }
-            return false;
+        function showSuccess(msg) {
+            const successMsg = document.getElementById('successMsg');
+            successMsg.textContent = '✅ ' + msg;
+            successMsg.style.display = 'block';
+            setTimeout(() => { successMsg.style.display = 'none'; }, 3000);
         }
-
-        // ===== STORAGE =====
-        function save() {
-            try {
-                // Save to authenticated user account if logged in
-                if (currentUser) {
-                    saveUserData();
-                } else {
-                    // Fallback for non-authenticated users
-                    localStorage.setItem('glowup', JSON.stringify(D));
-                }
-            } catch(e) {}
-        }
-
-        function load() {
-            try {
-                const s = localStorage.getItem('glowup');
-                if (s) D = JSON.parse(s);
-                currentLang = D.language || 'he';
-            } catch(e) {}
-        }
-
-        function clearAllUserData() {
-            if (confirm('למחוק את כל הנתונים שלך?')) {
-                if (currentUser) {
-                    const users = getAllUsers();
-                    if (users[currentUser]) {
-                        users[currentUser] = {
-                            ...users[currentUser],
-                            xp: 0,
-                            coins: 50,
-                            level: 1,
-                            posts: [],
-                            stories: [],
-                            friends: [],
-                            filters: [],
-                            language: 'he'
-                        };
-                        saveAllUsers(users);
-                        D = users[currentUser];
-                        updateUI();
-                        loadFeed();
-                        loadStories();
-                        loadFriends();
-                        alert('הנתונים נוקו 🗑️');
-                    }
-                }
-            }
-        }
-
-        function clearAll() {
-            if (confirm(t('confirmDelete'))) {
-                localStorage.clear();
-                location.reload();
-            }
-        }
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'he' ? 'en' : 'he';
-            D.language = currentLang;
-            document.getElementById('langBtn').textContent = currentLang === 'he' ? 'EN' : 'HE';
-            document.documentElement.lang = currentLang;
-            document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
-            save();
-        }
-
-        // ===== UI =====
-        function updateUI() {
-            document.getElementById('xp').textContent = D.xp;
-            document.getElementById('coins').textContent = D.coins;
-            document.getElementById('storeCoins').textContent = D.coins;
-            document.getElementById('level').textContent = D.level;
-            document.getElementById('postCount').textContent = D.posts.length;
-            document.getElementById('friendCount').textContent = D.friends.length;
-        }
-
-        function reward(xp, coins) {
-            D.xp += xp;
-            D.coins += coins;
-
-            const newLvl = Math.floor(D.xp / 100) + 1;
-            if (newLvl > D.level) {
-                D.level = newLvl;
-                alert(`🎉 ${t('levelUp')} ${newLvl}!`);
-            }
-
-            updateUI();
-            save();
-        }
-
-        // ===== NAV =====
-        function setupNav() {
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const tab = item.dataset.tab;
-                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                    document.getElementById(tab).classList.add('active');
-                    item.classList.add('active');
-                    window.scrollTo(0, 0);
-                });
-            });
-        }
-
-        // ===== IMAGE =====
-        function setupImage() {
-            const input = document.getElementById('imgInput');
-            const picker = document.getElementById('picker');
-            const deleteBtn = document.getElementById('deleteBtn');
-            const promptBox = document.getElementById('aiInstructionBox');
-            const promptInput = document.getElementById('aiPrompt');
-            const editBtn = document.getElementById('editBtn');
-            const storyBtn = document.getElementById('storyBtn');
-
-            input.addEventListener('change', e => {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                const reader = new FileReader();
-                reader.onload = ev => {
-                    img = ev.target.result;
-                    picker.classList.add('has-img');
-                    picker.innerHTML = `<img src="${img}" alt="Selected">`;
-                    deleteBtn.style.display = 'block';
-                    promptBox.style.display = 'block';
-                    promptInput.style.display = 'block';
-                    editBtn.style.display = 'block';
-                    storyBtn.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        function deleteImage() {
-            img = null;
-            editedImg = null;
-            const picker = document.getElementById('picker');
-            const deleteBtn = document.getElementById('deleteBtn');
-            const promptBox = document.getElementById('aiInstructionBox');
-            const promptInput = document.getElementById('aiPrompt');
-            const editBtn = document.getElementById('editBtn');
-            const storyBtn = document.getElementById('storyBtn');
-            const aiResult = document.getElementById('aiResult');
-            const editedSection = document.getElementById('editedSection');
-            const caption = document.getElementById('caption');
-
-            picker.classList.remove('has-img');
-            picker.innerHTML = `<div class="placeholder"><div class="placeholder-icon">📷</div><div>${t('uploadPhoto')}</div></div>`;
-            deleteBtn.style.display = 'none';
-            promptBox.style.display = 'none';
-            promptInput.style.display = 'none';
-            editBtn.style.display = 'none';
-            storyBtn.style.display = 'none';
-            promptInput.value = '';
-            caption.value = '';
-            aiResult.style.display = 'none';
-            aiResult.innerHTML = '';
-            editedSection.style.display = 'none';
-        }
-
-        // ===== AI IMAGE EDITING =====
-        async function editImage() {
-            if (!img) {
-                alert(t('noImage'));
-                return;
-            }
-
-            const prompt = document.getElementById('aiPrompt').value.trim();
-            if (!prompt) {
-                alert(t('aiPromptRequired'));
-                return;
-            }
-
-            const result = document.getElementById('aiResult');
-            result.style.display = 'block';
-            result.className = 'result result-ok';
-            result.innerHTML = `<span class="loading"></span>${t('editing')}`;
-
-            const editBtn = document.getElementById('editBtn');
-            editBtn.disabled = true;
-
-            try {
-                console.log('🚀 [AI] Starting image edit...');
-                console.log('📍 Current URL:', window.location.href);
-
-                // Check if we're on Vercel or GitHub Pages
-                const isVercel = window.location.hostname.includes('vercel.app');
-
-                if (!isVercel) {
-                    console.warn('⚠️ [AI] Not on Vercel deployment - API won\'t work');
-                    result.innerHTML = `❌ שגיאה: צריך להשתמש בקישור Vercel!<br><br>
-                    <strong>קישור נכון:</strong><br>
-                    https://glowup-app-kappa.vercel.app<br><br>
-                    <small>GitHub Pages אין לה backend</small>`;
-                    editBtn.disabled = false;
-                    return;
-                }
-
-                console.log('✅ [AI] On Vercel - calling API...');
-
-                // Call Vercel API for real AI processing
-                const response = await fetch('/api/edit-image', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        image: img,
-                        prompt: prompt,
-                    }),
-                    timeout: 60000,
-                });
-
-                console.log('📡 [AI] API Response status:', response.status);
-
-                if (!response.ok) {
-                    let error;
-                    try {
-                        error = await response.json();
-                        console.error('❌ [AI] API Error:', error);
-                    } catch {
-                        console.error('❌ [AI] API Error (no JSON):', response.statusText);
-                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                    }
-                    throw new Error(error.error || error.message || 'API Error');
-                }
-
-                const data = await response.json();
-                if (!data.image) {
-                    throw new Error('No image in response');
-                }
-
-                editedImg = data.image;
-                console.log('✅ [AI] Image processed successfully!');
-
-                // Show result
-                result.className = 'result result-ok';
-                result.innerHTML = `✨ ${t('edited')}<br><img src="${editedImg}" style="width: 100%; border-radius: 8px; margin-top: 10px;">`;
-
-                reward(50, 25);
-
-                // Show caption input
-                document.getElementById('editedSection').style.display = 'block';
-                editBtn.disabled = false;
-
-            } catch (error) {
-                console.error('❌ [AI] Fatal error:', error.message);
-                result.className = 'result result-err';
-                result.innerHTML = `❌ שגיאה בעיבוד:<br><small>${error.message}</small><br><br>
-                <strong>בדוק:</strong><br>
-                1. אתה על https://glowup-app-kappa.vercel.app?<br>
-                2. האם ה-API key הוגדר ב-Vercel?<br>
-                3. חכה דקה והנסה שוב`;
-                editBtn.disabled = false;
-            }
-        }
-
-        // ===== POSTS =====
-        function publish() {
-            if (!editedImg) {
-                alert(t('editFirst'));
-                return;
-            }
-
-            const cap = document.getElementById('caption').value || '';
-
-            D.posts.unshift({
-                id: Date.now(),
-                img: editedImg,
-                caption: cap,
-                time: 'עכשיו',
-                likes: 0
-            });
-
-            reward(50, 25);
-            save();
-
-            alert(t('published'));
-            deleteImage();
-            loadFeed();
-            document.querySelector('[data-tab="home"]').click();
-        }
-
-        function loadFeed() {
-            const feed = document.getElementById('feed');
-
-            if (D.posts.length === 0) {
-                feed.innerHTML = `<div class="empty"><div class="empty-icon">📸</div><div class="empty-title">${t('noPhotos')}</div><div class="empty-text">${t('startCreating')}</div></div>`;
-                return;
-            }
-
-            feed.innerHTML = D.posts.map(p => `
-                <div class="post">
-                    <div class="post-header">
-                        <div class="avatar"></div>
-                        <div class="post-user">
-                            <div class="post-name">אתה</div>
-                            <div class="post-time">${p.time}</div>
-                        </div>
-                    </div>
-                    <img src="${p.img}" class="post-img" alt="Post">
-                    ${p.caption ? `<div class="post-caption">${p.caption}</div>` : ''}
-                    <div class="post-actions">
-                        <div class="post-action">❤️ ${p.likes}</div>
-                        <div class="post-action">💬 0</div>
-                        <div class="post-action">📤</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // ===== STORIES =====
-        function uploadStory() {
-            if (!img && !editedImg) {
-                alert(t('noImage'));
-                return;
-            }
-
-            const storyImg = editedImg || img;
-            D.stories.unshift({ id: Date.now(), img: storyImg });
-            reward(15, 7);
-            save();
-
-            alert(t('storyUploaded'));
-            deleteImage();
-            loadStories();
-        }
-
-        function loadStories() {
-            const stories = document.getElementById('stories');
-
-            if (D.stories.length === 0) {
-                stories.innerHTML = '<div style="color: var(--dim); padding: 20px;">אין stories עדיין</div>';
-                return;
-            }
-
-            stories.innerHTML = D.stories.map(s => `<div class="story"><img src="${s.img}" alt="Story"></div>`).join('');
-        }
-
-        // ===== TASKS =====
-        const tasks = [
-            '📸 צלם selfie עם משהו כחול',
-            '🎨 צייר משהו וצלם',
-            '🌅 צלם שקיעה יפה',
-            '☕ צלם את הקפה של הבוקר',
-            '👟 צלם את הנעליים שלך באופן יצירתי',
-            '🌳 צלם עץ מעניין',
-            '😎 צלם בפוזה מגניבה',
-            '🍕 צלם את האוכל שלך',
-            '🎧 צלם משהו שאתה אוהב',
-            '🌈 מצא משהו צבעוני וצלם'
-        ];
-
-        function newTask() {
-            const el = document.getElementById('dailyTask');
-            el.textContent = tasks[Math.floor(Math.random() * tasks.length)];
-        }
-
-        function quick(xp, coins) {
-            reward(xp, coins);
-            alert(`הושלם! 🎉\n+${xp} XP, +${coins} Coins`);
-        }
-
-        // ===== FRIENDS =====
-        function loadFriends() {
-            const suggested = document.getElementById('suggested');
-            const list = document.getElementById('friendsList');
-
-            const people = [
-                { name: 'דני לוי', meta: '12 חברים משותפים' },
-                { name: 'שירה כהן', meta: '8 חברים משותפים' },
-                { name: 'יובל מזרחי', meta: 'מוכר מ-Instagram' }
-            ];
-
-            suggested.innerHTML = people.map(p => `
-                <div class="friend">
-                    <div class="avatar"></div>
-                    <div class="friend-info">
-                        <div class="friend-name">${p.name}</div>
-                        <div class="friend-meta">${p.meta}</div>
-                    </div>
-                    <button class="btn btn-primary btn-sm" onclick="addFriend('${p.name}')">הוסף</button>
-                </div>
-            `).join('');
-
-            if (D.friends.length === 0) {
-                list.innerHTML = '<div class="empty"><div class="empty-icon">👥</div><div class="empty-title">אין חברים</div></div>';
-            } else {
-                list.innerHTML = D.friends.map(f => `
-                    <div class="friend">
-                        <div class="avatar"></div>
-                        <div class="friend-info">
-                            <div class="friend-name">${f}</div>
-                            <div class="friend-meta">חבר</div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function addFriend(name) {
-            if (!D.friends.includes(name)) {
-                D.friends.push(name);
-                reward(20, 10);
-                save();
-                loadFriends();
-                alert(`${name} נוסף! +20 XP`);
-            }
-        }
-
-        function connect(platform) {
-            alert(`חיבור ל-${platform}\nבגרסה הבאה!`);
-        }
-
-        // ===== STORE =====
-        function buy(item, price) {
-            if (D.coins < price) return alert(t('notEnoughCoins'));
-            if (D.filters.includes(item)) return alert(t('alreadyHave'));
-
-            D.coins -= price;
-            D.filters.push(item);
-            save();
-            updateUI();
-
-            alert(`${t('purchased')} ${item}! ✨`);
-        }
-
-        function premium() {
-            alert('Premium - ₪29.90/חודש\nבגרסה הבאה!');
-        }
-
-        // ===== PWA =====
-        window.addEventListener('beforeinstallprompt', e => {
-            e.preventDefault();
-            deferredPrompt = e;
-            const banner = document.getElementById('installBanner');
-            if (banner) banner.style.display = 'block';
-        });
-
-        function install() {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then(choice => {
-                if (choice.outcome === 'accepted') {
-                    const banner = document.getElementById('installBanner');
-                    if (banner) banner.style.display = 'none';
-                }
-                deferredPrompt = null;
-            });
-        }
-
-        // ===== SHARE =====
-        async function share() {
-            const text = 'הצטרף אליי ל-GlowUp - הפלטפורמה החברתית עם AI! 🚀';
-            const url = window.location.href;
-
-            if (navigator.share) {
-                try {
-                    await navigator.share({ title: 'GlowUp', text, url });
-                } catch(e) {}
-            } else {
-                navigator.clipboard.writeText(url);
-                alert('הקישור הועתק! שתף עם חברים 📤');
-            }
-        }
-
-        // ===== INIT =====
-        console.log('🚀 [INIT] Script executing - document.readyState:', document.readyState);
-
-        let initDone = false;
-
-        function doInit() {
-            if (initDone) return;
-            initDone = true;
-
-            console.log('🔧 [INIT] Starting initialization...');
-
-            try {
-                // Get elements
-                const splash = document.getElementById('splash');
-                const app = document.getElementById('app');
-                const authScreen = document.getElementById('authScreen');
-
-                console.log('✓ [INIT] Elements found - splash:', !!splash, 'app:', !!app, 'auth:', !!authScreen);
-
-                // Hide splash immediately
-                if (splash) splash.style.display = 'none';
-
-                // Check authentication
-                const isAuthenticated = checkAuth();
-                console.log('📋 [INIT] Auth check result:', isAuthenticated, 'user:', currentUser);
-
-                if (!isAuthenticated) {
-                    console.log('🔐 [INIT] Not authenticated - showing login');
-                    if (authScreen) {
-                        authScreen.classList.add('show');
-                        console.log('✓ [INIT] Auth screen shown');
-                    }
-                    showLogin();
-                    return;
-                }
-
-                console.log('✅ [INIT] User authenticated, loading app...');
-
-                // Setup app for authenticated user
-                try {
-                    updateUI();
-                    setupNav();
-                    setupImage();
-
-                    const langBtn = document.getElementById('langBtn');
-                    if (langBtn) langBtn.textContent = currentLang === 'he' ? 'EN' : 'HE';
-
-                    const userDisplay = document.getElementById('currentUserDisplay');
-                    if (userDisplay) userDisplay.textContent = `👤 ${currentUser}`;
-
-                    // Show app
-                    if (authScreen) authScreen.classList.remove('show');
-                    if (app) {
-                        app.style.display = 'block';
-                        app.classList.add('show');
-                        console.log('✓ [INIT] App displayed');
-                    }
-
-                    // Load content
-                    setTimeout(() => {
-                        try {
-                            loadFeed();
-                            loadStories();
-                            loadFriends();
-                            newTask();
-                            console.log('✓ [INIT] All content ready');
-                        } catch(e) {
-                            console.error('❌ [INIT] Content error:', e.message);
-                        }
-                    }, 100);
-
-                    console.log('✅ [INIT] App ready!');
-                } catch(e) {
-                    console.error('❌ [INIT] Setup error:', e.message);
-                    if (app) app.style.display = 'block';
-                }
-            } catch(e) {
-                console.error('❌ [INIT] Critical error:', e.message);
-                const authScreen = document.getElementById('authScreen');
-                if (authScreen) authScreen.classList.add('show');
-            }
-        }
-
-        // Method 1: Synchronous check (for scripts at end of body)
-        if (document.readyState !== 'loading') {
-            console.log('📋 [INIT] DOM already ready (readyState:', document.readyState + ')');
-            doInit();
-        } else {
-            console.log('📋 [INIT] Waiting for DOMContentLoaded...');
-        }
-
-        // Method 2: DOMContentLoaded (most common)
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('📋 [INIT] DOMContentLoaded fired');
-            doInit();
-        });
-
-        // Method 3: Window load (for any async resource issues)
-        window.addEventListener('load', () => {
-            console.log('📋 [INIT] Window load event fired');
-            doInit();
-        });
-
-        // Method 4: Force initialization after 2 seconds (absolute fallback)
-        setTimeout(() => {
-            if (!initDone) {
-                console.warn('⚠️  [INIT] Forcing init after timeout');
-                doInit();
-            }
-        }, 2000);
-
-        // Method 5: Ensure something is visible after 1.5 seconds
-        setTimeout(() => {
-            const splash = document.getElementById('splash');
-            const authScreen = document.getElementById('authScreen');
-            const app = document.getElementById('app');
-
-            if (splash) splash.style.display = 'none';
-
-            const isAppVisible = app && app.style.display !== 'none';
-            const isAuthVisible = authScreen && authScreen.classList.contains('show');
-
-            if (!isAppVisible && !isAuthVisible) {
-                console.warn('⚠️  [INIT] Emergency: showing auth screen');
-                if (authScreen) {
-                    authScreen.classList.add('show');
-                    showLogin();
-                }
-            }
-        }, 1500);
     </script>
 </body>
 </html>
