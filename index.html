@@ -1389,49 +1389,116 @@
         }
 
         // ===== INIT =====
-        window.addEventListener('load', () => {
-            load();
-            updateUI();
-            setupNav();
-            setupImage();
+        console.log('🚀 [INIT] Script executing - document.readyState:', document.readyState);
 
-            const langBtn = document.getElementById('langBtn');
-            langBtn.textContent = currentLang === 'he' ? 'EN' : 'HE';
+        let initDone = false;
 
-            // Hide splash screen faster
-            setTimeout(() => {
-                document.getElementById('splash').classList.add('hide');
-                document.getElementById('app').classList.add('show');
-                loadFeed();
-                loadStories();
-                loadFriends();
-                newTask();
-            }, 800);
-        });
+        function doInit() {
+            if (initDone) return;
+            initDone = true;
 
-        // Fallback init for Safari and older browsers
-        document.addEventListener('DOMContentLoaded', () => {
-            const splash = document.getElementById('splash');
-            const app = document.getElementById('app');
-            if (splash && !splash.classList.contains('hide')) {
-                setTimeout(() => {
+            console.log('🔧 [INIT] Starting initialization...');
+
+            try {
+                // Load data first
+                load();
+                updateUI();
+                setupNav();
+                setupImage();
+
+                const langBtn = document.getElementById('langBtn');
+                if (langBtn) {
+                    langBtn.textContent = currentLang === 'he' ? 'EN' : 'HE';
+                }
+
+                // Force show app immediately (don't wait)
+                const splash = document.getElementById('splash');
+                const app = document.getElementById('app');
+
+                if (splash) {
+                    splash.style.display = 'none';
+                    splash.style.opacity = '0';
                     splash.classList.add('hide');
+                    console.log('✓ [INIT] Splash hidden');
+                }
+
+                if (app) {
+                    app.style.display = 'block';
+                    app.style.opacity = '1';
                     app.classList.add('show');
+                    console.log('✓ [INIT] App shown');
+                }
+
+                // Load content after short delay to ensure rendering
+                setTimeout(() => {
                     try {
-                        load();
-                        updateUI();
-                        setupNav();
-                        setupImage();
                         loadFeed();
                         loadStories();
                         loadFriends();
                         newTask();
+                        console.log('✓ [INIT] All content loaded');
                     } catch(e) {
-                        console.error('Init error:', e);
+                        console.error('❌ [INIT] Content load error:', e);
                     }
-                }, 300);
+                }, 100);
+
+                console.log('✓ [INIT] Initialization complete!');
+            } catch(e) {
+                console.error('❌ [INIT] Fatal error:', e);
+                // Still try to show the app even if there was an error
+                const app = document.getElementById('app');
+                if (app) {
+                    app.style.display = 'block';
+                    app.style.opacity = '1';
+                }
             }
+        }
+
+        // Method 1: Synchronous check (for scripts at end of body)
+        if (document.readyState !== 'loading') {
+            console.log('📋 [INIT] DOM already ready (readyState:', document.readyState + ')');
+            doInit();
+        } else {
+            console.log('📋 [INIT] Waiting for DOMContentLoaded...');
+        }
+
+        // Method 2: DOMContentLoaded (most common)
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('📋 [INIT] DOMContentLoaded fired');
+            doInit();
         });
+
+        // Method 3: Window load (for any async resource issues)
+        window.addEventListener('load', () => {
+            console.log('📋 [INIT] Window load event fired');
+            doInit();
+        });
+
+        // Method 4: Force initialization after 2 seconds (absolute fallback)
+        setTimeout(() => {
+            if (!initDone) {
+                console.warn('⚠️  [INIT] Forcing init after timeout');
+                doInit();
+            }
+        }, 2000);
+
+        // Method 5: Ensure splash is hidden with brute force after 1 second
+        setTimeout(() => {
+            const splash = document.getElementById('splash');
+            if (splash && splash.style.display !== 'none') {
+                console.warn('⚠️  [INIT] Forcing splash hide');
+                splash.style.display = 'none';
+                splash.style.opacity = '0';
+                splash.style.visibility = 'hidden';
+                splash.style.pointerEvents = 'none';
+                const app = document.getElementById('app');
+                if (app) {
+                    app.style.display = 'block';
+                    app.style.opacity = '1';
+                    app.style.visibility = 'visible';
+                }
+            }
+        }, 1000);
     </script>
 </body>
 </html>
