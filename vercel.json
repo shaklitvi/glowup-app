@@ -1,18 +1,3 @@
 {
-  "version": 2,
-  "buildCommand": "exit 0",
-  "outputDirectory": ".",
-  "functions": {
-    "api/**/*.js": {
-      "memory": 1024,
-      "maxDuration": 120,
-      "runtime": "nodejs18.x"
-    }
-  },
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ]
+  "version": 2
 }

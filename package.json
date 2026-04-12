@@ -1,15 +1,5 @@
 {
   "name": "glowup-app",
   "version": "1.0.0",
-  "description": "AI-powered social media app with Hugging Face integration",
-  "scripts": {
-    "dev": "vercel dev",
-    "build": "echo 'Static site ready'"
-  },
-  "keywords": ["ai", "social-media", "image-transformation"],
-  "author": "",
-  "license": "MIT",
-  "engines": {
-    "node": "18.x"
-  }
+  "description": "AI-powered social media app"
 }
