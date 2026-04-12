@@ -1310,7 +1310,23 @@
             editBtn.disabled = true;
 
             try {
-                console.log('🚀 [AI] Sending image to Vercel API...');
+                console.log('🚀 [AI] Starting image edit...');
+                console.log('📍 Current URL:', window.location.href);
+
+                // Check if we're on Vercel or GitHub Pages
+                const isVercel = window.location.hostname.includes('vercel.app');
+
+                if (!isVercel) {
+                    console.warn('⚠️ [AI] Not on Vercel deployment - API won\'t work');
+                    result.innerHTML = `❌ שגיאה: צריך להשתמש בקישור Vercel!<br><br>
+                    <strong>קישור נכון:</strong><br>
+                    https://glowup-app-kappa.vercel.app<br><br>
+                    <small>GitHub Pages אין לה backend</small>`;
+                    editBtn.disabled = false;
+                    return;
+                }
+
+                console.log('✅ [AI] On Vercel - calling API...');
 
                 // Call Vercel API for real AI processing
                 const response = await fetch('/api/edit-image', {
@@ -1322,16 +1338,29 @@
                         image: img,
                         prompt: prompt,
                     }),
+                    timeout: 60000,
                 });
 
+                console.log('📡 [AI] API Response status:', response.status);
+
                 if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.error || 'API Error');
+                    let error;
+                    try {
+                        error = await response.json();
+                        console.error('❌ [AI] API Error:', error);
+                    } catch {
+                        console.error('❌ [AI] API Error (no JSON):', response.statusText);
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    throw new Error(error.error || error.message || 'API Error');
                 }
 
                 const data = await response.json();
-                editedImg = data.image;
+                if (!data.image) {
+                    throw new Error('No image in response');
+                }
 
+                editedImg = data.image;
                 console.log('✅ [AI] Image processed successfully!');
 
                 // Show result
@@ -1345,9 +1374,13 @@
                 editBtn.disabled = false;
 
             } catch (error) {
-                console.error('❌ [AI] Error:', error.message);
+                console.error('❌ [AI] Fatal error:', error.message);
                 result.className = 'result result-err';
-                result.innerHTML = `❌ שגיאה: ${error.message}<br><small>בדוק שהגדרת את ה-API key ב-Vercel</small>`;
+                result.innerHTML = `❌ שגיאה בעיבוד:<br><small>${error.message}</small><br><br>
+                <strong>בדוק:</strong><br>
+                1. אתה על https://glowup-app-kappa.vercel.app?<br>
+                2. האם ה-API key הוגדר ב-Vercel?<br>
+                3. חכה דקה והנסה שוב`;
                 editBtn.disabled = false;
             }
         }
