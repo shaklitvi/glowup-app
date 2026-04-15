@@ -813,7 +813,7 @@
 
             <div class="card">
                 <div class="card-title">⚙️ הגדרות</div>
-                <button class="btn btn-secondary" onclick="alert('בקרוב')">ערוך פרופיל</button>
+                <button class="btn btn-secondary" onclick="alert(t('coming'))">ערוך פרופיל</button>
                 <button class="btn btn-secondary" onclick="clearAll()">נקה נתונים</button>
             </div>
         </div>
@@ -886,7 +886,14 @@
                 errorProcessing: 'שגיאה בעיבוד התמונה',
                 errorLoading: 'שגיאה בטעינת התמונה',
                 now: 'עכשיו',
-                friend: 'חבר'
+                friend: 'חבר',
+                completed: 'הושלם!',
+                friendAdded: 'נוסף!',
+                copiedLink: 'הקישור הועתק! שתף עם חברים 📤',
+                premium: 'Premium - ₪29.90/חודש - בגרסה הבאה!',
+                coming: 'בקרוב',
+                editProfile: 'ערוך פרופיל',
+                connect: 'חיבור ל'
             },
             en: {
                 noImage: 'Upload a photo first!',
@@ -908,7 +915,14 @@
                 errorProcessing: 'Error processing image',
                 errorLoading: 'Error loading image',
                 now: 'now',
-                friend: 'Friend'
+                friend: 'Friend',
+                completed: 'Completed!',
+                friendAdded: 'Added!',
+                copiedLink: 'Link copied! Share with friends 📤',
+                premium: 'Premium - $9.99/month - Coming soon!',
+                coming: 'Coming soon',
+                editProfile: 'Edit profile',
+                connect: 'Connect to '
             }
         };
 
@@ -1304,7 +1318,7 @@
 
         function quick(xp, coins) {
             reward(xp, coins);
-            alert(`הושלם! 🎉\n+${xp} XP, +${coins} Coins`);
+            alert(`${t('completed')} 🎉\n+${xp} XP, +${coins} Coins`);
         }
 
         // ===== FRIENDS =====
@@ -1350,12 +1364,12 @@
                 reward(20, 10);
                 save();
                 loadFriends();
-                alert(`${name} נוסף! +20 XP`);
+                alert(`${name} ${t('friendAdded')} +20 XP`);
             }
         }
 
         function connect(platform) {
-            alert(`חיבור ל-${platform}\nבגרסה הבאה!`);
+            alert(`${t('connect')}${platform}\n${t('coming')}`);
         }
 
         // ===== STORE =====
@@ -1368,11 +1382,11 @@
             save();
             updateUI();
 
-            alert(`${t('purchased')} ${item}! ✨`);
+            alert(`${t('purchased')} ${item}! ✨ +${price} Coins`);
         }
 
         function premium() {
-            alert('Premium - ₪29.90/חודש\nבגרסה הבאה!');
+            alert(t('premium'));
         }
 
         // ===== PWA =====
@@ -1397,7 +1411,7 @@
 
         // ===== SHARE =====
         async function share() {
-            const text = 'הצטרף אליי ל-GlowUp - הפלטפורמה החברתית עם AI! 🚀';
+            const text = currentLang === 'he' ? 'הצטרף אליי ל-GlowUp - הפלטפורמה החברתית עם AI! 🚀' : 'Join me on GlowUp - The AI Social Platform! 🚀';
             const url = window.location.href;
 
             if (navigator.share) {
@@ -1406,7 +1420,7 @@
                 } catch(e) {}
             } else {
                 navigator.clipboard.writeText(url);
-                alert('הקישור הועתק! שתף עם חברים 📤');
+                alert(t('copiedLink'));
             }
         }
 
