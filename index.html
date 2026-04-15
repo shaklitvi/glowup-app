@@ -732,7 +732,7 @@
                 <div id="aiResult" class="result"></div>
 
                 <div style="display: none;" id="editedSection">
-                    <label for="caption" style="display: block; margin-top: 20px; margin-bottom: 10px; font-weight: 600;">כתוב כיתוב:</label>
+                    <label for="caption" style="display: block; margin-top: 20px; margin-bottom: 10px; font-weight: 600;" id="captionLabel">כתוב כיתוב:</label>
                     <textarea id="caption" placeholder="כתוב כיתוב..."></textarea>
 
                     <button class="btn btn-primary" onclick="publish()">📤 פרסם</button>
@@ -894,7 +894,12 @@
                 coming: 'בקרוב',
                 editProfile: 'ערוך פרופיל',
                 connect: 'חיבור ל',
-                you: 'אתה'
+                you: 'אתה',
+                writeCaption: 'כתוב כיתוב:',
+                captionPlaceholder: 'כתוב כיתוב...',
+                noStories: 'אין stories עדיין',
+                addFriend: 'הוסף',
+                noFriends: 'אין חברים'
             },
             en: {
                 noImage: 'Upload a photo first!',
@@ -924,7 +929,12 @@
                 coming: 'Coming soon',
                 editProfile: 'Edit profile',
                 connect: 'Connect to ',
-                you: 'You'
+                you: 'You',
+                writeCaption: 'Write caption:',
+                captionPlaceholder: 'Write a caption...',
+                noStories: 'No stories yet',
+                addFriend: 'Add',
+                noFriends: 'No friends'
             }
         };
 
@@ -960,6 +970,13 @@
             document.getElementById('langBtn').textContent = currentLang === 'he' ? 'EN' : 'HE';
             document.documentElement.lang = currentLang;
             document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
+
+            // Update dynamic placeholders
+            const captionInput = document.getElementById('caption');
+            if (captionInput) captionInput.placeholder = t('captionPlaceholder');
+            const aiPrompt = document.getElementById('aiPrompt');
+            if (aiPrompt) aiPrompt.placeholder = t('aiPromptRequired');
+
             save();
         }
 
@@ -1280,7 +1297,7 @@
             const stories = document.getElementById('stories');
 
             if (D.stories.length === 0) {
-                stories.innerHTML = '<div style="color: var(--dim); padding: 20px;">אין stories עדיין</div>';
+                stories.innerHTML = `<div style="color: var(--dim); padding: 20px;">${t('noStories')}</div>`;
                 return;
             }
 
@@ -1341,12 +1358,12 @@
                         <div class="friend-name">${p.name}</div>
                         <div class="friend-meta">${p.meta}</div>
                     </div>
-                    <button class="btn btn-primary btn-sm" onclick="addFriend('${p.name}')">הוסף</button>
+                    <button class="btn btn-primary btn-sm" onclick="addFriend('${p.name}')">${t('addFriend')}</button>
                 </div>
             `).join('');
 
             if (D.friends.length === 0) {
-                list.innerHTML = '<div class="empty"><div class="empty-icon">👥</div><div class="empty-title">אין חברים</div></div>';
+                list.innerHTML = `<div class="empty"><div class="empty-icon">👥</div><div class="empty-title">${t('noFriends')}</div></div>`;
             } else {
                 list.innerHTML = D.friends.map(f => `
                     <div class="friend">
