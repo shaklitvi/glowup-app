@@ -29,29 +29,31 @@ export default async function handler(req, res) {
 
     if (!hfToken) {
       return res.status(500).json({
-        error: 'Server not configured. Please contact administrator.',
-        message: 'HUGGING_FACE_API_KEY not set in environment'
+        error: 'Server not configured',
+        message: 'HUGGING_FACE_API_KEY not set'
       });
     }
 
-    // Prepare the request
-    const base64Data = image.split(',')[1] || image;
+    // Extract base64 from data URL
+    const base64Data = image.includes(',') ? image.split(',')[1] : image;
     const binaryData = Buffer.from(base64Data, 'base64');
 
+    // Use FormData for the request
+    const FormData = (await import('form-data')).default;
     const formData = new FormData();
 
-    // Create blob from binary data
-    const imageBlob = new Blob([binaryData], { type: 'image/jpeg' });
-    formData.append('inputs', imageBlob, 'image.jpg');
-    formData.append('parameters', JSON.stringify({ prompt }))
+    // Add image as file
+    formData.append('image', binaryData, 'image.jpg');
+    formData.append('prompt', prompt);
 
-    // Call Hugging Face API
+    // Call Hugging Face InstructPix2Pix model
     const response = await fetch(
       'https://api-inference.huggingface.co/models/timbrooks/instruct-pix2pix',
       {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${hfToken}`
+          'Authorization': `Bearer ${hfToken}`,
+          ...formData.getHeaders()
         },
         body: formData
       }
