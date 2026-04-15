@@ -39,11 +39,11 @@ export default async function handler(req, res) {
     const binaryData = Buffer.from(base64Data, 'base64');
 
     const formData = new FormData();
-    formData.append('inputs', prompt);
 
     // Create blob from binary data
     const imageBlob = new Blob([binaryData], { type: 'image/jpeg' });
     formData.append('inputs', imageBlob, 'image.jpg');
+    formData.append('parameters', JSON.stringify({ prompt }))
 
     // Call Hugging Face API
     const response = await fetch(
