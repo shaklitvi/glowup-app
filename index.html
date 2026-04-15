@@ -621,7 +621,7 @@
     </div>
 
     <!-- Install Banner for PWA -->
-    <div id="installBanner" class="hide" style="display: none; position: fixed; bottom: 80px; left: 20px; right: 20px; background: rgba(0, 255, 255, 0.1); border: 1px solid var(--accent); border-radius: 8px; padding: 12px; text-align: center; z-index: 99;">
+    <div id="installBanner" style="display: none; position: fixed; bottom: 80px; left: 20px; right: 20px; background: rgba(0, 255, 255, 0.1); border: 1px solid var(--accent); border-radius: 8px; padding: 12px; text-align: center; z-index: 99;">
         <p style="margin: 0 0 8px 0;">📲 להתקין את GlowUp כאפליקציה?</p>
         <button onclick="install()" style="background: var(--accent2); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin: 0 4px;">כן</button>
         <button onclick="document.getElementById('installBanner').style.display='none'" style="background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 6px 12px; border-radius: 4px; cursor: pointer;">לא</button>
@@ -882,7 +882,11 @@
                 uploadPhoto: 'העלה תמונה',
                 alreadyHave: 'כבר יש לך!',
                 notEnoughCoins: 'אין מספיק קוינס!',
-                purchased: 'רכשת'
+                purchased: 'רכשת',
+                errorProcessing: 'שגיאה בעיבוד התמונה',
+                errorLoading: 'שגיאה בטעינת התמונה',
+                now: 'עכשיו',
+                friend: 'חבר'
             },
             en: {
                 noImage: 'Upload a photo first!',
@@ -900,7 +904,11 @@
                 uploadPhoto: 'Upload photo',
                 alreadyHave: 'You already have it!',
                 notEnoughCoins: 'Not enough coins!',
-                purchased: 'You bought'
+                purchased: 'You bought',
+                errorProcessing: 'Error processing image',
+                errorLoading: 'Error loading image',
+                now: 'now',
+                friend: 'Friend'
             }
         };
 
@@ -1159,14 +1167,14 @@
                         } catch (e) {
                             console.error('Canvas error:', e);
                             result.className = 'result result-err';
-                            result.innerHTML = `❌ שגיאה בעיבוד`;
+                            result.innerHTML = `❌ ${t('errorProcessing')}`;
                             editBtn.disabled = false;
                         }
                     };
 
                     img_el.onerror = function() {
                         result.className = 'result result-err';
-                        result.innerHTML = `❌ שגיאה בטעינה`;
+                        result.innerHTML = `❌ ${t('errorLoading')}`;
                         editBtn.disabled = false;
                     };
 
@@ -1194,7 +1202,7 @@
                 id: Date.now(),
                 img: editedImg,
                 caption: cap,
-                time: 'עכשיו',
+                time: t('now'),
                 likes: 0
             });
 
@@ -1260,7 +1268,19 @@
                 return;
             }
 
-            stories.innerHTML = D.stories.map(s => `<div class="story"><img src="${s.img}" alt="Story"></div>`).join('');
+            stories.innerHTML = D.stories.map((s, i) => `<div class="story" onclick="viewStory(${i})"><img src="${s.img}" alt="Story"></div>`).join('');
+        }
+
+        function viewStory(index) {
+            const story = D.stories[index];
+            if (!story) return;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; inset: 0; background: black; display: flex; align-items: center; justify-content: center; z-index: 1000; cursor: pointer;';
+            modal.innerHTML = `<img src="${story.img}" alt="Story" style="max-width: 100%; max-height: 100vh; object-fit: contain;">`;
+
+            modal.onclick = () => modal.remove();
+            document.body.appendChild(modal);
         }
 
         // ===== TASKS =====
@@ -1317,7 +1337,7 @@
                         <div class="avatar"></div>
                         <div class="friend-info">
                             <div class="friend-name">${f}</div>
-                            <div class="friend-meta">חבר</div>
+                            <div class="friend-meta">${t('friend')}</div>
                         </div>
                     </div>
                 `).join('');
