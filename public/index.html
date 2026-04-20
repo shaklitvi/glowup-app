@@ -1092,7 +1092,8 @@
             try {
                 result.innerHTML = `<span class="loading"></span>שולח ל-AI... זה יכול לקחת דקה`;
 
-                const response = await fetch('/api/edit-image', {
+                const apiEndpoint = 'https://glowup-app-api.vercel.app/api/edit-image';
+                const response = await fetch(apiEndpoint, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
