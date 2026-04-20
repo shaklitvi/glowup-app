@@ -733,6 +733,7 @@
 
             const result = db.registerUser(email, username, password);
             if (result.success) {
+                alert('✅ הרשמה בהצלחה! כניסה בעוד שניה...');
                 showMessage('register-message', '✅ הרשמה בהצלחה! עכשיו התחבר', 'success');
                 document.getElementById('register-username').value = '';
                 document.getElementById('register-email').value = '';
@@ -742,6 +743,7 @@
                     document.getElementById('login-message').textContent = '';
                 }, 1500);
             } else {
+                alert('❌ שגיאה: ' + result.error);
                 showMessage('register-message', result.error, 'error');
             }
         }
