@@ -593,6 +593,8 @@
     </div>
 
     <script>
+        console.log('🚀 GlowUp App Loaded!');
+
         // ====== DATA STORAGE ======
         class GlowUpDB {
             constructor() {
@@ -711,6 +713,7 @@
 
         // ====== AUTH ======
         function register() {
+            console.log('Register clicked');
             const username = document.getElementById('register-username').value.trim();
             const email = document.getElementById('register-email').value.trim();
             const password = document.getElementById('register-password').value.trim();
@@ -744,6 +747,7 @@
         }
 
         function login() {
+            console.log('Login clicked');
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value.trim();
 
