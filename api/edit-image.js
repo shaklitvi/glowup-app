@@ -18,19 +18,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { image, prompt } = req.body;
+    const { image, prompt, apiKey } = req.body;
 
     if (!image || !prompt) {
       return res.status(400).json({ error: 'Missing image or prompt' });
     }
 
-    // Get Hugging Face token from environment
-    const hfToken = process.env.HUGGING_FACE_API_KEY;
+    // Get Hugging Face token from environment or request
+    let hfToken = process.env.HUGGING_FACE_API_KEY || apiKey;
 
     if (!hfToken) {
       return res.status(500).json({
-        error: 'Server not configured. Please contact administrator.',
-        message: 'HUGGING_FACE_API_KEY not set in environment'
+        error: 'Missing API key',
+        message: 'Please provide your Hugging Face API key'
       });
     }
 

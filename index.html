@@ -813,6 +813,11 @@
 
             <div class="card">
                 <div class="card-title">⚙️ הגדרות</div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-size: 14px; color: var(--dim);">🔑 Hugging Face API Key</label>
+                    <input type="password" id="hfApiKey" placeholder="הדבק את ה-API key שלך" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; background: rgba(255,255,255,0.05); color: var(--text); font-size: 14px;">
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="saveApiKey()">שמור API Key</button>
+                </div>
                 <button class="btn btn-secondary" onclick="alert('בקרוב')">ערוך פרופיל</button>
                 <button class="btn btn-secondary" onclick="clearAll()">נקה נתונים</button>
             </div>
@@ -963,6 +968,21 @@
             save();
         }
 
+        function saveApiKey() {
+            const key = document.getElementById('hfApiKey').value.trim();
+            if (!key) {
+                alert('אנא הדבק את ה-API key');
+                return;
+            }
+            localStorage.setItem('hfApiKey', key);
+            alert('✅ API Key נשמר בהצלחה!');
+            document.getElementById('hfApiKey').value = '';
+        }
+
+        function getStoredApiKey() {
+            return localStorage.getItem('hfApiKey');
+        }
+
         // ===== NAV =====
         function setupNav() {
             console.log('🧭 Setting up navigation...');
@@ -1043,7 +1063,7 @@
         }
 
         // ===== AI IMAGE EDITING =====
-        function editImage() {
+        async function editImage() {
             if (!img) {
                 alert(t('noImage'));
                 return;
@@ -1052,6 +1072,12 @@
             const prompt = document.getElementById('aiPrompt').value.trim();
             if (!prompt) {
                 alert(t('aiPromptRequired'));
+                return;
+            }
+
+            const apiKey = getStoredApiKey();
+            if (!apiKey) {
+                alert('⚠️ אנא עבור לעמוד הגדרות (👤) והדבק את ה-API key שלך מ-Hugging Face');
                 return;
             }
 
@@ -1064,119 +1090,42 @@
             editBtn.disabled = true;
 
             try {
-                result.innerHTML = `<span class="loading"></span>${t('editing')}`;
+                result.innerHTML = `<span class="loading"></span>שולח ל-AI... זה יכול לקחת דקה`;
 
-                // Process image with Canvas API - AI Smart Filters
-                setTimeout(() => {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    const img_el = new Image();
+                const response = await fetch('/api/edit-image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        image: img,
+                        prompt: prompt,
+                        apiKey: apiKey
+                    })
+                });
 
-                    img_el.crossOrigin = 'anonymous';
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'בעיה בשינוי התמונה');
+                }
 
-                    img_el.onload = function() {
-                        try {
-                            // Scale for performance
-                            let w = img_el.width;
-                            let h = img_el.height;
-                            const maxSize = 1024;
-                            if (w > maxSize || h > maxSize) {
-                                const ratio = Math.min(maxSize / w, maxSize / h);
-                                w = Math.floor(w * ratio);
-                                h = Math.floor(h * ratio);
-                            }
+                const data = await response.json();
 
-                            canvas.width = w;
-                            canvas.height = h;
-                            ctx.drawImage(img_el, 0, 0, w, h);
-
-                            const imageData = ctx.getImageData(0, 0, w, h);
-                            const data = imageData.data;
-
-                            // Detect AI effect from prompt
-                            const promptLower = prompt.toLowerCase();
-                            let effect = 'enhance'; // default
-
-                            // עברית + אנגלית keywords
-                            if (promptLower.includes('סופרמן') || promptLower.includes('superman') || promptLower.includes('hero')) effect = 'superhero';
-                            else if (promptLower.includes('rio') || promptLower.includes('קרנבל') || promptLower.includes('carnival')) effect = 'carnival';
-                            else if (promptLower.includes('חלל') || promptLower.includes('space') || promptLower.includes('cosmic')) effect = 'space';
-                            else if (promptLower.includes('צהוב') || promptLower.includes('yellow') || promptLower.includes('gold')) effect = 'golden';
-                            else if (promptLower.includes('קר') || promptLower.includes('cool') || promptLower.includes('ice')) effect = 'cool';
-                            else if (promptLower.includes('אש') || promptLower.includes('fire') || promptLower.includes('hot')) effect = 'hot';
-                            else if (promptLower.includes('חלום') || promptLower.includes('dream') || promptLower.includes('dreamy')) effect = 'dreamy';
-                            else if (promptLower.includes('שחור') || promptLower.includes('black') || promptLower.includes('bw')) effect = 'grayscale';
-
-                            // Apply smart AI enhancement
-                            for (let i = 0; i < data.length; i += 4) {
-                                let r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3];
-                                const brightness = (r + g + b) / 3;
-
-                                if (effect === 'superhero') {
-                                    // Red/Blue/Yellow superhero effect
-                                    if (brightness < 100) {
-                                        data[i] = Math.max(0, r * 0.1); data[i + 1] = Math.max(0, g * 0.1); data[i + 2] = Math.min(200, b * 0.9);
-                                    } else {
-                                        data[i] = Math.min(255, r * 1.4 + 80); data[i + 1] = Math.min(255, g * 0.8); data[i + 2] = Math.min(100, b * 0.2);
-                                    }
-                                } else if (effect === 'carnival') {
-                                    // Vibrant carnival colors
-                                    data[i] = Math.min(255, r * 1.6 + 40); data[i + 1] = Math.min(255, g * 1.3 + 60); data[i + 2] = Math.min(255, b * 1.4);
-                                } else if (effect === 'space') {
-                                    // Deep space effect
-                                    data[i] = Math.max(20, r * 0.3); data[i + 1] = Math.max(10, g * 0.2); data[i + 2] = Math.min(200, b * 1.2 + 100);
-                                } else if (effect === 'golden') {
-                                    // Golden glow
-                                    data[i] = Math.min(255, r * 1.3 + 100); data[i + 1] = Math.min(255, g * 1.2 + 80); data[i + 2] = Math.min(200, b * 0.4);
-                                } else if (effect === 'cool') {
-                                    // Cool blue effect
-                                    data[i] = Math.max(50, r * 0.6); data[i + 1] = Math.min(255, g * 1.1 + 40); data[i + 2] = Math.min(255, b * 1.5 + 80);
-                                } else if (effect === 'hot') {
-                                    // Hot red/orange effect
-                                    data[i] = Math.min(255, r * 1.4 + 60); data[i + 1] = Math.min(255, g * 0.8); data[i + 2] = Math.max(0, b * 0.3);
-                                } else if (effect === 'dreamy') {
-                                    // Soft dreamy effect
-                                    data[i] = Math.min(255, r * 1.1 + 40); data[i + 1] = Math.min(255, g * 1.05 + 35); data[i + 2] = Math.min(255, b * 1.15 + 50);
-                                } else if (effect === 'grayscale') {
-                                    const gray = brightness;
-                                    data[i] = gray; data[i + 1] = gray; data[i + 2] = gray;
-                                } else { // enhance
-                                    // General enhance - more vibrant
-                                    data[i] = Math.min(255, r * 1.2 + 20); data[i + 1] = Math.min(255, g * 1.2 + 20); data[i + 2] = Math.min(255, b * 1.2 + 20);
-                                }
-                            }
-
-                            ctx.putImageData(imageData, 0, 0);
-                            editedImg = canvas.toDataURL('image/jpeg', 0.95);
-
-                            result.className = 'result result-ok';
-                            result.innerHTML = `✨ ${t('edited')}<br><img src="${editedImg}" style="width: 100%; border-radius: 8px; margin-top: 10px;">`;
-
-                            reward(50, 25);
-                            document.getElementById('editedSection').style.display = 'block';
-                            editBtn.disabled = false;
-
-                        } catch (e) {
-                            console.error('Canvas error:', e);
-                            result.className = 'result result-err';
-                            result.innerHTML = `❌ שגיאה בעיבוד`;
-                            editBtn.disabled = false;
-                        }
-                    };
-
-                    img_el.onerror = function() {
-                        result.className = 'result result-err';
-                        result.innerHTML = `❌ שגיאה בטעינה`;
-                        editBtn.disabled = false;
-                    };
-
-                    img_el.src = img;
-
-                }, 300);
+                if (data.success && data.image) {
+                    editedImg = data.image;
+                    result.className = 'result result-ok';
+                    result.innerHTML = `✨ ${t('edited')}<br><img src="${editedImg}" style="width: 100%; border-radius: 8px; margin-top: 10px;">`;
+                    reward(50, 25);
+                    document.getElementById('editedSection').style.display = 'block';
+                } else {
+                    throw new Error(data.error || 'לא קיבלנו תמונה חזרה');
+                }
 
             } catch (error) {
+                console.error('API Error:', error);
                 result.className = 'result result-err';
                 result.innerHTML = `❌ שגיאה: ${error.message}`;
+            } finally {
                 editBtn.disabled = false;
             }
         }
