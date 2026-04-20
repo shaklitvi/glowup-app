@@ -598,14 +598,28 @@
         // ====== DATA STORAGE ======
         class GlowUpDB {
             constructor() {
-                this.users = JSON.parse(localStorage.getItem('glowup-users') || '{}');
-                this.posts = JSON.parse(localStorage.getItem('glowup-posts') || '[]');
-                this.currentUser = localStorage.getItem('glowup-current-user');
+                try {
+                    this.users = JSON.parse(localStorage.getItem('glowup-users') || '{}');
+                    this.posts = JSON.parse(localStorage.getItem('glowup-posts') || '[]');
+                    this.currentUser = localStorage.getItem('glowup-current-user');
+                } catch (e) {
+                    console.error('localStorage error:', e);
+                    this.users = {};
+                    this.posts = [];
+                    this.currentUser = null;
+                }
             }
 
             save() {
-                localStorage.setItem('glowup-users', JSON.stringify(this.users));
-                localStorage.setItem('glowup-posts', JSON.stringify(this.posts));
+                try {
+                    localStorage.setItem('glowup-users', JSON.stringify(this.users));
+                    localStorage.setItem('glowup-posts', JSON.stringify(this.posts));
+                    if (this.currentUser) {
+                        localStorage.setItem('glowup-current-user', this.currentUser);
+                    }
+                } catch (e) {
+                    console.error('Save error:', e);
+                }
             }
 
             registerUser(email, username, password) {
@@ -631,7 +645,7 @@
                     return { success: false, error: '❌ דוא"ל או סיסמה שגויים' };
                 }
                 this.currentUser = email;
-                localStorage.setItem('glowup-current-user', email);
+                this.save();
                 return { success: true, user };
             }
 
