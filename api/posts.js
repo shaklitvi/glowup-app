@@ -1,8 +1,4 @@
-import jwt from 'jsonwebtoken';
-
-const SECRET = process.env.JWT_SECRET || 'glowup-secret-key-2024';
-
-// מסד נתונים זמני
+// Simple in-memory posts storage (for demo)
 let allPosts = [];
 
 export default async function handler(req, res) {
@@ -21,7 +17,7 @@ export default async function handler(req, res) {
 
     if (token) {
       try {
-        const decoded = jwt.verify(token, SECRET);
+        const decoded = JSON.parse(Buffer.from(token.split('.')[0], 'base64').toString());
         currentUser = decoded.email;
       } catch (e) {
         // no auth required for getting posts
@@ -29,9 +25,9 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'POST') {
-      // יצירת פוסט חדש
+      // Create new post
       if (!currentUser) {
-        return res.status(401).json({ error: 'צריך להיות מחובר' });
+        return res.status(401).json({ error: 'Must be logged in' });
       }
 
       const { image, caption, transformation } = req.body;
@@ -48,18 +44,20 @@ export default async function handler(req, res) {
         likedBy: []
       };
 
-      allPosts.push(newPost);
+      allPosts.unshift(newPost);
 
       return res.status(201).json({ success: true, post: newPost });
     }
 
     if (req.method === 'GET') {
-      // קבלת כל הפוסטים
+      // Get all posts
       return res.status(200).json({ success: true, posts: allPosts });
     }
 
-    return res.status(400).json({ error: 'פעולה לא ידועה' });
+    return res.status(400).json({ error: 'Unknown action' });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Posts error:', error);
+    res.status(500).json({ error: 'Server error: ' + error.message });
   }
 }
+

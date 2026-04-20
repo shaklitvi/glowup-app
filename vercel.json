@@ -1,9 +1,6 @@
 {
-  "env": {
-    "HUGGING_FACE_API_KEY": {
-      "description": "Your Hugging Face API key"
-    }
-  },
+  "buildCommand": "echo 'Static build'",
+  "outputDirectory": ".",
   "functions": {
     "api/**": {
       "runtime": "node18.x"

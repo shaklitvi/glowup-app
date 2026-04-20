@@ -24,11 +24,11 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing image or prompt' });
     }
 
-    // Get Hugging Face token from environment or request
-    let hfToken = process.env.HUGGING_FACE_API_KEY || apiKey;
+    // Get Hugging Face token from request (user provides it)
+    let hfToken = apiKey || process.env.HUGGING_FACE_API_KEY;
 
     if (!hfToken) {
-      return res.status(500).json({
+      return res.status(400).json({
         error: 'Missing API key',
         message: 'Please provide your Hugging Face API key'
       });
