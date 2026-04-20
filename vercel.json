@@ -1,9 +1,3 @@
 {
-  "buildCommand": "echo 'Static build'",
-  "outputDirectory": ".",
-  "functions": {
-    "api/**": {
-      "runtime": "node18.x"
-    }
-  }
+  "buildCommand": "exit 0"
 }
