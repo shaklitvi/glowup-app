@@ -731,9 +731,13 @@
                 return;
             }
 
+            console.log('Register attempt:', { email, username });
             const result = db.registerUser(email, username, password);
+            console.log('Register result:', result);
+            console.log('Stored users:', localStorage.getItem('glowup-users'));
+
             if (result.success) {
-                alert('✅ הרשמה בהצלחה! כניסה בעוד שניה...');
+                alert('✅ הרשמה בהצלחה!\nדוא"ל: ' + email + '\nכניסה בעוד שניה...');
                 showMessage('register-message', '✅ הרשמה בהצלחה! עכשיו התחבר', 'success');
                 document.getElementById('register-username').value = '';
                 document.getElementById('register-email').value = '';
@@ -754,18 +758,25 @@
             const password = document.getElementById('login-password').value.trim();
 
             if (!email || !password) {
+                alert('❌ אנא מלא את כל השדות');
                 showMessage('login-message', '❌ אנא מלא את כל השדות', 'error');
                 return;
             }
 
+            console.log('Login attempt:', { email });
+            console.log('Stored users:', localStorage.getItem('glowup-users'));
             const result = db.loginUser(email, password);
+            console.log('Login result:', result);
+
             if (result.success) {
+                alert('✅ כניסה בהצלחה! ברוכים הבאים');
                 document.getElementById('login-email').value = '';
                 document.getElementById('login-password').value = '';
                 switchScreen('app-screen');
                 loadProfile();
                 loadPosts();
             } else {
+                alert('❌ שגיאה: ' + result.error);
                 showMessage('login-message', result.error, 'error');
             }
         }
