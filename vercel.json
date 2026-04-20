@@ -1,21 +1,12 @@
 {
-  "buildCommand": "exit 0",
-  "outputDirectory": ".",
-  "framework": "static",
-  "functions": {
-    "api/**": {
-      "runtime": "node18.x"
-    }
-  },
   "env": {
     "HUGGING_FACE_API_KEY": {
       "description": "Your Hugging Face API key"
     }
   },
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
+  "functions": {
+    "api/**": {
+      "runtime": "node18.x"
     }
-  ]
+  }
 }
