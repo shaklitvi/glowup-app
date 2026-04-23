@@ -968,6 +968,17 @@
 
         // ====== INIT ======
         window.addEventListener('load', () => {
+            // Attach event listeners to buttons
+            document.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const onclick = this.getAttribute('onclick');
+                    if (onclick) {
+                        console.log('Button clicked:', onclick);
+                        eval(onclick);
+                    }
+                });
+            });
+
             if (db.currentUser) {
                 switchScreen('app-screen');
                 loadProfile();
