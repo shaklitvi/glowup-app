@@ -1,5 +1,4 @@
 {
   "buildCommand": "exit 0",
-  "outputDirectory": ".",
-  "framework": "static"
+  "outputDirectory": "."
 }
