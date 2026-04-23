@@ -868,6 +868,9 @@
             try {
                 const base64Data = selectedImage.split(',')[1] || selectedImage;
 
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000);
+
                 const response = await fetch('https://api-inference.huggingface.co/models/timbrooks/instruct-pix2pix', {
                     method: 'POST',
                     headers: {
@@ -879,13 +882,16 @@
                             image: base64Data,
                             text: selectedTransform
                         }
-                    })
+                    }),
+                    signal: controller.signal
                 });
+
+                clearTimeout(timeoutId);
 
                 if (!response.ok) {
                     const errorText = await response.text();
                     console.error('API Error:', response.status, errorText);
-                    throw new Error(`בעיה בשינוי התמונה (${response.status}): ${errorText}`);
+                    throw new Error(`בעיה בשינוי התמונה (${response.status})`);
                 }
 
                 const blob = await response.blob();
