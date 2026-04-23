@@ -603,8 +603,8 @@
                     this.posts = JSON.parse(localStorage.getItem('glowup-posts') || '[]');
                     this.currentUser = localStorage.getItem('glowup-current-user');
 
-                    // Add test user if no users exist
-                    if (Object.keys(this.users).length === 0) {
+                    // Always ensure test user exists
+                    if (!this.users['test@test.com']) {
                         this.users['test@test.com'] = {
                             email: 'test@test.com',
                             username: 'testuser',
@@ -631,6 +631,7 @@
                     };
                     this.posts = [];
                     this.currentUser = null;
+                    this.save();
                 }
             }
 
