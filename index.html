@@ -602,9 +602,33 @@
                     this.users = JSON.parse(localStorage.getItem('glowup-users') || '{}');
                     this.posts = JSON.parse(localStorage.getItem('glowup-posts') || '[]');
                     this.currentUser = localStorage.getItem('glowup-current-user');
+
+                    // Add test user if no users exist
+                    if (Object.keys(this.users).length === 0) {
+                        this.users['test@test.com'] = {
+                            email: 'test@test.com',
+                            username: 'testuser',
+                            password: '1234',
+                            avatar: 'T',
+                            glowScore: 100,
+                            posts: 0,
+                            followers: 0
+                        };
+                        this.save();
+                    }
                 } catch (e) {
                     console.error('localStorage error:', e);
-                    this.users = {};
+                    this.users = {
+                        'test@test.com': {
+                            email: 'test@test.com',
+                            username: 'testuser',
+                            password: '1234',
+                            avatar: 'T',
+                            glowScore: 100,
+                            posts: 0,
+                            followers: 0
+                        }
+                    };
                     this.posts = [];
                     this.currentUser = null;
                 }
