@@ -863,7 +863,8 @@
                 return;
             }
 
-            showMessage('register-message', '⏳ מעבדת את התמונה עם AI...', 'success');
+            console.log('API Key received (first 10 chars):', apiKey.substring(0, 10));
+            showMessage('register-message', '⏳ מעבדת את התמונה עם AI... (עד 30 שניות)', 'success');
 
             try {
                 const base64Data = selectedImage.split(',')[1] || selectedImage;
